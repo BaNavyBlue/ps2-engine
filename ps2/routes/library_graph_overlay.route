@@ -1,0 +1,64 @@
+# (build 138d) "Please look -- overlap the graphs": the library's graph
+# with its hidden lines. The graph's palette (portrait_library_graph.png,
+# line 1) paints entries 5, 8 and 10-14 the background's dark blue; after
+# $1012, loc_C4B2 (ps2.asm:18022) puts library_graph_overlay.png straight
+# into the live line 1 (PaletteLoad2 -- PaletteLoad1 is the one that adds
+# $80 for the fade target), and the lines show in white, cyan and red
+# under $1013. Until 138d the port took it for a target-only load and left
+# it out. paseo_recorder_key_tube's way to the graph. Fails on 138c.
+
+start slot 1 routes/saves/paseo_recorder.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 4 32 17
+expect item Recorder 0
+walk up 2
+wait screen building
+wait idle
+expect script $0D04          # the desk: "This must get to the governor!"
+press c
+wait idle
+expect script $1107
+press c
+wait idle
+press c
+wait idle
+expect script $1108
+expect script $1109
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $1010          # the library: the Recorder played
+expect script $1011
+expect script $1012
+expect pixel 211 66 $A22     # a hidden line: the background's blue
+press c
+wait idle
+press c
+wait idle
+expect pixel 211 66 $EEE     # the overlay: the line shows (before 138d $A22)

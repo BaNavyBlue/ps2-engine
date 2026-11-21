@@ -1,0 +1,28 @@
+# (build 145) The teleport clerk's portrait (portrait 30, teleport_clerk)
+# in Paseo's teleport station (Building_TeleportStation), from its picture:
+# one of the twelve no route drew after build 142 (see
+# paseo_hospital_picture). A new game knows no other town, so the clerk
+# says so ($0C03, three pages) and "come again later" ($0C04), and the
+# party is let out.
+
+start building 15 30 0 0 7 18       # the station; the street is 7,18
+wait idle
+expect script $0C01                 # "Welcome to the Teleport Station!"
+expect picture 56 64 teleport_clerk
+shot 01_teleport_clerk
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $0C03
+expect script $0C04
+press c
+wait screen level
+wait idle
+expect level 4 7 18
+expect picture 56 64 none
+expect no-stderr not ported

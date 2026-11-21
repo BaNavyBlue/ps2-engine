@@ -1,0 +1,81 @@
+# The Recorder taken to the Governor in Paseo (story_lab_b1.json, the
+# Recorder in Rolf's bag, moved to under the tower's door). The desk
+# (Building_CentralTowerOutside) sends it straight up: $0D04. The Governor
+# (loc_C9BE, ps2.asm:18476): CheckItemExistInventory finds it, $1107, and
+# event_routine + 2 is loc_CA22 -- the library, by screen_changed_flag.
+# The library (loc_C3E6, 17946): Rolf alive and the Recorder found, $1010
+# and on to the graph (loc_C49A), $1012, PaletteLoad2 $32, $1013; then
+# loc_C4CA removes the Recorder and adds ItemID_KeyTube to the same
+# member's bag, with SXFID_ItemReceived. Reported missing by the player
+# on an earlier build; this pins the path as it plays now.
+
+start slot 1 routes/saves/paseo_recorder.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 4 32 17
+expect item Recorder 0
+walk up 2
+wait screen building
+wait idle
+expect script $0D04          # the desk: "This must get to the governor!"
+press c
+wait idle
+expect script $1107
+shot 01_governor
+press c
+wait idle
+press c
+wait idle
+expect script $1108
+expect script $1109
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $1010          # the library: the Recorder played
+expect script $1011
+expect script $1012
+shot 02_graph
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c                      # the last of $1014: loc_C4CA
+wait screen level
+wait idle
+expect level 4 32 16
+expect item KeyTube 0        # the Recorder out, the Key Tube in Rolf's hands
+shot 03_key_tube
+expect no-stderr not ported

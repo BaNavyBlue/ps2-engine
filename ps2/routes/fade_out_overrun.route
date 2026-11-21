@@ -1,0 +1,51 @@
+# (build 183) The music's fade-out writes one track too far (FadeOutMusic,
+# ps2.asm:92206). It copies the chord's voice -- FM3's algorithm and four
+# levels -- to as many tracks as the chord has parts, starting at the track
+# after FM3's, so the last copy lands on the track past the chord: with
+# every song's chord of three, the first effect track. An effect sounding
+# there (on FM3) then works out its next volume steps from the music's
+# voice, not its own.
+#
+# The game fades its music in three places, and only one has such an
+# effect: Gaira's control panel, where the explosion starts 22 frames
+# before the fade under Mystery. The explosion's FM3 part steps its volume
+# down 8 every 8 frames, at frames 17, 25, 33, 41 and 49 of it; the fade
+# arrives at frame 22. Its voice has three carriers, all at level 0, so a
+# step writes its volume to $46, $4A and $4E (FM3's operators 3, 2 and 4).
+#
+# Mystery has two chord voices, the first for 1536 frames of its 2304 and
+# the second for the other 768 (fade_out_overrun_second_chord). Under the
+# first -- three carriers, levels $27, $12 and $04 -- the steps after the
+# fade are those levels more: the explosion's end is quieter. Fails on 182,
+# whose fade stopped at the chord's last part: every step wrote the
+# explosion's own volume to all three registers.
+
+start level $41 53 26        # Gaira, the cell below the control panel
+wait screen level
+wait idle
+expect music $88             # Mystery
+press up                     # the panel's wall
+wait idle
+wait ticks 1
+expect object $37 visible
+press a                      # the control panel
+wait screen building
+limit 2000
+wait ticks 60
+expect script $1901          # "Oh no! This satellite is headed straight for Palm!"
+wait ticks 389               # 300 frames, the explosion, its step at frame 17
+expect sound-register 1 $46 $08      # the explosion's own voice: volume 8
+expect sound-register 1 $4A $08
+expect sound-register 1 $4E $08
+wait ticks 8                 # the fade at frame 22, the step at frame 25
+expect sound-register 1 $46 $37      # volume $10 on the chord's levels,
+expect sound-register 1 $4A $22      # $27, $12 and $04
+expect sound-register 1 $4E $14
+wait ticks 8                 # frame 33
+expect sound-register 1 $46 $3F
+expect sound-register 1 $4A $2A
+expect sound-register 1 $4E $1C
+wait ticks 8                 # frame 41
+expect sound-register 1 $46 $47
+expect sound-register 1 $4A $32
+expect sound-register 1 $4E $24

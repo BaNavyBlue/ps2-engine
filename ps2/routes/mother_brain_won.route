@@ -1,0 +1,161 @@
+# Mother Brain beaten, and what follows (build 93): the aftermath, Lutz's
+# warning, the Earthmen and the ending screen. Her fight is the battle
+# route's business; here `enemy-hp 1` at FIGHT/STGY leaves her one hit
+# (a level-50 party in the Nei items dies to her first, at ~140 damage a
+# round against 2450 HP). The level comes back with the
+# aftermath pending: everyone to full HP, and -- nobody having died -- the
+# big box opens EMPTY for a visit before "stood in amazement" fills it
+# ($183B into $183C, then $181F); the box closes, three steps back down
+# the corridor (walk 9 to its first stop), "{char} wait!" ($1831), then
+# the same walk resumed: eleven north with the camera forced up, into
+# Lutz's warning ($1832 on the music Exclaim), walk 10 north to the
+# Earthmen, and their three YES/NOs. YES, YES here: $181A, $181C, $1833,
+# then $1834-$1836 straight to $1821 and the six on the bridge, then the
+# ending screen through the fade to white. Before build 93 the aftermath
+# printed "level: event $38 is not ported".
+
+start level $64 33 37
+party 4 50
+outfit Rolf Neimet NeiSword NeiShield NeiArmor -
+outfit Nei NeiCrown NeiSlasher NeiSlasher NeiCape -
+outfit Rudo Neimet NeiShot NeiShot NeiArmor -
+outfit Amy NeiCrown NeiSlasher NeiEmel NeiCape -
+wait idle
+walk up 4
+wait idle
+wait ticks 2
+wait idle
+expect script $1813
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press c                      # YES
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press down
+press c                      # NO: "Die!"
+wait idle
+expect script $1818
+press c
+wait screen battle
+expect flag $C747 1
+wait idle                    # FIGHT/STGY
+enemy-hp 1
+press c                      # FIGHT: one hit
+limit 60000
+wait idle
+shot 01_beaten
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+limit 3000
+wait screen level
+wait ticks 6
+shot 02_empty_box            # the aftermath's box before its text
+wait idle
+expect script $183B
+shot 03_stood_in_amazement
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $181F
+press c
+limit 3000
+wait idle                    # three steps back, then "{char} wait!"
+expect script $1831
+expect level $64 33 37
+shot 04_lutz_wait
+press c
+wait idle
+press c
+wait idle                    # eleven north, then Lutz's warning
+expect script $1832
+expect music $91
+expect level $64 33 26
+shot 05_who_are_these_people
+press c
+wait idle                    # seventeen north, then the Earthmen
+expect script $1819
+expect level $64 33 9
+shot 06_welcome_to_noah
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press c                      # YES: we hate you
+wait idle
+expect script $181A
+press c
+wait idle
+expect script $181C
+press c
+wait idle
+expect script $1833
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+shot 07_do_you_want_to_know
+press c                      # YES: tell us why
+wait idle
+expect script $1834
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $1821
+shot 08_the_six_on_the_bridge
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+limit 3000
+wait screen ending
+shot 09_ending
+expect no-stderr is not ported

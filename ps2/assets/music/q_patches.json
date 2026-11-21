@@ -1,0 +1,85 @@
+{
+  "about": [
+    "Q's patch file (build 112): hand-voiced instruments for the Q synth in place of the ROM's.",
+    "The chip always plays the ROM's. Read once at start-up; restart the game after an edit.",
+    "PATCHES on the AUDIO page (Escape, AUDIO) switches the whole file on or off.",
+    "An entry names its instrument by the bank's number (cfEF's byte) and says only what it changes;",
+    "a field left out keeps the ROM's value. tools/q_patch_template.py N writes instrument N whole.",
+    "Operators are the chip's 1-4. multiple 0-15 (0 = a half), detune -3..3, level 0-127",
+    "(0.75 dB a step, 0 loudest; the song's volume is still added on carriers), key_scale 0-3,",
+    "attack/decay/sustain_rate 0-31, sustain_level/release 0-15. Q only: fine_cents per operator,",
+    "volume_db per instrument, tail: row (as TAILS), fade or ring. 'role' is a note, not read.",
+    "docs/audio.md, 'The patch file', has the rest."
+  ],
+  "patches": [
+    {
+      "instrument": 70,
+      "name": "Advanced's chord: its 9 x drone rings on under the next chord (111a's ring) -- off by default since build 115; true to hear it",
+      "enabled": false,
+      "tail": "ring"
+    },
+    {
+      "instrument": 74,
+      "name": "Step Up's chord, as the ROM has it -- an example to edit (off)",
+      "enabled": false,
+      "algorithm": 0,
+      "feedback": 5,
+      "volume_db": 0.0,
+      "tail": "row",
+      "operators": [
+        {
+          "role": "modulator",
+          "multiple": 9,
+          "detune": 3,
+          "level": 23,
+          "key_scale": 3,
+          "attack": 31,
+          "decay": 12,
+          "sustain_rate": 7,
+          "sustain_level": 2,
+          "release": 15,
+          "fine_cents": 0.0
+        },
+        {
+          "role": "modulator",
+          "multiple": 3,
+          "detune": -1,
+          "level": 50,
+          "key_scale": 3,
+          "attack": 31,
+          "decay": 7,
+          "sustain_rate": 7,
+          "sustain_level": 1,
+          "release": 15,
+          "fine_cents": 0.0
+        },
+        {
+          "role": "modulator",
+          "multiple": 2,
+          "detune": 0,
+          "level": 20,
+          "key_scale": 2,
+          "attack": 1,
+          "decay": 10,
+          "sustain_rate": 7,
+          "sustain_level": 1,
+          "release": 15,
+          "fine_cents": 0.0
+        },
+        {
+          "role": "carrier",
+          "multiple": 2,
+          "detune": 1,
+          "level": 0,
+          "key_scale": 2,
+          "attack": 31,
+          "decay": 10,
+          "sustain_rate": 9,
+          "sustain_level": 15,
+          "release": 15,
+          "fine_cents": 0.0
+        }
+      ]
+    }
+  ]
+}

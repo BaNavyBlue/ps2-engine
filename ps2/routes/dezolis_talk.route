@@ -1,0 +1,32 @@
+# ObjType_People's loc_E584 (ps2.asm:20982; build 85): a Dezolian makes
+# sense only to a live Rolf in a cap. Nothing on his head is $1651 ("Ga?
+# dote-mew? banaput?"); a Magic Cap reads loc_E70C - 1 + $67, which runs
+# on into loc_E730, and gives $1653 ("We are Dezo people..."); a Mogic Cap
+# reads loc_E730 - 1 + $67, $1665 ("This town is called Aukba."). Before
+# build 85 there was nobody there to talk to, and npc_dialogue_script gave
+# $1651 whatever Rolf wore.
+
+start level 10 11 8          # Aukba, right below $67 at 11,7
+wait screen level
+wait idle
+press up                     # blocked by him: a turn
+wait step
+press a
+wait idle
+expect script $1651
+press c
+wait idle
+outfit Rolf MagicCap - - - -
+press a
+wait idle
+expect script $1653
+shot 01_magic_cap
+press c
+wait idle
+outfit Rolf MogicCap - - - -
+press a
+wait idle
+expect script $1665
+press c
+wait idle
+expect level 10 11 8

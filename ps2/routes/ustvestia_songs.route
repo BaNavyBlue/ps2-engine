@@ -1,0 +1,48 @@
+# Ustvestia's house in Oputa (building 12, portrait 15), YES to hearing
+# him play: Building_UstvestiaHouse (ps2.asm:18151). "I am Ustvestia, a
+# musician. Do you want to hear me play?" ($A01), YES, "Great! Pick a
+# song." ($A02) and event_routine + $B to loc_C7FC: $CB12 = 0 and
+# WinID_UstvestiaSoundtracks ($74), one song name in the 2-row font.
+# loc_C80E reads the pad: down steps two bytes through
+# Ustvestia_MusicPointers, skipping a song whose event flag is clear
+# (Secret Ways and Mystery need flag 6 -- a new game has it clear, so
+# down from "Over" goes to... the next one whose flag is set); C plays
+# the song; B leaves with "Well, actually, I'm kind of busy right now"
+# ($A04). Before build 70 the door gave "building: 12 is not ported".
+
+start level 6 7 9            # Oputa, a new game, two below the door
+wait screen level
+wait idle
+walk up 2                    # 7,8, then the door takes the pad
+wait screen building
+wait idle
+expect script $0A01
+shot 01_ustvestia
+press c                      # the line out, YES / NO
+wait idle
+press c                      # YES
+wait idle
+expect script $0A02          # "Great! Pick a song."
+press c
+wait idle
+shot 02_phantasy
+press down
+wait idle
+shot 03_restration
+press c                      # plays it
+wait idle
+press up
+wait idle
+press up                     # past the top: $2A, "Never Dream" -- its
+wait idle                    # flag ($34) clear, so on up to "Over"
+shot 04_over
+press b
+wait idle
+expect script $0A04          # busy, got to go
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect screen level
+expect no-stderr not ported

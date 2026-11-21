@@ -1,0 +1,10 @@
+# (build 165) The attract crawl in Japanese: two rows a line, the marks
+# above each (the stock crawl's lines are a row apart), his `jp` of the
+# second message: やみのちからによって アルゴルをしはいしていた ...
+start new
+language ja
+wait screen level
+wait script $1402
+wait ticks 30
+expect pixel 172 150 $EEE      # the dakuten over ゴ, the row above the line
+shot 01_second

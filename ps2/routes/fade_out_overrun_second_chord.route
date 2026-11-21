@@ -1,0 +1,39 @@
+# (build 183) fade_out_overrun's scene under Mystery's second chord voice,
+# which the song plays from its frame 1536 to its 2304th: 1200 frames on
+# Gaira before the panel put the fade there. That voice has one carrier
+# (operator 4, level 0) where the explosion's has three, so after the fade
+# a volume step of the explosion writes operator 4's register alone, and
+# operators 3 and 2 keep the level of the step before the fade: the
+# explosion's end rings on, where under the first voice it is quieter.
+# Fails on 182, which stepped all three.
+
+start level $41 53 26        # Gaira, the cell below the control panel
+wait screen level
+wait idle
+expect music $88             # Mystery
+wait ticks 1200              # into its second chord voice
+press up                     # the panel's wall
+wait idle
+wait ticks 1
+expect object $37 visible
+press a                      # the control panel
+wait screen building
+limit 2000
+wait ticks 60
+expect script $1901          # "Oh no! This satellite is headed straight for Palm!"
+wait ticks 389               # 300 frames, the explosion, its step at frame 17
+expect sound-register 1 $46 $08      # the explosion's own voice: volume 8
+expect sound-register 1 $4A $08
+expect sound-register 1 $4E $08
+wait ticks 8                 # the fade at frame 22, the step at frame 25
+expect sound-register 1 $46 $08      # left where they were
+expect sound-register 1 $4A $08
+expect sound-register 1 $4E $10      # operator 4 alone: volume $10
+wait ticks 8                 # frame 33
+expect sound-register 1 $46 $08
+expect sound-register 1 $4A $08
+expect sound-register 1 $4E $18
+wait ticks 8                 # frame 41
+expect sound-register 1 $46 $08
+expect sound-register 1 $4A $08
+expect sound-register 1 $4E $20

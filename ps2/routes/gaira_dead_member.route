@@ -1,0 +1,189 @@
+# A member dead through the prison is up again at Tyler's. Death is HP 0:
+# every test in ps2.asm is on the record's HP word (tst.w 2(a1) in
+# Enemy_PickCharToAttack, 4044; CheckPlanetAndCaps, 19192; Shir's, 19111).
+# loc_DF32 (the prison) leaves HP alone; loc_CE5E, after Tyler's
+# spaceship, copies max HP to HP for all eight (move.w (a0), -(a0) at
+# record + 4) and never looks at the status word at + 0, so Anna, dead in
+# the save, walks into the Governor's office at 111/111. The story's first
+# build 83 pass had Amy and Anna die on Gaira and come back so. The ROM's,
+# and the port's (gamedata_prison_release). army_eye_capture's steps from
+# green_dam_last_panel.json with Anna at 0 HP, its shots and pixel checks
+# left to it.
+
+start slot 1 routes/saves/gaira_dead_member.json
+bags
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $31 113 29
+expect object $38 visible
+give GreenCard 1             # Rudo's bag, slot 5
+press up                     # face the panel
+wait idle
+press a
+wait idle
+expect script $171B          # ObjType_Events $1C-$23 (loc_DC9C)
+press c
+wait idle
+press c                      # the C menu
+wait idle
+press c                      # ITEM
+wait idle
+press down
+press c                      # RUDO
+wait idle
+press down
+press down
+press down
+press down
+press down                   # GREENCARD, slot 5
+press c
+wait idle
+press c                      # USE
+wait idle
+expect script $0018          # "'Character' puts 'Item' inside."
+expect flag $C72D 1
+press c
+wait idle
+expect script $001B          # "The dam locks open..."
+press c
+wait idle
+limit 600
+wait screen battle
+wait idle
+expect music $93
+press c                      # FIGHT, repeated
+limit 30000
+wait idle
+expect script $1219          # carried off
+press c
+wait idle
+press c
+limit 3000
+wait screen level
+expect level $41 5 43        # Gaira, $50,$2B0
+expect music $88             # Gaira's own: Mystery
+wait idle
+expect script $1839          # ObjType_Events $2D (loc_DF32)
+expect hp 2 0 0              # Anna, dead since the save: the prison
+                             # (loc_DF32) does not touch HP
+shot 01_prison
+bags
+expect item PrsnClths 0
+expect item PlsmRing 0
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $183A          # run on from $1839
+press c
+wait idle
+press c                      # the box closes; demo_timer counts from here
+wait idle
+expect screen level
+wait ticks 1700              # $708 frames, the leader free meanwhile
+expect flag $C73E 0
+wait ticks 200
+limit 600
+wait idle
+expect script $1812          # $2E: the explosion and the orbit
+expect flag $C73E 1
+press c
+wait idle
+press c
+wait idle
+press c                      # $1812's third page closes the box
+wait idle
+expect screen level
+# The walk to the panel is 159 steps with fourteen damage floors and
+# Gaira's own encounters (the level record's group), fought in prison
+# clothes: no weapon ($1205, "can't fight!") and no TP -- RUN is all
+# there is, which is the game. The route warps to the cell below the
+# panel instead: $37 at $360,$1A0, box row 9, covers cells 52-55 x 22-25.
+warp $41 53 26
+wait screen level
+wait idle
+press up                     # the panel's wall: turn to face it
+wait idle
+wait ticks 1
+expect object $37 visible
+press a                      # ObjType_Events $2F (loc_DFE6)
+wait screen building
+expect flag $C73F 1
+limit 2000
+wait ticks 60
+expect script $1901          # "Oh no! This satellite is headed straight for Palm!"
+wait ticks 8
+wait script $1902            # Tyler's spaceship: 300 frames, the explosion,
+                             # the fade, 300 more, "that same dream again"
+wait ticks 450               # its words, loc_6BBE's 256 frames, into the 300
+wait script $1903            # "Help!!!" loads once loc_70D42 has dissolved in
+wait idle                    # 300 frames, loc_6C54, $1904, 180 frames, Tyler
+expect script $1905
+expect script $1906
+                             # extract-nametables has art/ (build 82)
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $1907
+press c                      # loc_CE20: a TylerSpaceShip_EventFrames step
+                             # every fourth frame, $FE the explosion
+wait ticks 46
+wait ticks 7
+wait ticks 4
+wait idle
+expect script $1908
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $190A
+press c                      # loc_CE5E: gear back, HP and TP full; demo 8
+wait screen level
+expect level $04
+wait screen building         # demo walk 8 ends at the Central Tower
+wait idle
+expect script $1111
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c                      # the Governor's last page: the street
+wait screen level
+wait idle
+expect level $04 31 16
+bags
+expect item LaserKnife 0
+expect item TtnmArmor 1
+expect item LasrSlshr 2
+state
+expect hp 2 111 111          # Anna: loc_CE5E, HP = max HP -- up again
+expect hp 0 148 148
+expect hp 1 199 199
+shot 02_home

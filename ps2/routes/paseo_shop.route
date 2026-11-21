@@ -1,0 +1,25 @@
+# Into the Paseo item store from the street and out again: the greeting,
+# BUY/SELL, B (which leaves the shop outright, loc_11028), the goodbye,
+# and the street under the door.
+
+start level 4 57 21          # a new game, three cells below the store
+wait screen level
+wait idle
+shot 01_street
+walk up 5                    # two steps, then the door takes the pad
+wait screen building
+wait idle                    # BUY / SELL
+expect script $0801          # "Welcome, how may I be of service?"
+shot 02_inside
+press b
+wait idle
+expect script $080D          # "Good-bye, and come again!"
+shot 03_goodbye
+press c
+wait screen level
+wait idle
+expect screen level
+shot 04_outside
+walk down 1                  # the pad is back
+wait step
+expect no-stderr not ported

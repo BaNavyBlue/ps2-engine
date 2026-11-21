@@ -1,0 +1,43 @@
+# The confrontation's YES, then YES (build 92): after "If that is your
+# aim, disable me! If not, return now!", YES is $1817 on its own -- the
+# second half of the refusal NO would have given in full ($1816 runs on
+# into $1817), so the box opens mid-sentence on "destruction." That is
+# the ROM (loc_E194). No battle, the flag stays clear, her image goes.
+
+start level $64 33 37
+wait idle
+walk up 4
+wait idle
+wait ticks 2
+wait idle
+expect script $1813
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press c                      # YES
+wait idle
+expect script $1814
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press c                      # YES: return
+wait idle
+expect script $1817
+shot 01_mid_sentence
+press c
+wait idle                    # $1817's last page
+press c
+wait idle                    # closed; the image deleted
+wait ticks 4
+expect screen level
+expect flag $C747 0
+expect object $2C absent
+expect no-stderr not ported

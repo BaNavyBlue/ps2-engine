@@ -1,0 +1,22 @@
+# (build 160) The rumble when the party falls: a level-1 Rolf against
+# Mother Brain (gameover_to_sega's way in), FIGHT. Its first blow takes
+# all his HP: hurt and fell in the same tick, both motors full, as it
+# lands; then the game over screen, the longest shake (held 60, down over
+# 90 at HIGH).
+
+start battle $103
+party 1 1
+rumble-log motors.txt 3
+limit 4000
+wait idle
+press c
+wait idle
+expect rumble hurt 1
+expect rumble fell 1
+expect stat 0 hp 0
+press c
+wait screen gameover
+expect rumble lost 1
+expect rumble going
+wait ticks 160
+expect rumble still

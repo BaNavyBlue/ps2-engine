@@ -1,0 +1,61 @@
+# Building_Roof (ps2.asm:18055), YES: the Central Tower's roof to Skure
+# and Skure's roof back to Paseo (build 84). Fails on build 83a's code at
+# `wait screen building`: "building: 11 is not ported", back to the street.
+start building 8 21 0 0 32 16   # the tower desk; the street is 32,16
+flag $C73F 1                    # Gaira's $2F: ROOF on the desk
+wait idle
+expect script $0D01
+expect menu $36                 # WinID_TowerOptions2: ROOM LIBRARY ROOF OUTSIDE
+press down
+press down
+press c                         # ROOF: building 11, portrait $18
+wait screen building
+wait idle
+expect script $0F01             # routine 2, WinID_ScriptMessage2
+shot 01_roof
+press c
+wait idle
+press c
+wait idle
+expect menu $1F                 # routine 3, WinID_YesNo2
+shot 02_yesno
+press c                         # YES: $F02, DezolisSkure $4F0,$3C0
+wait idle
+expect script $0F02
+shot 03_leaving
+press c                         # routine 5, loc_C572: PaletteFadeFrom
+# 21 ticks out, loc_C58A, 21 ticks of PaletteFadeTo (no objects), then
+# SpaceShipLoop: Obj_Spaceship's mappings 0-9, five frames each.
+wait ticks 43
+shot 04_ship_frame0             # loc_59E4's first pair, $B8,$98
+expect pixel 205 156 $AA8       # the ship, line 2 ($3C) colour 6
+expect pixel 212 190 $664       # line 2 colour 4
+expect pixel 181 80 $E60        # the planet, $39: line 3 colour 5
+expect pixel 196 56 $EEE        # line 3 colour 2
+wait ticks 5
+shot 05_ship_frame1
+expect pixel 117 91 $EEE        # $60,$58: mapping 1
+wait ticks 42
+shot 06_ship_frame9             # a dot at $A8,$40
+expect pixel 175 71 $EEE
+wait ticks 5
+shot 07_planet                  # $24 = $A: the ship is gone
+expect pixel 175 71 $000
+wait screen level
+wait idle
+expect level $03 60 79          # x $3C0, y $4F0: one right of the door
+expect no-stderr not ported
+shot 08_skure
+# Skure's door (79,59) is building 11 too: loc_8318 adds 5, routine 6,
+# loc_C578 on the first idle pass -- no portrait, no $F01, no question.
+walk left 1
+wait screen building
+wait ticks 30
+shot 09_to_paseo
+expect pixel 181 80 $6E2        # the planet, $3A this time: colour 5
+expect pixel 196 56 $EEE
+wait screen level
+wait idle
+expect level $04 31 16          # loc_C578: Paseo $100,$1F0
+expect no-stderr not ported
+shot 10_paseo

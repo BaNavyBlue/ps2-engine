@@ -1,0 +1,231 @@
+# The last dam: the save has the other three doors and panels set
+# ($C72C, $C72E-$C733), so when the menu closes loc_81E6 finds all four
+# words at $0101 and starts formation $101 -- three Army Eyes, 3000 HP
+# each, with ThePlaceOfDeath. Their technique (loc_2E24) counts $CC92 on
+# every use; the ninth, in round three, is $1219 and the party carried to
+# Gaira at $50,$2B0 with event_flags $A00: loc_7E02 case $A, $DE6E = $2D
+# on arrival, and the prison (build 81): $1839, everyone's gear backed up
+# to $DA00 and swapped for PrsnClths and a PlsmRing; 30 seconds of
+# demo_timer (camera case 6) counted only with the box closed; $2E's
+# explosion, $C73E and $1812; the walk to the panel ($37 at 54,26), $2F
+# into the control panel ($1901, the alarm, the explosion, the fade);
+# Tyler's spaceship ($1902-$1908, loc_CE5E: gear back, HP and TP full);
+# demo walk 8 to the Governor ($1111) and Paseo.
+
+start slot 1 routes/saves/green_dam_last_panel.json
+bags
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $31 113 29
+expect object $38 visible
+give GreenCard 1             # Rudo's bag, slot 5
+press up                     # face the panel
+wait idle
+press a
+wait idle
+expect script $171B          # ObjType_Events $1C-$23 (loc_DC9C)
+press c
+wait idle
+press c                      # the C menu
+wait idle
+press c                      # ITEM
+wait idle
+press down
+press c                      # RUDO
+wait idle
+press down
+press down
+press down
+press down
+press down                   # GREENCARD, slot 5
+press c
+wait idle
+press c                      # USE
+wait idle
+expect script $0018          # "'Character' puts 'Item' inside."
+expect flag $C72D 1
+press c
+wait idle
+expect script $001B          # "The dam locks open..."
+shot 01_dam_opened
+press c
+wait idle
+limit 600
+wait screen battle
+wait idle
+expect music $93
+shot 02_army_eyes
+press c                      # FIGHT, repeated
+limit 30000
+wait idle
+expect script $1219          # carried off
+shot 03_captured
+press c
+wait idle
+press c
+limit 3000
+wait screen level
+expect level $41 5 43        # Gaira, $50,$2B0
+expect music $88             # Gaira's own: Mystery
+shot 04_gaira
+wait idle
+expect script $1839          # ObjType_Events $2D (loc_DF32)
+bags
+expect item PrsnClths 0
+expect item PlsmRing 0
+shot 05_prison
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $183A          # run on from $1839
+press c
+wait idle
+press c                      # the box closes; demo_timer counts from here
+wait idle
+expect screen level
+wait ticks 1700              # $708 frames, the leader free meanwhile
+expect flag $C73E 0
+wait ticks 200
+limit 600
+wait idle
+expect script $1812          # $2E: the explosion and the orbit
+expect flag $C73E 1
+shot 06_orbit
+press c
+wait idle
+press c
+wait idle
+press c                      # $1812's third page closes the box
+wait idle
+expect screen level
+# The walk to the panel is 159 steps with fourteen damage floors and
+# Gaira's own encounters (the level record's group), fought in prison
+# clothes: no weapon ($1205, "can't fight!") and no TP -- RUN is all
+# there is, which is the game. The route warps to the cell below the
+# panel instead: $37 at $360,$1A0, box row 9, covers cells 52-55 x 22-25.
+warp $41 53 26
+wait screen level
+wait idle
+press up                     # the panel's wall: turn to face it
+wait idle
+shot 07_at_panel
+expect pixel 160 125 $008      # the floor: no ring this frame
+wait ticks 1
+shot 07b_at_panel_ring       # ObjCL_Main: loc_12B36 every other frame
+expect pixel 160 125 $0AAA     # loc_5D12C's ring, line 0 colour 5
+expect object $37 visible
+press a                      # ObjType_Events $2F (loc_DFE6)
+wait screen building
+expect flag $C73F 1
+limit 2000
+wait ticks 60
+expect script $1901          # "Oh no! This satellite is headed straight for Palm!"
+shot 08_control_panel        # the Radar portrait, the alarm (loc_66F6)
+wait ticks 8
+shot 08b_panel_alarm
+wait script $1902            # Tyler's spaceship: 300 frames, the explosion,
+                             # the fade, 300 more, "that same dream again"
+wait ticks 450               # its words, loc_6BBE's 256 frames, into the 300
+shot 09a_dream_fight         # loc_70A32 over loc_6D7BA; Pal_TitleScr line 3
+expect pixel 100 40 $AAC
+expect pixel 176 70 $AAC
+expect pixel 236 110 $446
+wait script $1903            # "Help!!!" loads once loc_70D42 has dissolved in
+shot 09b_help                # loc_70D42 over loc_6F040
+expect pixel 90 60 $446
+expect pixel 170 70 $CCE
+expect pixel 240 40 $668
+wait idle                    # 300 frames, loc_6C54, $1904, 180 frames, Tyler
+expect script $1905
+expect script $1906
+shot 09_tyler                # Tyler and the monitor (loc_CD50, loc_CDDE 0)
+expect pixel 64 25 $0EE      # TylerPortraitTileInd, row 3 column 6, line 2
+expect pixel 78 49 $8EE
+expect pixel 94 63 $68A
+expect pixel 212 71 $A62     # TylerSpcshp_MonitorTileInd frame 0, column 19
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $1907
+press c                      # loc_CE20: a TylerSpaceShip_EventFrames step
+                             # every fourth frame, $FE the explosion
+wait ticks 20
+shot 09f_monitor_1           # loc_CDF8's frame 1, and the table's first step
+expect pixel 212 71 $620
+wait ticks 26
+shot 09c_palm_flash          # ObjID_MonitorExplosion: Map_PalmExplosion_2
+expect pixel 223 63 $EEE     # Pal_CentTow2Port line 3 (palette $2A)
+expect pixel 212 63 $08C
+wait ticks 7
+shot 09d_palm_burst          # Map_PalmExplosion_3
+expect pixel 214 51 $08C
+wait ticks 4
+shot 09e_palm_debris         # Map_PalmExplosion_4, 33 pieces
+expect pixel 190 32 $08C
+expect pixel 250 90 $EEE
+wait ticks 9                 # step 15: frame 2, then 3 2 3 2 3 2 4 2 4 and $FF
+shot 09g_monitor_2
+expect pixel 215 74 $EEE
+wait ticks 4
+shot 09h_monitor_3
+expect pixel 212 72 $00E
+wait ticks 24
+shot 09i_monitor_4
+expect pixel 215 74 $6EE
+wait idle
+expect script $1908
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $190A
+press c                      # loc_CE5E: gear back, HP and TP full; demo 8
+wait screen level
+expect level $04
+shot 10_paseo_demo8
+wait screen building         # demo walk 8 ends at the Central Tower
+wait idle
+expect script $1111
+shot 11_governor
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c                      # the Governor's last page: the street
+wait screen level
+wait idle
+expect level $04 31 16
+bags
+expect item LaserKnife 0
+expect item TtnmArmor 1
+expect item LasrSlshr 2
+state
+shot 12_home

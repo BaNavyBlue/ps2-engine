@@ -1,0 +1,25 @@
+# (build 138d) The fades to and from black, one channel of each colour a
+# frame in the ROM's order. PaletteFadeTo (ps2.asm:9010) zeroes the palette
+# and PaletteAddColor walks each entry up: blue while the word stays at or
+# under its target, then green, then red -- white takes 21 frames, $200,
+# $400 ... $E00, $E20 ... $EE0, $EE2 ... $EEE. PaletteFadeFrom (9080) and
+# PaletteDecreaseColor take each entry down: red first, then green, then
+# blue. Until 138d the port stepped every channel at once (palette_add /
+# palette_fade_step): white to black in 7 frames, $666 where the ROM has
+# $600. The Sega logo's white, from power-on, then Start on the Sega
+# screen. Fails on 138c.
+
+start new
+wait ticks 3
+expect pixel 117 97 $600     # the fade in: blue first (before 138d $666)
+wait ticks 7
+expect pixel 117 97 $E60     # blue there, green rising (before 138d $EEE)
+wait ticks 11
+expect pixel 117 97 $EEE     # the 21st frame
+wait ticks 39
+press start                  # SegaScreen's loop: Start, then TitleScreen's fade out
+expect pixel 117 97 $EEC     # the fade out: red first (before 138d $CCC)
+wait ticks 7
+expect pixel 117 97 $EC0     # red gone, green falling (before 138d $000)
+wait ticks 13
+expect pixel 117 97 $000     # the 21st frame

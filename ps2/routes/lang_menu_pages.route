@@ -1,0 +1,76 @@
+# (build 164) The C menu in the retranslation (docs/languages.md): his
+# labels from names.json's windows -- the main menu in the original's
+# order (Items, Status, Techniques, Strength, Equip), a cell wider than
+# the stock for "Techniques" (46 px) -- his prompts on the party list's
+# bottom border ("Who?", "To whom?"), item names whole, the technique list
+# a cell wider (his wide_techs), the Strength page's labels, job and
+# equipment. Numbers stay the stock digits.
+start level $64 33 10
+language retranslation
+party 4 50
+wait idle
+press c
+wait idle
+expect menu $01
+expect pixel 74 50 $EEE        # Techniques' last s, in the cell the menu
+                               # gained (the stock menu ends at x 79)
+expect pixel 87 40 $EEE        # its right border, a cell out
+shot 01_menu
+press c                      # Items
+wait idle
+press c                      # Eusis
+wait idle
+press c                      # the Knife
+wait idle
+press down                   # Give
+wait ticks 3
+press c
+wait idle
+expect pixel 264 152 $EEE      # the T of "To whom?" on the bottom border
+shot 02_to_whom
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press c
+wait idle
+press down
+wait ticks 3
+press down                   # Techniques
+wait ticks 3
+press c
+wait idle
+press c                      # Eusis
+wait idle
+expect pixel 120 24 $EEE       # the R of Ryuker
+expect pixel 175 40 $EEE       # the list's right border, a cell out
+shot 03_techniques
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press c
+wait idle
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down                   # Strength
+wait ticks 3
+press c
+wait idle
+press c                      # Eusis
+wait idle
+expect pixel 216 168 $EEE      # the top of Dexterity's D, a row the
+                               # stock letters leave paper
+shot 04_strength

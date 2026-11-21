@@ -1,0 +1,19 @@
+# The fuzzer in battle. Formation 1 from a new game (Rolf with the
+# Knife, Nei with nothing), then 8000 ticks of fuzz: that fight, run
+# from at tick 4231 after two rounds, the field, and a second fight.
+#
+# Before build 62 the fuzzer treated the battle's windows like any other
+# menu -- random moves, then C or B -- and almost always took FIGHT, so
+# every command stayed where loc_F550 / loc_F584 left it: Rolf on Attack,
+# the unarmed Nei on Defend. Now it plays FIGHT/STGY, ORDR, the party
+# and command triangles, the technique and item lists and the groups on
+# purpose. With this seed the old one began no technique at all.
+
+start battle 1
+limit 6000
+fuzz 8000 2
+expect command attack
+expect command tech
+expect command item
+expect command defend
+expect no-stderr not ported

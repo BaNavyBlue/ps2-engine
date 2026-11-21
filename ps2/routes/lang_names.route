@@ -1,0 +1,15 @@
+# (build 163) The party's default names follow the language: chosen, then
+# set back before the fight. Rolf's name was his default (Eusis) and is
+# the cartridge's again (ROLF): a name that is any language's default is
+# the chosen one's (gamedata_language_names), so the stock text names him
+# as the stock game does -- and every route's save, all in the cartridge's
+# language, keeps its names.
+start battle 1
+language retranslation
+wait idle
+language us
+wait ticks 1
+press c                      # FIGHT
+wait idle
+expect script $1211
+expect text "ROLF and party"

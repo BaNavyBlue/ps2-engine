@@ -1,0 +1,157 @@
+# Neifirst on Climatrol F7 when Nei loses the fight alone: the same way
+# in, Nei down (loc_F1F6 brings the party back from $C618 and returns to
+# the level instead of the SEGA screen), $183D $183E in the picture, then
+# the whole party against her (ObjType_Events $26 with the party
+# restored), victory, and the rest of the scene from $1827 with Power
+# queued again. The save is story_gum.json on F7 at 48,23 with Nei's
+# stats cut and the others' raised.
+
+start slot 1 routes/saves/climatrol_nei_dies.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press b                      # out of Data Memory
+wait screen level
+wait idle
+expect level $3D 48 23
+shot 01_neifirst
+walk down 1
+wait idle
+press a
+wait idle
+expect script $180A
+shot 02_neifirst_speaks
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180B
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180C
+expect script $180D
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180F
+expect script $1810
+expect menu $1F              # WinID_YesNo2
+press c                      # YES
+wait idle
+expect script $1823
+press c
+wait screen battle
+wait idle                    # FIGHT / STGY, Nei alone
+expect party Nei
+expect music $93             # BattleScreen: formation $100, ThePlaceOfDeath
+shot 03_nei_alone
+press c                      # FIGHT: Nei goes down
+limit 60000
+wait idle
+expect screen level          # not game over
+expect script $183D          # "Nei, hold on!"
+expect party Rolf Nei Rudo Anna
+expect hp 1 0
+expect music $90             # loc_7E02 case 1: MusicID_Power
+expect pixel 18 131 $000      # beside the box: black, no battle floor
+shot 04_nei_down
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $183E
+press c
+wait screen battle
+wait idle
+expect party Rolf Nei Rudo Anna
+expect music $93
+shot 05_party_fights
+press c                      # FIGHT
+limit 60000
+wait idle
+expect script $1211          # victory
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+limit 3000
+wait screen level
+wait idle
+expect level $3D 48 24
+expect script $1827          # "{char} calls Nei's name once again"
+expect flag $C737 1
+expect music $90             # case 2: Power again, Nei's HP ($C042) is 0
+expect pixel 18 131 $000
+shot 06_nei_body
+press c
+wait idle
+expect script $1825
+expect party Rolf Rudo Anna
+shot 07_shaking              # case 3: F7 with the party, camera 3's jitter
+press c
+wait idle
+press c
+limit 3000
+wait level 0                 # case 4: Motavia at $490,$4A0, no party
+expect flag $C735 0
+expect object $3D visible    # the pump, shown once $C737 is set
+shot 08_pump                 # object $3D pumping (loc_585C)
+wait level $3D               # case 5: F7 at $300,$1A0, the party there
+expect level $3D 48 26
+shot 09_climatrol_shakes
+wait ticks 130               # the explosions' timers: $40-$7F
+shot 10_explosions
+wait level 0                 # case 6: $C735 set -- the lake full
+expect flag $C735 1
+expect object $3D visible
+shot 11_lake_full
+wait level $3D               # case 7
+limit 8000
+wait idle
+expect level $3D 48 26
+expect script $1828
+expect music $90             # cases 3-7 only latched $82/$87/$84: Power on
+shot 12_explosions_1828
+press c
+limit 3000
+wait screen building
+wait idle
+expect script $0408
+shot 13_clone_lab
+expect no-stderr not ported

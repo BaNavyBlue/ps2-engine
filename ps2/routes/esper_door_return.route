@@ -1,0 +1,27 @@
+# (build 89a) The door Espers after the party comes back upstairs.
+# Obj_MovingEsper's init (ps2.asm 7604, loc_532C), with $C742 already
+# set: routine 4 at x $118 and frame 6 for the one placed at $110, x $E8
+# and frame 9 for the other -- half a cell out from the doorway, facing
+# each other, not south as right after their step on first entry
+# (esper_door's 02_stepped_aside). The owner confirmed it in the emulator
+# after build 89 (back up the stairs from B1). A picture check: the probe
+# has no expect on an object's place or frame, so 01_facing_in and the
+# objects line are the evidence.
+
+start level $10 15 15
+flag $C742 1
+wait idle
+walk up 2                    # onto B1's stairs, 15,13
+wait screen level
+wait idle
+expect level $11 15 14
+objects
+shot 01_facing_in
+# The line above: $30 at cell 14,27 on frame 9 and at 17,27 on frame 6
+# ($E8 and $118). The door is off the bottom of that frame; F1 entered
+# again by warp, the same init, puts the camera on the doorway.
+warp $11 15 25
+wait screen level
+wait idle
+objects
+shot 02_doorway

@@ -1,0 +1,27 @@
+# (build 100) The Escape menu's FULLSCREEN item. On the title Escape opens
+# the menu (the game frozen under it); down three stops is FULLSCREEN, C
+# turns it on and C again off; B closes the menu. The route reads its own
+# settings.json (none, so windowed), never the player's. The PNGs are the
+# menu as the window draws it (game_overlay); the fullscreen switch itself
+# is the SDL3 platform's and cannot be seen headless. The waits put
+# the shots in the lamp's lit half of its blink.
+start new
+wait screen title
+press esc
+expect escape-menu open
+expect setting fullscreen off
+shot menu_open
+press down
+press down
+press down
+wait ticks 12
+shot menu_fullscreen_off
+press c
+expect setting fullscreen on
+wait ticks 12
+shot menu_fullscreen_on
+press c
+expect setting fullscreen off
+press b
+expect escape-menu closed
+expect screen title

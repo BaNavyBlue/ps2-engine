@@ -1,0 +1,106 @@
+# Build 87a. ProcessStealItem (ps2.asm:19093) left event_flags = $C00 for
+# the level screen, which build 87 and before never ran: Shir left the
+# party with the item and nothing was said. loc_7E02 case $C now gives
+# ObjType_Events $31 (loc_E042): $1722 "What? Shir is gone?". Rolf and
+# Shir (L1) in and out of Paseo's item store; the ninth goodbye is the
+# one-in-sixteen (the RNG is the tick's).
+start level 4 57 21
+members Rolf Shir
+wait screen level
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+walk down 3
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+walk down 3
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+walk down 3
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+walk down 3
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+walk down 3
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+walk down 3
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+walk down 3
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+walk down 3
+wait idle
+walk up 5
+wait screen building
+wait idle
+press b
+wait idle
+press c
+wait screen level
+wait idle
+expect script $1722
+shot 01_shir_gone
+press c
+wait idle
+expect party Rolf
+walk down 1
+wait idle
+expect no-stderr not ported

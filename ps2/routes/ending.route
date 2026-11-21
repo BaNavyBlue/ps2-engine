@@ -1,0 +1,234 @@
+# The ending screen in full (build 93a): the six epilogue pages, the
+# strip wipe and the last picture, the text over the stars, the credits
+# under "Never Dream" with their palette fade, the ending UFO, and the
+# button back to the Sega screen. The way there is mother_brain_won's.
+#
+# Each page: its portrait slides in on plane A (page 1 from the right),
+# its palette in line 2, its text typed beside it -- one code every two
+# frames, the controls locked -- for 720 frames, then plane A cleared and
+# 60 frames of nothing. The starfield is on plane B throughout but its
+# palette line is black until the last picture's palette; the planet's
+# rim lights up with the credits' palette fade, whose last step starts
+# the UFO. Pixel values are from an independent composition of the ROM's
+# tables (build 93a's history): Rudo's portrait $888, the planet dark
+# during the pages and $600 over the stars, Rolf's picture $E66, a
+# lowercase credits letter $A44 and an uppercase one $EEE, the ship $888.
+# Two build 93 slips are pinned too: the music, which the ROM starts
+# before its fade to white (build 93 started it 21 frames later, at the
+# screen), and the fade in from white, one channel a frame, blue first
+# ($6EE after four frames; build 93 stepped all three, $666). On build 93
+# the music check fails first; past it, the screen was the font on black.
+
+start level $64 33 37
+party 4 50
+outfit Rolf Neimet NeiSword NeiShield NeiArmor -
+outfit Nei NeiCrown NeiSlasher NeiSlasher NeiCape -
+outfit Rudo Neimet NeiShot NeiShot NeiArmor -
+outfit Amy NeiCrown NeiSlasher NeiEmel NeiCape -
+wait idle
+walk up 4
+wait idle
+wait ticks 2
+wait idle
+expect script $1813
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press c                      # YES
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press down
+press c                      # NO: "Die!"
+wait idle
+expect script $1818
+press c
+wait screen battle
+expect flag $C747 1
+wait idle                    # FIGHT/STGY
+enemy-hp 1
+press c                      # FIGHT: one hit
+limit 60000
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+limit 3000
+wait screen level
+wait ticks 6
+wait idle
+expect script $183B
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $181F
+press c
+limit 3000
+wait idle                    # three steps back, then "{char} wait!"
+expect script $1831
+expect level $64 33 37
+press c
+wait idle
+press c
+wait idle                    # eleven north, then Lutz's warning
+expect script $1832
+expect music $91
+expect level $64 33 26
+press c
+wait idle                    # seventeen north, then the Earthmen
+expect script $1819
+expect level $64 33 9
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press c                      # YES: we hate you
+wait idle
+expect script $181A
+press c
+wait idle
+expect script $181C
+press c
+wait idle
+expect script $1833
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press c                      # YES: tell us why
+wait idle
+expect script $1834
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $1821
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait ticks 2                 # "The Place of Death" before the white fade
+expect music $93
+limit 3000
+wait screen ending
+wait ticks 4                 # four steps down from white: blue first
+shot 00_fading_in
+expect pixel 0 0 $6EE
+wait ticks 725
+shot 01_page1
+expect pixel 80 120 $888
+expect pixel 300 60 $000
+expect script $182A
+limit 1000
+wait ending page2_slide
+wait ticks 3
+shot 02_page2_sliding
+wait ending page2_text
+wait ticks 700
+shot 03_page2
+expect script $182B
+wait ending page3_text
+wait ticks 700
+shot 04_page3
+expect script $182C
+wait ending page4_text
+wait ticks 700
+shot 05_page4
+expect script $182D
+wait ending page5_text
+wait ticks 700
+shot 06_page5
+expect pixel 200 100 $288
+expect script $182E
+wait ending page6_text
+wait ticks 700
+shot 07_page6
+expect script $182F
+wait ending wipe
+wait ticks 3
+shot 08_strip_wipe
+wait ending last_picture
+wait ticks 100
+shot 09_last_picture
+expect pixel 160 100 $E66
+wait ending final_days_text
+wait ticks 600
+shot 10_final_days
+expect pixel 300 60 $600
+expect script $1830
+limit 12000
+wait ending credits
+expect music $97
+wait ticks 4500
+shot 11_credits
+expect pixel 98 36 $A44
+expect pixel 125 60 $EEE
+wait ending ufo
+wait ticks 24
+shot 12_ufo
+expect pixel 188 24 $EEE
+expect pixel 176 24 $888
+wait ending button
+shot 13_the_end
+expect pixel 130 96 $EEE
+wait idle
+press c
+# (build 157a) The button's ScreenID_Sega: SegaScreen sends $E0 and fades
+# the credits out (PaletteFadeFrom) before its setup, red first. The
+# button's $9001 has the planes 64x32 by then, so the VDP reads plane A's
+# first 32 rows: THE END stays (the port's wrap drew PRESENTED BY SEGA
+# there, from rows 32-63). Until 157a the port cut to the logo's setup;
+# the log has the $E0 on the press's tick. Eleven steps in, THE END's
+# white has lost its red and four of its green ($E60); PRESENTED's P
+# (130, 88) would be lit there.
+wait ticks 10
+shot 14_fading
+expect pixel 130 96 $E60
+expect pixel 130 88 $000
+wait screen sega
+expect no-stderr is not ported

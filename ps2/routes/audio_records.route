@@ -1,0 +1,21 @@
+# (build 124a) audio.c's record of each track -- what a switch of synth or
+# VOICES replays -- holds only the track's own channel. The title theme
+# puts track 2 on FM1; the attract's Motavia crawl (its own song) puts it
+# on FM2. Up to 124 the record kept the title's FM1 registers under track
+# 2, and a switch during the crawl put them back on the crawl's melody on
+# FM1: louder, brighter, "less flute like" (The owner), on the chip under
+# VOICES EXTRA and on Q either way. Now a track found on another channel
+# starts its record again. The route asks during the title and during the
+# crawl, then switches the synth there and asks again.
+start new
+sound render on
+wait screen title
+wait ticks 600
+expect sound-records
+wait screen level
+wait ticks 600
+expect sound-records
+synth chip
+wait ticks 60
+expect sound-records
+expect sound playing

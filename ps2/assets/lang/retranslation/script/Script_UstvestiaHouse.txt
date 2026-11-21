@@ -1,0 +1,52 @@
+# Script_UstvestiaHouse, bank 0x0a; script_id = 0x0aNN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+You may address me as Avancino.
+Avancino the Musician, if you so please.{pause}You all have come to hear my humble sound,
+naturally?{end:C5}
+
+[2]
+Oh my! How delightful!!
+Then, please, do pick a song.{end:C5}
+
+[3]
+Oh my. So that means{47}{47}{47} I've got it!
+You've come to learn the piano, hm?{end:C5}
+
+[4]
+Oh. Well then, as for myself, I'm terribly
+busy, so if you'll excuse me.{end:C4}
+
+[5]
+Oh my! So you'd acknowledge one such as I
+to be a truly great musician?{end:C5}
+
+[6]
+Hmph. The very idea! I hate you.
+Begone!!{end:C4}
+
+[7]
+Which of you will take the lesson?{end:C5}
+
+[8]
+Oh! Well, aren't you awfully cute.
+I'll make it 2000 meseta. How's that?{end:C5}
+
+[9]
+Very well. Lessons are 5000 meseta.
+Is that acceptable?{end:C5}
+
+[10]
+You don't have enough money, hm?
+Don't undersell one such as I!{end:C4}
+
+[11]
+In that case, allow me to teach you.{end:C4}
+
+[12]
+With this, you, too, have become an artiste.
+Do come again, won't you!{end:C4}
+
+[13]
+{char} learned the Musica Technique.{end:C4}

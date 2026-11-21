@@ -1,0 +1,63 @@
+# Script_Introduction, bank 0x13; script_id = 0x13NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+There's no room left to save any
+more data, but{pause}do you want to start a new game
+anyway?{end:C5}
+
+[2]
+First, please give the protagonist a name.{end:C5}
+
+[3]
+When starting a new story, you'll want
+to write it on a blank page, right?{pause}Well then, please erase one of your saved
+games before you begin.{end:C4}
+
+[4]
+And now, at last, the curtain rises
+on Phantasy Star II.{end:C4}
+
+[5]
+Which game will you start?{end:C5}
+
+[6]
+Which game will you erase?{end:C5}
+
+[7]
+Game number {meseta}.
+Are you sure you want to erase it?{end:C5}
+
+[8]
+Well then, I'll erase the data.{end:C4}
+
+[9]
+Whew, that was close! I almost
+erased it by mistake.{end:C4}
+
+[10]
+There's no data under that number.
+Please choose another number.{end:C5}
+
+[11]
+Well then, I'll check the backup data!{end:C7}
+
+[12]
+The data for number {meseta} is fine.{end:C5}
+
+[13]
+What's this?!
+The data for number {meseta} is broken!{pause}But don't lose hope just yet.
+I'm going to start repairing it now.{end:C7}
+
+[14]
+Your good karma must have paid off.
+The data is fixed! Hooray!{end:C4}
+
+[15]
+Sadly, the data couldn't be fixed.
+This is a truly rare occurrence!{pause}Maybe you're one of the luckiest
+people around! Don't let it get you down!{end:C4}
+
+[16]
+The data check is complete.{end:C7}

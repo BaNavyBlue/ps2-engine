@@ -1,0 +1,13 @@
+# (build 163) The attract crawl across Motavia in the retranslation: the
+# crawl draws its box itself (draw_message), a line a row as the stock
+# does, each line a run in his face on the box's fill -- his lines are up
+# to 41 letters, past the box's 24 cells in the stock font. The second
+# message, his "About a thousand years have passed since".
+start new
+language retranslation
+wait screen level
+wait script $1402
+wait ticks 30
+shot 01_second
+expect pixel 65 144 $EEE       # the top of the A, where the stock row
+                               # has paper

@@ -1,0 +1,30 @@
+# The tube from Paseo: in from the east entrance (Motavia 66,21 arrives
+# at 27,9) and left until Darum is in the way. CharSprites_ChkMoveLeft
+# (ps2.asm:5289) turns a left step blocked by a type-3 object into an A
+# press, so the walk ends with his line and no button: loc_E9A8, $1801 in
+# the big box. Pushing left again brings it back.
+
+start level $0E 27 9
+wait screen level
+wait idle
+shot 01_tube
+walk left 20                 # ends when the box opens
+wait idle
+expect script $1801          # "I've seen that face! ..."
+shot 02_darum
+press c
+wait idle
+press c
+wait idle                    # the box closed, the pad back
+shot 03_back
+press left                   # the push again: the line again
+wait idle
+expect script $1801
+press c
+wait idle
+press c
+wait idle
+walk right 2                 # and away
+wait step
+shot 04_away
+expect no-stderr not ported

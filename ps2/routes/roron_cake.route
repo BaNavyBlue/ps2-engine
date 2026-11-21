@@ -1,0 +1,54 @@
+# The Mota with the cake on RoronF4 (object $1B, loc_4288; dialogue $85).
+# ObjType_People sends $85 to loc_E5FE (ps2.asm:20557), which runs one
+# step per idle visit with d2 = $DE70: $1681 "Hey! I found some tasty
+# cake! Won't you try some?", WinID_YesNo2, then YES: $1682 "... ate the
+# cake. It tasted funny! ...", WinID_MenuCharStats, $1E frames, ten HP off
+# everyone (not below 0), the stats redrawn, and B or C to close. Before
+# build 74 no $1B was spawned: the Mota was not there and A found nothing.
+
+start level $1F 23 9
+wait screen level
+wait idle
+expect person $85 present
+walk left 3
+wait idle
+walk up 3
+wait idle
+walk left 7
+wait idle
+walk down 16
+wait idle
+walk left 2
+wait idle
+walk down 2
+wait idle
+walk left 2
+wait idle
+walk down 3
+wait idle
+walk down 1
+wait idle
+press right                  # the Mota, one cell east
+wait idle
+press a
+wait idle
+expect script $1681
+press c                      # {pause}
+wait idle
+press c
+wait idle
+shot 01_try_some
+press c                      # YES
+wait idle
+expect script $1682
+press c
+wait idle
+press c
+wait idle
+shot 02_ate_it
+expect hp 0 9                # Rolf 19 -> 9
+expect hp 1 2                # Nei 12 -> 2
+press c
+wait idle
+expect screen level
+expect no-stderr not ported

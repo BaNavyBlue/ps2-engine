@@ -1,0 +1,28 @@
+# The game over screen's message sits on the title picture with nothing
+# behind it (build 93a). GameOverScreen loads the font through
+# DrawArtTiles2 (ps2.asm:12320), which clears colour 11 -- the whole of
+# the window fill tile -- from every tile, so the fill cells the message
+# is typed with are transparent. Up to build 93 the port placed the font
+# as it was, and the message sat in a solid box of colour 11 ($800) that
+# hid the middle planet. A level-1 Rolf against Mother Brain loses in a
+# round.
+
+start battle $103
+party 1 1
+limit 4000
+wait idle
+press c
+wait idle
+press c
+wait screen gameover
+wait ticks 400
+shot 01_game_over
+expect script $1218
+expect pixel 82 82 $000
+# (build 153) The background is GameOverScreen's own table (loc_6C5DA,
+# ps2.asm:12284): the title's two rows up, and two rows of its own below.
+# Up to 152 the port drew the title's: the middle planet's pixel was at
+# 190,112 (black now), and the bottom two rows were the title's.
+expect pixel 190 96 $260
+expect pixel 190 112 $000
+expect pixel 1 208 $420

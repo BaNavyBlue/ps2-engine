@@ -1,0 +1,33 @@
+# Script_WeaponStore, bank 0x06; script_id = 0x06NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Hey, welcome. What'll it be?{end:C5}
+
+[2]
+The {item}, huh?
+Who'll carry it?{end:C5}
+
+[3]
+You? Using this? What a joke!
+Are you sure?{end:C5}
+
+[4]
+Then who'll carry it?{end:C5}
+
+[5]
+You're short on money!{end:C4}
+
+[6]
+Use it well! And don't break it!{end:C4}
+
+[7]
+Use it well! Here, take it!
+Anything else you want?{end:C5}
+
+[8]
+See ya!{end:C4}
+
+[9]
+Greedy, aren't you? You can't carry{pause}any more. Toss something or sell it
+off, then come back!{end:C4}

@@ -1,0 +1,46 @@
+# Script_CloneLabs, bank 0x04; script_id = 0x04NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Welcome to the Clone Lab.
+Who needs to be regenerated?{end:C5}
+
+[2]
+Hey, now, this is no time for jokes!{end:C4}
+
+[3]
+It will cost {meseta} meseta.
+Is that agreeable?{end:C5}
+
+[4]
+Then take care, young one!{end:C4}
+
+[5]
+Is there anyone else I should restore?{end:C5}
+
+[6]
+{char} lives again!{end:C5}
+
+[7]
+Whom shall I revive, then?{end:C5}
+
+[8]
+Welcome to the Clone Lab.
+Who needs to be regenerated?{pause}This girl, Nei? You want her restored?
+Hmm, what could have left her cells{pause}all scrambled like this? I'm sorry, but all
+her non-human parts are destroyed{pause}beyond repair{47}{47}{47} Bringing this child
+back to life is utterly impossible{47}{47}{47}{pause}
+
+[9]
+Now, it would be best to let her rest
+in peace in the soil of mother Paseo{47}{47}{47}{pause}Death comes to everyone in time.
+But didn't she live her short life{pause}to the fullest? Then surely that
+is enough. Don't lose heart, now.{end:C4}
+
+[10]
+Have you never heard it said that
+even hell's judgment depends on money?{end:C4}
+
+[11]
+Oh, there's another young man who's fallen.
+That one I can bring back to life.{end:C4}

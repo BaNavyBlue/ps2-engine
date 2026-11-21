@@ -1,0 +1,60 @@
+# Build products (Linux names and Windows .exe)
+build/
+dist/
+/ps2
+/ps2_headless
+/ps2_headless_q
+/psg_demo
+/fm_demo
+/smps_trace
+/level_probe
+/intro_probe
+/building_probe
+/pause_probe
+/menu_probe
+/route_probe
+/route_probe_asan
+/crt_ref
+/crt_gpu_check
+/display_probe
+/q_demo
+/drum_hits
+/fm_probe
+/patches_check
+/controls_check
+/art_dump
+/save_resave
+*.exe
+*.o
+*.d
+*.dll
+/frame.ppm
+__pycache__/
+*.pyc
+
+# The owner's saves and settings; the routes' own saves
+/saves/
+# (build 138b) The mods folder the game makes beside itself
+/mods/
+route_out/*/saves/
+
+# (build 114) The directories every route and harness session rewrites
+# (route_out/<route>/, the trials' and probe_check's sessions, the CRT
+# checks'), and fuzz_levels' output. What the uploads keep under route_out/
+# -- the trials' reports beside these, and the directories named here --
+# stays tracked.
+/route_out/*/
+!/route_out/computer_last_run/
+!/route_out/dam_lights/
+!/route_out/mild_ground/
+!/route_out/playthrough_s*/
+!/route_out/rom_left/
+!/route_out/story_*/
+/fuzz_out/
+
+# Listening files, never committed
+listen/
+*.flac
+
+# (macOS) clang's debug symbols beside each program (-g)
+*.dSYM/

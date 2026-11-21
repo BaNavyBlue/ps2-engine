@@ -1,0 +1,29 @@
+# Script_CentralTower, bank 0x0d; script_id = 0x0dNN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+This is the Central Tower of Paseo,
+the capital of Motavia.
+Where shall we go?{end:C5}
+
+[2]
+Huh? Something's going on.
+What could it be?{end:C7}
+
+[3]
+"It's a disaster!! The lake is
+overflowing!! There's been an accident
+at AMeDAS, and all the water that
+should have become rain is pouring{pause}into the lake instead!! Tons and tons of it!!
+At this rate, Motavia is going to be
+completely flooded!!{pause}You should run for your lives, too!"
+This is a catastrophe!{end:C4}
+
+[4]
+Okay, I have to take this to the Governor.{end:C4}
+
+[5]
+Just what is happening to Motavia?
+With Nei-First dead, the biomonsters
+must surely have been wiped out.{pause}But why was Nei-First created?
+Who was behind it, and to what end?{end:C4}

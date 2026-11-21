@@ -1,0 +1,107 @@
+# Build 87. F1's $33 (loc_549A) shows once $C743 is 3 when F1 loads; A
+# on it is event $34 (loc_E0AA): Lutz again. With all eight pieces of
+# NeiEquipmentArray in the bags, loc_CF38 sets $C744, shows $1690 in
+# place of $168F and clears $C78F: the chest slot is then $0F, the Nei
+# Sword ($C78E stays 1, as a new game leaves it). $1690-$1694 run on as
+# one text, over the 1024 bytes the window held before this build. With
+# the Nei Sword carried the next visit is $1911 and YES/NO; NO is $1912
+# and loc_B9D8. On build 85 the $33 slot was empty.
+start level $11 17 17
+flag $C743 3
+wait idle
+warp $11 17 17
+give Neimet 0
+give NeiCrown 0
+give NeiArmor 0
+give NeiCape 0
+give NeiShield 1
+give NeiEmel 1
+give NeiSlasher 1
+give NeiShot 1
+wait idle
+expect object $33 visible
+walk up 1
+wait idle
+expect level $11 17 16
+press a
+wait screen building
+wait idle
+expect script $1690
+shot 01_lutz_nei
+expect flag $C744 1
+expect flag $C78F 0
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $1694
+expect level $11 17 16
+walk left 4
+wait idle
+press up
+press a
+wait idle
+expect item NeiSword
+press c
+wait idle
+walk right 4
+wait idle
+press up
+press a
+wait screen building
+wait idle
+expect script $1911
+expect menu $1F
+press down
+press c
+wait idle
+expect script $1912
+press c
+wait idle
+press c
+wait idle
+expect level $11 17 16
+expect no-stderr level:
+expect no-stderr window:

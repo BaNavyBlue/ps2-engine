@@ -1,0 +1,35 @@
+# Obj_MuskCat ($1C, ps2.asm:6482; build 85): the five cats under Skure
+# (B2 $7B/$7C, B1 $7D-$7F) are spawned and drawn, and talk as loc_E584
+# says: $1652 ("Mew! Meeyaw!") to a bare head, $167B to a Magic Cap
+# (loc_E70C - 1 + $7D), $1658 ("You weirdo!") to a Mogic Cap (loc_E730 -
+# 1 + $7D). Before build 85 they were not spawned.
+
+start level 2 23 72          # Skure B1, right below $7D at 23,71
+wait screen level
+wait idle
+expect person $7D present
+expect person $7E present
+expect person $7F present
+objects
+shot 01_cats
+press up
+wait step
+press a
+wait idle
+expect script $1652
+press c
+wait idle
+outfit Rolf MagicCap - - - -
+press a
+wait idle
+expect script $167B
+press c                      # {pause}: the second page
+wait idle
+press c
+wait idle
+outfit Rolf MogicCap - - - -
+press a
+wait idle
+expect script $1658
+press c
+wait idle

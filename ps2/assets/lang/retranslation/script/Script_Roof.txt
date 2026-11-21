@@ -1,0 +1,14 @@
+# Script_Roof, bank 0x0f; script_id = 0x0fNN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+This is the last spaceship left
+on Motavia. It flies automatically,{pause}so anyone can pilot it.
+Shall we go to Dezolis?{end:C5}
+
+[2]
+Departing for Dezolis.{end:C4}
+
+[3]
+{char} and the others left the
+Central Tower without boarding.{end:C4}

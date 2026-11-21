@@ -1,0 +1,20 @@
+# Script_EquipAction, bank 0x02; script_id = 0x02NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+{char} can't equip the
+{item}.{end:C4}
+
+[2]
+{char} equipped the
+{item}.{end:C4}
+
+[3]
+{char} refused to equip the
+{item}.{end:C4}
+
+[4]
+{char} removed the {item}.{end:C4}
+
+[5]
+The {item} can't be equipped.{end:C4}

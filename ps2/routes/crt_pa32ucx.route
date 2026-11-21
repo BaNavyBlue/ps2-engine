@@ -1,0 +1,53 @@
+# (build 105) The CRT page on the owner's Windows PC as tools/display_probe.c
+# measured it (Windows, SDL 3.4.16, Direct3D 12 on an RTX 3080 Ti): the
+# ASUS ProArt PA32UCX, 3840x2160 at 100% (pixel density 1), Windows's HDR
+# off. Windowed at the game's 960x672: three display lines a scanline --
+# scanlines yes, the grille wants fullscreen; fullscreen, nine: every mask,
+# four-pixel triads. HDR: NO HDR, and PEAK's AUTO falls back to 1000. Then
+# the probe again with Windows's "Use HDR" on: a headroom of 14.995 over an
+# SDR white of 1.0 in scRGB (80 nits), so AUTO is 1200 nits -- the panel's
+# rated peak. The words are the probe's PS2_DISPLAY lines. The route reads
+# its own settings.json.
+start new
+wait screen title
+display 960x672 full=3840x2160
+press esc
+press down
+press down
+press down
+press down
+press c
+press c
+expect crt scanlines ON
+expect crt summary SCANLINES
+press down
+press c
+expect crt mask APERTURE GRILLE / NEEDS FULLSCREEN
+wait ticks 17
+shot pa32ucx_window
+display 3840x2160 fullscreen full=3840x2160
+expect crt mask APERTURE GRILLE
+press right
+press right
+expect crt mask SHADOW MASK
+expect crt summary SHADOW MASK
+press down
+press down
+press right
+expect crt hdr ON / NO HDR
+press c
+expect crt peak AUTO 1000 NITS
+wait ticks 6
+shot pa32ucx_hdr_page
+display 3840x2160 fullscreen full=3840x2160 hdr=14.995/1.000 sdr=80
+expect crt hdr ON
+expect crt peak AUTO 1200 NITS
+wait ticks 16
+shot pa32ucx_hdr_on
+display 960x672 full=3840x2160 hdr=14.995/1.000 sdr=80
+expect crt hdr ON
+expect crt peak AUTO 1200 NITS
+press b
+press b
+press b
+expect escape-menu closed

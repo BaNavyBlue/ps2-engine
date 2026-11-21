@@ -1,0 +1,22 @@
+# (build 166) LANGUAGE changed while a message is being typed (lang_shop's
+# store): the script copied again in the new language and typed again
+# from its start -- its codes are the language's, and until 166 the rest
+# of the old language's codes were typed in the new face (US English's in
+# the Japanese one: nonsense kana). Then, finished, changed again: shown
+# whole in the next language.
+start building 5 13 5 18
+wait idle
+press down
+press down
+press down
+press c
+wait ticks 8
+language ja
+wait ticks 2
+expect text "ラコニアスライサーだね。 だれが もつんだ?"
+wait idle
+shot 01_japanese
+language retranslation
+wait ticks 2
+expect text "The Laconia Slicer, huh?"
+shot 02_retranslated

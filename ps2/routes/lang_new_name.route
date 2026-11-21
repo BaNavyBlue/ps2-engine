@@ -1,0 +1,60 @@
+# (build 163) A name typed in the retranslation: new_game's name board,
+# ROLF typed, then his dream's 1504, "My name is {char}. I work as an
+# agent". The name board takes four letters and they are the whole name:
+# the default under it is his six-letter field's "Eusis", whose fifth
+# letter stayed behind the four typed ("ROLFs") until the copy ended the
+# name (intro_select.c's commit_name; building.c's renaming the same).
+start new
+language retranslation
+wait screen title
+wait idle                   # TITLE_WAIT: the finished title
+press start
+
+wait screen intro
+wait idle                   # NEW GAME / CONTINUE / ERASE GAME
+expect script $130B         # "Let me check the backup data."
+expect script $1310         # "Data check complete."
+press c                     # NEW GAME
+
+wait idle                   # the name board, the lamp on A
+expect script $1302         # "What is the name of your character?"
+press down                  # J
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press c                     # R
+press left
+press left
+press left
+press c                     # O
+press left
+press left
+press left
+press c                     # L
+press up                    # C
+press right
+press right
+press right
+press c                     # F
+press up                    # F wraps to the bottom row, onto RUB
+press right                 # END
+wait idle
+press c                     # END
+
+wait idle
+expect script $1304
+press c
+wait idle                    # the dream: $1501, $1502
+press c
+wait idle
+press c
+wait idle                    # $1503
+press c
+wait idle                    # $1504's first page
+expect script $1504
+expect text "My name is ROLF. I work as an agent"

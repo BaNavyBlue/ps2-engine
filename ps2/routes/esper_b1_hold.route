@@ -1,0 +1,44 @@
+# Build 97d: the one-shot case $D, the Esper mansion B1's hold. B1's Esper
+# (event $33, loc_E07A) on the second talk sets the event word to $D00
+# and $C743 to 2; the one-shot case $D (loc_8022) is `rts`, so the word
+# stays $D00 until Building_EsperMansion clears it (loc_CF0A). While it is
+# set the leader stands still (loc_3786), A is ignored, and the C menu's
+# gate -- `tst.b (event_flags).w` in ProcessPlayerMenu -- keeps the menu
+# shut. Before 97d the port's gate read the save block's $C710 byte,
+# which the port never writes (it keeps the hold apart, g_event_hold), so
+# C opened the menu in the middle of the scene.
+start level $11 15 14
+flag $C743 1
+wait idle
+walk up 2
+wait idle
+expect level $10 16 14
+walk left 3
+wait idle
+walk up 5
+wait idle
+expect level $10 13 9
+press left
+press a
+wait idle
+expect script $1698
+press c
+wait idle
+press c
+wait ticks 4
+expect flag $C743 2
+limit 2000
+wait ticks 60                # the talk's box closed, the scene begun
+state
+press c                      # the C menu: shut while the hold lasts
+wait ticks 30
+expect menu none
+shot 01_c_in_the_hold
+press a
+wait ticks 20
+expect menu none
+expect level $10 13 9
+wait screen building
+wait idle
+expect script $190B
+shot 02_lutz

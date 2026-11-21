@@ -1,0 +1,38 @@
+# The Prism opens Ikuto (loc_92CC, the tail of LoadLevelData). On
+# Dezolis, with anyone in the party holding it, block $63 goes into plane
+# B -- the collision plane there -- at four places, solid and special in
+# every quadrant. They are the doors to Menobe, Ikuto, Guaron and Naval:
+# without the patch those cells are open ground and the four interaction
+# entries can never match. Before build 63 the port did none of this.
+#
+# The save is slot 1 moved to Dezolis, cell 88,8, one below Ikuto's
+# block (cells 88-89, 6-7), with a Prism in Rolf's bag, and made a
+# Visiphone save: $C65A = 1 and $C65C = 1 (raw_c600 row 5). Without
+# $C65C, CONTINUE's Data Memory runs CheckPlanetAndCaps on Dezolis
+# (loc_B44A) and, with no Magic Cap, answers $810 and shows you out. The entry at
+# 7,89 matches a probe at 5-7, 87-89 and leads to IkutoGroundF 13,15.
+# dezolis_no_prism.route is the same step without it.
+
+start slot 1 routes/saves/dezolis_prism.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 3 88 8
+shot 01_below_ikuto
+walk up 1                    # the patched block takes the pad
+wait screen level
+wait idle
+expect level $52 15 13
+shot 02_ikuto_ground
+expect no-stderr map_patches

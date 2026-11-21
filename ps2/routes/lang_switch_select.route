@@ -1,0 +1,33 @@
+# (build 168d) LANGUAGE changed on the select screen (NEW GAME /
+# CONTINUE / ERASE GAME), which opens where the backup check's message
+# window closed: the text window's place in the stack, which the ROM
+# keeps. Until 168d a change of language there typed the check's last
+# message again -- into the menu, over its words and lamps, the cursor
+# left lit on a blank row (The owner: "the lines don't update quite
+# right. The flashing red cursor floats over text with no perimeter
+# box"). Now the menu is built again in the new language, as every open
+# window is (build 166), and nothing is typed into it.
+start new
+wait screen title
+wait idle
+press start
+wait screen intro
+wait idle                   # NEW GAME / CONTINUE / ERASE GAME
+expect script $130B         # "Let me check the backup data."
+expect script $1310         # "Data check complete."
+language retranslation
+wait ticks 2
+expect pixel 65 56 $EEE     # CONTINUE's lamp, its top edge (until 168d
+                            # the window's blue: the check's message there)
+shot 01_retranslated
+language ja
+wait ticks 2
+expect pixel 65 56 $EEE
+shot 02_japanese
+press down
+wait ticks 12
+shot 03_japanese_down
+language us
+wait ticks 2
+expect pixel 65 72 $EEE     # ERASE GAME's lamp, the cursor on CONTINUE
+shot 04_english

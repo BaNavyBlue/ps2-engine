@@ -1,0 +1,73 @@
+# (build 105) The CRT page's HDR row and its own page: HDR, PEAK and WHITE
+# (docs/crt.md). A 3840x2400 panel fullscreen whose SDL says HDR with a
+# headroom of 6.25 over an SDR white of 2.5 (x 80 nits): PEAK's AUTO is
+# 6.25 x 2.5 x 80 = 1250 nits. Left and right step PEAK through its stops
+# (AUTO, 400 ... 10000) and WHITE by 10 nits to 400, 50 above; C on HDR's
+# row of the CRT page opens the HDR page, B comes back. Without HDR, AUTO
+# is 1000 and HDR says NO HDR. The route reads its own settings.json.
+start new
+wait screen title
+display 3840x2400 fullscreen hdr=6.25/2.5
+press esc
+press down
+press down
+press down
+press down
+press c
+press up
+expect crt hdr OFF
+press right
+expect crt hdr ON
+press c
+expect crt hdr ON
+expect crt peak AUTO 1250 NITS
+expect crt white 200 NITS
+wait ticks 6
+shot hdr_page_auto
+press down
+press right
+expect crt peak 400 NITS
+press right
+press right
+press right
+press right
+press right
+expect crt peak 1000 NITS
+press left
+press left
+press left
+press left
+press left
+press left
+expect crt peak AUTO 1250 NITS
+press left
+expect crt peak AUTO 1250 NITS
+press c
+expect crt peak 400 NITS
+press down
+press right
+expect crt white 210 NITS
+press left
+press left
+press left
+expect crt white 180 NITS
+wait ticks 4
+shot hdr_page_white_180
+press c
+expect crt white 190 NITS
+# The screen goes SDR: AUTO falls back to 1000, HDR says why.
+display 3840x2400 fullscreen
+expect crt hdr ON / NO HDR
+expect crt peak 400 NITS
+press up
+press left
+press left
+expect crt peak AUTO 1000 NITS
+wait ticks 6
+shot hdr_page_no_hdr
+press b
+expect crt hdr ON / NO HDR
+press b
+expect escape-menu open
+press b
+expect escape-menu closed

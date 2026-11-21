@@ -1,0 +1,56 @@
+# (build 100b, 100c) The Escape menu's COMPUTER PLAYS and SPEED. On the
+# title, Escape; down six stops (four before build 105's CRT, five before
+# build 110's AUDIO) is COMPUTER PLAYS: its lamp, then where it
+# starts (NEW GAME: the route has no slots of its own, and left/right find
+# none to step to). C lights the lamp and the menu stays up (100c: closing
+# the menu with the lamp lit is what starts the computer, in main.c; with it
+# put out, what hands the pad back). Down one more is SPEED, C to FAST and
+# back to NORMAL; (build 120) C steps NORMAL, AUTO, 2X, AUTO 2X, FAST and
+# round to NORMAL, a shot of each (16 ticks apart, the lamp's lit half).
+# Up, C to put the lamp out, B to close. The probe has no
+# main.c: nothing starts here. The route reads its own settings.json, never
+# the player's. The waits put the cursor's lamp in its lit half.
+start new
+wait screen title
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press down
+press right
+expect setting computer off
+wait ticks 7
+shot menu_computer_plays
+press c
+expect setting computer on
+expect escape-menu open
+wait ticks 5
+shot menu_computer_lit
+press down
+press c
+expect setting speed auto
+wait ticks 10
+shot menu_speed_auto
+press c
+expect setting speed 2x
+wait ticks 14
+shot menu_speed_2x
+press c
+expect setting speed auto_2x
+wait ticks 14
+shot menu_speed_auto_2x
+press c
+expect setting speed fast
+wait ticks 14
+shot menu_speed_fast
+press c
+expect setting speed normal
+press up
+press c
+expect setting computer off
+press b
+expect escape-menu closed
+expect screen title

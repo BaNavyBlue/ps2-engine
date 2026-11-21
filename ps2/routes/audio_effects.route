@@ -1,0 +1,87 @@
+# (build 111) The AUDIO page's EFFECTS: the sequencer's hooks tell a sound
+# effect's writes from the music's, so MUSIC turns the music alone down and
+# EFFECTS the effects. On the chip an effect plays on a channel it takes
+# from the music (FM3-FM5); the channels an effect last struck are weighted
+# by EFFECTS, the rest by MUSIC, clock by clock (docs/audio.md, "The
+# hooks"). With `sound render on` the probe renders each tick's audio at the
+# page's volumes, as main.c hands them to the mixer.
+#
+# On the title with its theme playing: MUSIC OFF and the mix is silent;
+# Gaj ($C1, a technique's sound, 32 ticks on FM3, FM4 and FM5) queued over
+# it plays at EFFECTS 0 dB -- before 111 MUSIC silenced it too, and there
+# was no EFFECTS row nor `sound play`; then EFFECTS OFF and Gaj again is
+# silent; then MUSIC back to 0 dB with EFFECTS still OFF, and the theme
+# plays. The page, a row taller, drawn for a look.
+start new
+sound render on
+wait screen title
+wait ticks 420
+expect sound playing
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press c
+expect audio effects 0 DB
+press down
+press down
+press c
+expect audio music OFF
+wait ticks 40
+expect sound silent
+sound play $C1
+wait ticks 10
+expect sound playing
+wait ticks 60
+expect sound silent
+press down
+press c
+expect audio effects OFF
+wait ticks 8
+shot page_effects_off
+sound play $C1
+wait ticks 10
+expect sound silent
+wait ticks 40
+press up
+press c
+expect audio music -30 DB
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+expect audio music 0 DB
+wait ticks 30
+expect sound playing
+press b
+press b
+expect escape-menu closed

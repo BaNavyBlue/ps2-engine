@@ -1,0 +1,73 @@
+# Getting off the jet scooter: A on nothing while riding is ObjType_Events
+# 0 (loc_D9AA). The leader's copy of the position moves by
+# JetScooter_CharOffPosOffsets for the way the scooter faces, and the
+# walking table (loc_29B64) is asked about the scooter plus that offset.
+#
+# Boarded from below, the scooter faces up, over water: $171E, "We can't
+# get off here!", and the box closes. Pushed down against the shore it
+# turns without moving; A again is $171D and, on the next idle visit
+# (loc_DA26), it parks on its own cell ($C654/$C656), jet_scooter_flag
+# clears and the party comes back through ObjCL_Init on the cell below:
+# 89,116, where they got on, facing up -- the leader's $2A is his $24,
+# untouched while he rode. The scooter is parked again and A on it boards
+# with $171C alone ($C716 is 2 now).
+#
+# Before build 64 there was no scooter to get on.
+
+start slot 1 routes/saves/jet_scooter.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect object $3D hidden     # the pump (loc_5822): hidden until $C737
+press up
+wait idle
+press a
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle                    # riding, facing up
+expect script $171C
+press a
+wait idle
+expect script $171E          # "We can't get off here!"
+shot 01_cant_get_off
+press c
+wait idle
+press down                   # the shore: it turns, and stays put
+wait idle
+expect level 0 89 115
+press a
+wait idle
+expect script $171D          # "Ok. Let's get off and walk from here."
+shot 02_getting_off
+press c
+wait idle
+expect level 0 89 116        # on foot, where they got on
+shot 03_on_foot
+press a                      # he faces up, at the scooter
+wait idle
+expect script $171C          # $C716 is 2: no note this time
+shot 04_again
+press c
+wait idle
+expect no-stderr not ported

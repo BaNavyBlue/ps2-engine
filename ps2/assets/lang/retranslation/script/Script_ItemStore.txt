@@ -1,0 +1,59 @@
+# Script_ItemStore, bank 0x08; script_id = 0x08NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Welcome. How may I help you?{end:C5}
+
+[2]
+Whose belongings would you
+like to sell?{end:C5}
+
+[3]
+I can take it for {meseta} meseta.
+Is that all right?{end:C5}
+
+[4]
+Which would you like to sell?{end:C5}
+
+[5]
+I've never seen that item before,
+so I can't put a price on it.{pause}Please choose something else.{end:C5}
+
+[6]
+Which would you like?{end:C5}
+
+[7]
+You don't have enough money.{end:C4}
+
+[8]
+Who will carry it?{end:C5}
+
+[9]
+It seems like you can't carry any more.
+Is there someone else who will carry it?{end:C5}
+
+[10]
+Thank you very much.
+Is there anything else you need?{end:C5}
+
+[11]
+I see. That's a shame.
+Can I help you with anything else?{end:C5}
+
+[12]
+Thank you very much.
+Is there anything else you need?{end:C5}
+
+[13]
+Goodbye. Please come again.{end:C4}
+
+[14]
+Wh-what? Y-you can't spring that on
+me all of a sudden! I need time to{47}{47}{47}{end:C4}
+
+[15]
+{char} doesn't seem to be carrying
+anything. Whose belongings will{pause}you sell?{end:C5}
+
+[16]
+Danyaraha? Bebekucharaaba!{end:C4}

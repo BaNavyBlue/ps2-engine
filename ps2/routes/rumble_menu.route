@@ -1,0 +1,43 @@
+# (build 160) The Escape menu's GAMEPAD row (above QUIT, so COMPUTER PLAYS
+# and SPEED stay where routes find them) and its page: PAD 1 and PAD 2 --
+# NONE, the probe has no gamepads -- and RUMBLE, MEDIUM by default. Left
+# and right step it and stop at OFF and HIGH; C goes round. A, B or C on a
+# PAD row with no gamepad does nothing; Escape or B goes back to the menu.
+
+start new
+wait screen title
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press down
+press down
+press down                   # GAMEPAD
+shot 01_menu
+press c
+shot 02_page
+expect setting rumble medium
+press c                      # PAD 1: no gamepad, nothing
+expect setting rumble medium
+press down
+press down                   # RUMBLE
+press right
+expect setting rumble high
+press right                  # stops at HIGH
+expect setting rumble high
+press left
+press left
+press left
+expect setting rumble off
+press left                   # stops at OFF
+expect setting rumble off
+press c                      # round: OFF to LOW
+expect setting rumble low
+shot 03_low
+press b                      # back to the menu
+expect escape-menu open
+press esc
+expect escape-menu closed

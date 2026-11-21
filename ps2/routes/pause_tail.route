@@ -1,0 +1,35 @@
+# (build 132) A note sounding on through a pause (The owner, on 131c: "a lot of
+# synth note sustain when I push pause", both synths). Shure under its music
+# (Music_Advanced), VOICES EXTRA (the default): the tick before the pause
+# takes hold, music slot 3's chord strikes a pad note across FM3-FM5, and
+# the pause jingle has lent FM4 and FM5, so the one chip never hears the
+# pad there -- but EXTRA's music chip does, and the pause's walk (as the
+# ROM's) skips parts lent to an effect. The pad rang on at -35 dBFS 90
+# ticks in. Now the pause keys off, on the hooks alone, every music part
+# lent to an effect; the chip's own writes are unchanged. Fails on 131c,
+# passes on 132. (Aukba and the dams measured -43 and -48 before, under the
+# -40 this expects; silent too now: docs/history.md, Build 132.)
+
+start slot 1 routes/saves/paseo_recorder.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+warp 0x17 24 12
+wait screen level
+wait idle
+sound render on
+wait ticks 300
+press start
+wait ticks 90
+expect sound silent          # the jingle's release gone, no pad

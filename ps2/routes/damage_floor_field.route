@@ -1,0 +1,27 @@
+# A damage floor's white field is the whole palette (build 157b). loc_7108
+# (ps2.asm:10430) runs inside ObjCL_Main, the leader's object: it writes
+# $EEE into all 64 entries and waits for a field there, puts the palette
+# back from $FB80 and waits seven more, takes the HP, and only then
+# returns -- the rest of LevelScreenLoop's iteration (the other objects,
+# ProcessAButtonPress, ProcessRandomBattle, loc_6430's colour cycles) runs
+# after the eight fields. Until 157b the port ran that rest in the white
+# field's own tick, so on Gaira loc_6430 wrote its star entries over the
+# white (the palette path showed line 3 entry 10 at $CAA), and the cycle
+# step the ROM shows at the stall's end was put back by loc_7140 instead.
+# Gaira, from the open cell above the floor: the second step, off 3,6.
+
+start level $41 3 5
+party 1 1
+wait idle
+walk down 2                  # off 3,6: the white field is this tick
+shot 01_white
+expect pixel 24 5 $EEE       # a star, line 3 entry 10, white with the rest
+expect stat 0 hp 19          # loc_7162 comes after the fields
+wait ticks 1
+expect pixel 24 5 $000       # loc_7140: the palette as loaded
+wait ticks 6
+expect pixel 24 5 $000       # the seventh field
+wait ticks 1
+shot 02_rest
+expect pixel 24 5 $CAA       # the iteration's rest: loc_6430's step
+expect stat 0 hp 18

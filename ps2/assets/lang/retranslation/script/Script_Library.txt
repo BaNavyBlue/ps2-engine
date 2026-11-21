@@ -1,0 +1,152 @@
+# Script_Library, bank 0x10; script_id = 0x10NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Welcome! This is the Library.{end:C4}
+
+[2]
+I see. Good day, then.{end:C4}
+
+[3]
+Is there anything else you'd like
+to look up?{end:C5}
+
+[4]
+Motavia was once a barren world, nothing
+but desert. But after Mother Brain
+was brought to Motavia, it became
+a lush, green planet.{pause}That is because it built systems such
+as the Biosystem and AMeDAS, and all
+development followed Mother Brain's
+meticulous plans.{end:C4}
+
+[5]
+The Biosystem creates life adapted
+to Motavia through selective breeding.
+The DNA of every living thing in
+Algol is stored there.{pause}
+
+[6]
+It is thanks to the Biosystem that
+Motavia could become the leading
+agricultural planet in the Algol star system.{pause}
+
+[7]
+Two years ago, however, an accident
+at the Biosystem gave rise to creatures
+that posed a threat to people. This is known
+as the "biohazard." The Biosystem was{pause}immediately sealed off, but to this day,
+neither the cause nor a solution has been
+made public.{end:C4}
+
+[8]
+AMeDAS is the system that regulates
+Motavia's weather. It keeps the
+temperature from rising, and makes
+the rain fall in appropriate measure.{pause}For Motavia, normally lacking in rainfall
+and water,
+
+
+[9]
+AMeDAS has become something
+completely indispensable.{end:C4}
+
+[10]
+From the Lake of Motavia, rivers run
+out in four directions: east, west,
+south, and north. Between the rivers
+and the lake stand dams, which{pause}
+
+[11]
+regulate how much water flows from
+the lake into the rivers. The four dams
+are the Green Dam, the Yellow Dam,
+the Red Dam, and the Blue Dam. To enter{pause}
+
+[12]
+a dam, a keycard of the corresponding color
+is required. The cards are said to be kept in
+the Control Tower, but in which town
+remains a secret.{end:C4}
+
+[13]
+Mother Brain is an enormous computer with
+the power to run the entire Algol star
+system. Our lives are supported and
+watched over by Mother Brain.{pause}
+
+[14]
+Mother Brain was brought to Palma in
+AW 845, and its network subsequently
+expanded to encompass Motavia and
+Dezolis.{pause}
+
+[15]
+Mother Brain also regulates systems such
+as the Biosystem, AMeDAS, and the dams.
+While Mother Brain is essential to our
+survival, its location and the identity{pause}of its creators remain unknown.{end:C4}
+
+[16]
+The analysis of the System Recorder is
+complete. The accident at the Biosystem
+happened because a surplus of energy
+was fed into the system.{pause}
+
+[17]
+As a result, living creatures underwent
+rapid evolution. These creatures fall
+outside the natural order; they are
+things that should not exist.{pause}And because they were set loose,
+the entire natural cycle has been thrown
+into disarray.{end:C4}
+
+[18]
+Please look at this graph. It shows
+the energy used at the Biosystem
+over the last several years.{pause}Now let's overlay the graphs of temperature
+and rainfall.{end:C4}
+
+[19]
+In other words, it seems the energy
+AMeDAS uses to regulate temperature
+and rainfall flowed into the Biosystem,
+for reasons currently unknown.{pause}Perhaps the biohazard was secretly
+masterminded by someone{47}{47}{47}{pause}
+
+[20]
+In any case, please find out why
+energy flowed out of AMeDAS.{pause}And if you are going south, please
+take this with you. With it, you
+should be able to cross the bridge
+over the western river. Good luck.{end:C4}
+
+[21]
+If you'd like to look something up
+here, please choose a file.{end:C5}
+
+[22]
+I hear {char} and the others are
+going to the Biosystem to get the
+System Recorder.{end:C4}
+
+[23]
+Have you found the cause of the accident
+that sent energy from AMeDAS into the
+Biosystem? I can't help worrying about
+what is happening at AMeDAS.{end:C4}
+
+[24]
+{char}, is it true that Motavia
+is going to be flooded?
+If only the four dams could
+somehow be opened{47}{47}{47}{end:C4}
+
+[25]
+{char}, thanks to all of you, Motavia
+was spared from the flood.{pause}Why, then, have you been branded as the
+criminals who made Mother Brain
+go haywire?{pause}What! Someone who holds the key to
+Mother Brain is on Dezolis?!{pause}I see{47}{47}{47} Now that Palma is gone, we
+on Motavia must support Algol ourselves.
+Please do your best, {char}.{end:C4}

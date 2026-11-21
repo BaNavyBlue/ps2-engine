@@ -1,0 +1,20 @@
+# (build 138d) After a damage floor's white field the palette comes back as
+# the level loaded it. loc_7108 (ps2.asm:10430) sets every live entry to
+# $EEE for one field, then loc_7140 copies the fade target ($FFFFFB80, the
+# palette as loaded) back over it and waits seven more fields: the
+# cycling entries show their loaded colours until loc_6430 next writes
+# them. Here Gaira's line 2 entry 14, loaded $44E (level_gaira.png), which
+# its pulse (loc_65D8) has at $004 when the step lands. Until 138d the port put back the
+# palette as it was shown before the field. Gaira's damage floor at cell
+# 3,6, from the open cell above it. Fails on 138c.
+
+start level $41 3 5
+wait idle
+wait ticks 30                # the cycles step away from the loaded colours
+walk down 1
+wait ticks 16
+expect pixel 160 112 $EEE    # the white field
+wait ticks 1
+expect pixel 44 36 $44E      # loc_7140: the loaded colour (before 138d $004)
+wait ticks 9
+expect pixel 44 36 $008      # loc_6430's next step writes it again

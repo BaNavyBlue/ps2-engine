@@ -1,0 +1,120 @@
+# (build 126) The two pictures after the Neifirst fight (loc_7E02 cases 1
+# and 2): Nei's face, 28x14 at plane A row 2, column 6, and her eyes
+# closed, 6x4 over it at row 9, column 17. Up to build 125 the extractor
+# gave them 27x13 and 5x3 -- DrawArtTiles's dbf counts, one less than the
+# sizes -- and both came out sheared and wrapped. The route is
+# climatrol_nei_dies's way to them: a pixel of her hair in the first, of
+# her closed eyelid in the second, and a shot of each.
+
+
+start slot 1 routes/saves/climatrol_nei_dies.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press b                      # out of Data Memory
+wait screen level
+wait idle
+expect level $3D 48 23
+walk down 1
+wait idle
+press a
+wait idle
+expect script $180A
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180B
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180C
+expect script $180D
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180F
+expect script $1810
+expect menu $1F              # WinID_YesNo2
+press c                      # YES
+wait idle
+expect script $1823
+press c
+wait screen battle
+wait idle                    # FIGHT / STGY, Nei alone
+expect party Nei
+expect music $93             # BattleScreen: formation $100, ThePlaceOfDeath
+press c                      # FIGHT: Nei goes down
+limit 60000
+wait idle
+expect screen level          # not game over
+expect script $183D          # "Nei, hold on!"
+expect party Rolf Nei Rudo Anna
+expect hp 1 0
+expect music $90             # loc_7E02 case 1: MusicID_Power
+expect pixel 18 131 $000      # beside the box: black, no battle floor
+expect pixel 156 40 $804       # her hair (the old table: the red sky)
+shot 01_nei_face
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $183E
+press c
+wait screen battle
+wait idle
+expect party Rolf Nei Rudo Anna
+expect music $93
+press c                      # FIGHT
+limit 60000
+wait idle
+expect script $1211          # victory
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+limit 3000
+wait screen level
+wait idle
+expect level $3D 48 24
+expect script $1827          # "{char} calls Nei's name once again"
+expect flag $C737 1
+expect music $90             # case 2: Power again, Nei's HP ($C042) is 0
+expect pixel 18 131 $000
+expect pixel 176 76 $8AE       # her closed eyelid (the old table: blue)
+shot 02_nei_eyes_closed

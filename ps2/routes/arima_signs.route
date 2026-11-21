@@ -1,0 +1,37 @@
+# A on Arima's event objects (ObjID $38): the six blown doors are
+# index 1 -- loc_DA74 (ps2.asm:20022), "Those scoundrels seem to have
+# blown open the door with dynamite and stolen the things." ($170A) --
+# and the control tower at 19,17 is index 2, $1709 as in Oputa. Before
+# build 69 both gave $1708 and "event $0N is not ported" on stderr.
+
+start level 5 9 9            # Arima, below the blown door at 9,7
+wait screen level
+wait idle
+walk up 1                    # 9,8, facing it
+wait step
+expect level 5 9 8
+press a
+wait idle
+expect script $170A
+shot 01_blown_door
+press c
+wait idle
+press c
+wait idle
+expect level 5 9 8
+walk down 8
+wait idle
+walk right 10                # 19,16, above the tower's event
+wait idle
+expect level 5 19 16
+press down                   # face it: the block's box is solid
+wait idle
+press a
+wait idle
+expect script $1709
+shot 02_tower
+press c
+wait idle
+press c
+wait idle
+expect no-stderr not ported

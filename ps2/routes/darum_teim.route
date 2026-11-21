@@ -1,0 +1,48 @@
+# Teim taken to her father: with Teim in a bag, loading the tube ($0E)
+# runs LoadSpritesInLevel's tail (ps2.asm:896) -- Teim out of the bag
+# (RemoveItemFromInventory), $DE70 = 1, $DE6E = $302, demo 2
+# (Demo_TeimScene) and "A Prologue" ($8F). ObjType_TeimDarum's steps
+# (loc_E9BA on) show "What's Teim doing?" ($1802), "I'm going to go meet
+# my father ..." ($1803) as Teim steps out of the party, and the scene
+# runs on through $1804-$1806. Afterwards the tube is open.
+
+start level 0 69 21          # Motavia, east of the tube's east door
+wait screen level
+wait idle
+give Teim
+walk left 2                  # 67,21
+wait idle
+walk left 1                  # the door
+wait screen level
+limit 6000
+wait idle
+expect level 14
+expect script $1802          # "What's Teim doing?"
+shot 01_teim_out
+press c
+wait idle
+expect script $1803
+shot 02_meet_father
+press c
+wait idle
+expect script $1804
+shot 03_darum
+press c
+wait idle
+shot 04_on
+press c
+wait idle
+shot 05_on
+press c
+wait idle
+shot 06_on
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+bags
+state
+shot 07_after
+expect no-stderr not ported

@@ -1,0 +1,37 @@
+# (build 129c) The pause through the sound driver's own pause flag
+# (cfE8_MusPause), as the ROM has it. The pause sound's flag walks nine
+# tracks turning each down; its test for an unused track branches into the
+# unpause walk's step, so from the first unused track on -- here the first
+# effect track, unused -- the rest are turned back up to their volumes, the
+# special track is given back, and the flag returns without ending the pause
+# track (its next byte does). Up to 129b the port skipped the unused track
+# and went on turning down. On Motavia under its music the pause is silent
+# either way; what differs is the sequencer's writes: 2642 both, the hash
+# $F1E4E5B7 on 129b, $E34E7B33 on 129c-132a. (build 132b) $1DF0A957: the
+# same 2642 writes, but SetMaxRelRate's as the ROM's -- the pause jingle's
+# echo on FM5 writes $81, $86, $8B and $90 (FM4 op1's SSG-EG), no longer
+# $81, $85, $89, $8D.
+
+start slot 1 routes/saves/jet_scooter.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+sound render on
+wait ticks 60
+expect sound playing         # Motavia's music
+press start
+wait ticks 90
+shot 01_paused
+expect sound silent          # the music turned down, the driver stopped
+expect sound-writes 2642 $1DF0A957

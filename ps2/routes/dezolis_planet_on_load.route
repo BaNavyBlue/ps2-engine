@@ -1,0 +1,36 @@
+# (build 104) The planet is set by every level load, as LoadLevelData does
+# (ps2.asm:13229: planet_index = bit 7 of the level record's first byte).
+#
+# routes/saves/zosa_bareheaded.json is story_skure.json -- the party in
+# Zosa, under its Data Memory's door (21,5) -- with Rolf's Magic Cap
+# taken off by hand (it stays in his bag). Like every save the port made
+# on Dezolis before build 104, it says "planet": "Motavia": the port never
+# set the planet on a level load, so it stayed what the last save said.
+#
+# CONTINUE puts the party in Zosa; the Data Memory's door, walked into
+# bareheaded, runs CheckPlanetAndCaps (loc_B44A, ps2.asm:16573): on
+# Dezolis a live Rolf without the Magic or Mogic Cap is refused, "Danyaraha?
+# bebekucha?" ($810). Before build 104 the port took Zosa for Motavia and
+# said "Welcome to Data Memory." ($301).
+
+start slot 1 routes/saves/zosa_bareheaded.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $0B 21 6
+walk up 1
+wait screen building
+wait idle
+expect script $0810          # "Danyaraha? bebekucha?"
+shot 01_refused

@@ -1,0 +1,56 @@
+# Control Tower F1's four boxes: ObjType_Events $13-$16, loc_DC1E
+# (ps2.asm:20171), Obj_InvisibleBlock2 ($38) at x 656, 720, 784, 848 and
+# y 96 -- cells 40-41, 44-45, 48-49, 52-53 on row 6. No d2 test: with
+# the event's flag clear, loc_E84A with item event - $E, the Green,
+# Blue, Yellow and Red cards; set, $1708. Before build 73 each was
+# $1708 and "... is not ported" on stderr.
+
+start level $3F 40 7
+wait idle
+press up
+wait idle
+press a
+wait idle
+expect script $1702
+expect script $1703
+shot 01_green
+press c
+wait idle
+expect item GreenCard
+walk right 4
+wait idle
+press up
+wait idle
+press a
+wait idle
+expect script $1703
+press c
+wait idle
+expect item BlueCard
+walk right 4
+wait idle
+press up
+wait idle
+press a
+wait idle
+expect script $1703
+press c
+wait idle
+expect item YellowCard
+walk right 4
+wait idle
+press up
+wait idle
+press a
+wait idle
+expect script $1703
+shot 02_red
+press c
+wait idle
+expect item RedCard
+press a
+wait idle
+expect script $1708
+press c
+wait idle
+expect no-stderr not ported

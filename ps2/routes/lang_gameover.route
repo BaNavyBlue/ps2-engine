@@ -1,0 +1,16 @@
+# (build 163) The retranslation's game over message (gameover_message's
+# way): frameless text typed on the picture, his runs on the font's
+# cleared fill -- nothing behind the glyphs, as the stock message has
+# nothing behind its letters.
+start battle $103
+language retranslation
+party 1 1
+limit 4000
+wait idle
+press c
+wait screen gameover
+wait ticks 400
+expect script $1218
+expect text "Eusis and the others fell in vain,"
+expect text "without bringing peace to Algol{47}{47}{47}"
+shot 01_game_over

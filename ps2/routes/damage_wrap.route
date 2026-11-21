@@ -1,0 +1,20 @@
+# loc_2AA8, an enemy's blow: (0-63 + $44 + attack) << 8, divu by
+# defense x 5 + 100, then mulu.w by the attack and lsr.w #8 -- the low
+# word of the product shifted, so a strong enemy against light armour
+# wraps. Build 71 fixed the port, which shifted the whole product.
+#
+# Formation 213 is one Archdragon (attack 254, no technique). Rolf at
+# L30 has 213 HP; his defense set to 24 by hand, the ROM's blow is
+# 115-188 and the unwrapped one 367-439. The first blow lands before
+# tick 139 and the second after 319 (FIGHT repeats the round until a
+# button), so HP is read at 200: 25-98 left, where the unwrapped blow
+# kills him.
+
+start battle 213
+party 1 30
+defense 0 24
+wait idle
+press c                      # FIGHT
+wait ticks 200
+expect hp 0 25 98
+shot 01_first_blow

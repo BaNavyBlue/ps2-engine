@@ -1,0 +1,8 @@
+# Text is LF in the repository and in every checkout, Windows too, where git
+# would otherwise check it out with CRLF: MSYS2's bash refuses a CRLF
+# script. (ps2/ has its own .gitattributes, from the private tree.)
+* text=auto eol=lf
+*.png   binary
+*.ico   binary
+*.zip   binary
+*.gz    binary

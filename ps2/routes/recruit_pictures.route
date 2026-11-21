@@ -1,0 +1,125 @@
+# (build 145) The five recruits' portraits (Rudo 2, Amy 3, Hugh 4, Anna 5,
+# Kain 6; the pictures rudo, amy, hugh, anna, kain) from their pictures:
+# five of the twelve no route drew after build 142 (see
+# paseo_hospital_picture). Both of Rolf's house's portrait loads in the
+# middle of a scene: a newcomer at the door (RolfHouse_Arrival, loc_B282)
+# and SEE STRENGTH (loc_B118), whose list loads the chosen member's
+# portrait.
+#
+# The counters as they stand when Kain knocks: Anna the last to join
+# (members puts Rolf, Rudo and Anna in the party, party_members_joined 5)
+# and Kain sent (join-next 6). In at Rolf's door: the knock ($090C), Kain's
+# introduction ($0923) with Rolf's own window beside his, NO to renaming
+# him, the roster ($090E), then SEE STRENGTH for each of the five, and
+# OUTSIDE.
+
+start level 4 45 19                 # Paseo, under Rolf's door
+members Rolf Rudo Anna
+join-next 6
+wait screen level
+wait idle
+walk up 3                           # one step, then the door takes the pad
+wait screen building
+wait idle
+expect script $090C                 # "There's a knock at the door."
+press c
+wait idle
+expect script $0923                 # Kain
+expect picture 56 64 kain
+expect picture 258 70 rolf
+shot 01_kain_arrives
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect menu $20                     # rename him? YES / NO
+press down
+press c
+wait idle
+press c
+wait idle
+expect script $090E
+expect menu $29                     # SEE STRENGTH / REORGANIZE / OUTSIDE
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press c
+wait idle
+expect picture 56 64 rudo
+shot 02_rudo_strength
+press c
+wait idle
+expect menu $29
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press down
+press c
+wait idle
+expect picture 56 64 amy
+shot 03_amy_strength
+press c
+wait idle
+expect menu $29
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press down
+press down
+press c
+wait idle
+expect picture 56 64 hugh
+shot 04_hugh_strength
+press c
+wait idle
+expect menu $29
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press down
+press down
+press down
+press c
+wait idle
+expect picture 56 64 anna
+shot 05_anna_strength
+press c
+wait idle
+expect menu $29
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press down
+press down
+press down
+press down
+press c
+wait idle
+expect picture 56 64 kain
+shot 06_kain_strength
+press c
+wait idle
+expect menu $29
+press down
+press down
+press c                             # OUTSIDE
+wait idle
+expect script $0909
+press c
+wait screen level
+wait idle
+expect level 4 45 18
+expect picture 56 64 none
+expect no-stderr not ported

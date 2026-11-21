@@ -1,0 +1,149 @@
+# Script_ItemAction, bank 0x00; script_id = 0x00NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+{char} used the {item}.{end:C4}
+
+[2]
+{char2}'s wounds healed.{end:C4}
+
+[3]
+The poison left {char2}'s body.{end:C4}
+
+[4]
+But nothing happened.{end:C4}
+
+[5]
+{char2} came back to life.{end:C4}
+
+[6]
+{char} is dead{47}{47}{47}{end:C4}
+
+[7]
+A prism with a mysterious, truly
+mysterious radiance{47}{47}{47}{end:C4}
+
+[8]
+{char} handed the {item}
+to {char2}.{end:C4}
+
+[9]
+{char2} took the {item}
+out of {char}'s bag.{end:C4}
+
+[10]
+{char2} can't carry any more.{end:C4}
+
+[11]
+It would be such a shame to throw
+the {item} away!{end:C4}
+
+[12]
+Throw away the {item}?{end:C5}
+
+[13]
+{char} reconsidered.{end:C4}
+
+[14]
+{char} threw the {item}
+away.{end:C4}
+
+[15]
+It won't come off, however hard you try.
+How humiliating, to be stuck like this!{end:C4}
+
+[16]
+A fragrant aroma filled the air.{end:C4}
+
+[17]
+A leaf from a Maruera tree.
+It feels soft and fluffy to the touch.{end:C4}
+
+[18]
+Somehow, everyone felt lighter.{end:C5}
+
+[19]
+Its tones muffled the footsteps
+of {char} and the others.{end:C5}
+
+[20]
+{char} took out the {item},
+but put it back; it looked dangerous.{end:C4}
+
+[21]
+A key for small keyholes, the kind
+found on containers.{end:C4}
+
+[22]
+A round metal rod, about 20 cm long,
+with markings here and there.{end:C4}
+
+[23]
+The container opened.{end:C4}
+
+[24]
+{char} inserted the {item}.{end:C4}
+
+[25]
+{char} and the others ate the
+{item}. Air filled their mouths{pause}with every chew. With this, they could
+dive to the bottom of the deep sea.{end:C4}
+
+[26]
+To try out the {item}, that place
+would probably be best.{end:C4}
+
+[27]
+The dam's lock released; the sound
+of rushing water followed.{end:C4}
+
+[28]
+A beautiful card that shines
+like a green emerald.{end:C4}
+
+[29]
+A clear card, the pale blue
+of an aquamarine.{end:C4}
+
+[30]
+An amber card, the color of
+Motavia's former landscape.{end:C4}
+
+[31]
+A card as red as the sun setting
+over the Motavian soil.{end:C4}
+
+[32]
+"Darum. Your little girl, Tiem,
+is a real good kid, don't you think?{pause}We're keeping her safe in the Tower
+of Nido. If you don't want your daughter{pause}killed, bring 50,000 meseta
+within a month! Understand?"{pause}That's what it says. So Darum had been
+killing and stealing for his daughter's sake{47}{47}{47}{end:C4}
+
+[33]
+A device that records events
+in the Biosystem.{end:C4}
+
+[34]
+If we deliver this to Paseo, we'll learn
+what caused the biohazard.{end:C4}
+
+[35]
+{char} isn't carrying anything.{end:C4}
+
+[36]
+{char} made sure the {item}
+was there, and put it back.{end:C4}
+
+[37]
+"How can I make Father
+change his ways, I wonder{47}{47}{47}"{end:C4}
+
+[38]
+You can't use that here!{end:C4}
+
+[39]
+You can't use that here!{end:C4}
+
+[40]
+Contacting Data Memory!{end:C4}

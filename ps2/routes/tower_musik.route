@@ -1,0 +1,62 @@
+# Musik at Control Tower F1's keyboard (TechEffect_Musik, ps2.asm:15597).
+# The keyboard is an Obj_InvisibleBlock2 with ObjType_Events index 7 at
+# x 776, y 416 -- cells 47-48, row 26. Faced, Musik is $109 alone,
+# $C734 (event_flags $24, the shutter at x 760, y 255: slot 0, the gap
+# at 47,15) = 1, SXFID_Musik waited out in place, bset #0 on $C717 and
+# demo 5, whose $FD slides the shutter open. Anything else faced: $109
+# then $004. Before build 73 it was always $109 then $004, and the
+# shutter stayed shut.
+#
+# The save is story_amy_grind on 47,27 with Musik (techs_b $84: bit 7
+# and a count of four) in Rolf's list, fourth.
+
+start slot 1 routes/saves/tower_musik.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $3F 47 27
+press up                     # face the keyboard
+wait idle
+press c                      # the menu, TECH
+wait idle
+press down
+press down
+press c
+wait idle
+press c                      # Rolf
+wait idle
+press down                   # Musik, the fourth
+press down
+press down
+press c
+wait idle
+expect script $0109
+shot 01_musik
+press c
+wait idle
+wait ticks 60                # demo 5: seven idle reads and $FD
+expect no-stderr not ported
+walk left 1                  # out of the keyboard's room, round its wall
+walk down 7
+walk left 5
+walk up 16
+walk right 5
+walk up 2
+walk right 1
+wait idle
+expect level $3F 47 16
+shot 02_shutter_open
+walk up 2
+wait idle
+expect level $3F 47 14

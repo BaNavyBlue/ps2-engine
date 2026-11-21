@@ -1,0 +1,32 @@
+# Obj_Dezolian ($1A, ps2.asm:6083; build 85): the thirty Dezolians of
+# Aukba (10), Zosa (8) and Ryuon (12) are spawned, drawn (two pieces a
+# frame, loc_59EBA) and wander (loc_402C). Before build 85 npc_spawn kept
+# their slots free and the three towns were empty.
+
+start level 10 11 9          # Aukba, two below $67 at 11,7
+wait screen level
+wait idle
+expect person $67 present
+expect person $66 present
+objects
+shot 01_aukba
+wait ticks 600               # they wander: a decision every $28 frames
+objects
+shot 02_aukba_later
+warp 11 19 13                # Zosa, two below $5D at 19,11
+wait screen level
+wait idle
+expect level 11
+expect person $5D present
+expect person $64 present
+objects
+shot 03_zosa
+warp 12 11 9                 # Ryuon, two below $6F at 11,7
+wait screen level
+wait idle
+expect level 12
+expect person $6F present
+expect person $7A present
+objects
+shot 04_ryuon
+expect no-stderr not ported

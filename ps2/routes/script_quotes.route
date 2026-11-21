@@ -1,0 +1,42 @@
+# (build 129a) `\I` in the script text is AS's escape for the double
+# quote: under the script charset (ps2.asm:32183) one glyph, $42. Up to
+# build 129 the extractor kept it as two characters, and the port drew a
+# blank cell and a letter I -- one column more than the ROM's line, which
+# pushed "But I escaped,and stole" past the box. The route is
+# climatrol_nei_dies's way to Neifirst's first words ($180A, $180B).
+
+start slot 1 routes/saves/climatrol_nei_dies.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press b                      # out of Data Memory
+wait screen level
+wait idle
+expect level $3D 48 23
+walk down 1
+wait idle
+press a
+wait idle
+expect script $180A
+expect pixel 65 184 $EEE       # the quote opening line 3, "I am Neifirst
+                               # (up to 129: a blank cell, $800)
+shot 01_neifirst_quote
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180B
+expect pixel 65 152 $EEE       # the quote opening "But I escaped,and stole"
+shot 02_but_i_escaped

@@ -1,0 +1,36 @@
+# Script_ArmorStore, bank 0x07; script_id = 0x07NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Hey there! Need somethin' from
+my shop?{end:C5}
+
+[2]
+The {item}, huh?
+Who's carryin' it?{end:C5}
+
+[3]
+You can't use this thing!
+That fine by you?{end:C5}
+
+[4]
+Then who's gonna carry it?{end:C5}
+
+[5]
+Whoa, whoa. I don't do loans, and I don't do
+credit.{end:C4}
+
+[6]
+Here ya go! Hope it serves you well!
+Use it right!{end:C4}
+
+[7]
+Here, take it!
+Anything else you want?{end:C5}
+
+[8]
+Take care, now!{end:C4}
+
+[9]
+You can't carry any more!
+Clear out your bags and come back!{end:C4}

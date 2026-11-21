@@ -1,0 +1,42 @@
+# (build 112) The AUDIO page's PATCHES: ON plays the patch file's instruments (assets/music/
+# q_patches.json) in place of the ROM's, OFF the ROM's alone
+# (docs/audio.md, "Build 112"). It is Q's: route_probe is built without Q
+# and the chip plays, so the line under it says Q ONLY and the title's theme
+# plays on through every change. Two values: left, right and C each flip it.
+# The route reads its own settings.json, never the player's.
+start new
+sound render on
+wait screen title
+wait ticks 420
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press c
+press down
+press down
+press down
+press down
+press down
+press down
+press down
+expect audio patches ON / Q ONLY
+press right
+expect audio patches OFF / Q ONLY
+wait ticks 10
+shot page_patches_off
+expect sound playing
+press left
+expect audio patches ON / Q ONLY
+press c
+expect audio patches OFF / Q ONLY
+press c
+expect audio patches ON / Q ONLY
+wait ticks 12
+expect sound playing
+press b
+press b
+expect escape-menu closed

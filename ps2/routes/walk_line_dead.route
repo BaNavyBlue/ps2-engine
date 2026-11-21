@@ -1,0 +1,47 @@
+# Build 182. The walking line with Rolf at 0 HP: RenderCharSprites
+# (ps2.asm:26657) calls loc_11868 once per slot -- the leader's, then the
+# three followers' -- and loc_11868 takes the next id of party_member_id,
+# passing over any whose character_data_buffer+2 (HP) is 0, so the living
+# close up behind the dead and the slot left over is hidden (2(a0) = 2).
+# Nei leads, Rudo and Amy follow, and there is no fourth sprite. Build 181
+# drew every member in his own slot, Rolf at the head.
+#
+# The save is paseo_rolf_dead's: slot 1 on Paseo under Rolf's door, the
+# party Rolf, Nei, Rudo, Amy.
+
+start slot 1 routes/saves/paseo_rolf_dead.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 4 45 18
+expect party Rolf Nei Rudo Amy
+expect hp 0 0
+shot 01_door                 # the four stacked under the door, the leader
+                             # in front
+expect pixel 165 108 $E0A    # Nei's hair, line 1: she leads
+press down
+wait idle
+press left
+wait idle
+press left
+wait idle
+press left
+wait idle
+press left
+wait idle
+shot 02_line                 # spread out, 16 pixels apart, going left
+expect pixel 102 124 $E0A    # the leader's slot: Nei
+expect pixel 118 123 $2EE    # the first follower's: Rudo's hair
+expect pixel 133 124 $00E    # the second's: Amy's hair
+expect pixel 149 124 $640    # the third's: nobody, the ground

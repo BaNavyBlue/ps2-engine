@@ -1,0 +1,15 @@
+# (build 166) LANGUAGE changed in a fight (formation 1): the painted boxes
+# -- the enemy's name, the party's names, FIGHT/STGY -- built again in the
+# new language. Until 166 they kept the old one until the fight drew them
+# again (the enemy's box never), and his names, runs of his face, were
+# blank in another language's.
+start battle 1
+wait idle
+language ja
+wait ticks 2
+expect pixel 20 22 $EEE        # the dakuten over the enemy box's バ
+shot 01_japanese
+language retranslation
+wait ticks 2
+expect pixel 16 24 $EEE        # the top of his B of Biting Ant
+shot 02_retranslated

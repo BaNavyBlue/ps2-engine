@@ -1,0 +1,120 @@
+# (build 164) Rolf's house in the retranslation (recruit_pictures' way,
+# a press fewer: his roster line ends a page sooner): his labels for the
+# house's options (View Strength, Change Members, Go Outside), each
+# recruit's job ("Counterhunter") and his five-line profiles from
+# names.json -- the stock Rolf has four lines, the others five. Amia's is
+# the original game's: "slicers and whips", the JP's スライサーやムチ, where
+# his rebalance wrote knives (the k's ascender would be ink at 24,184).
+start level 4 45 19
+language retranslation
+members Rolf Rudo Anna
+join-next 6
+wait screen level
+wait idle
+walk up 3                           # one step, then the door takes the pad
+wait screen building
+wait idle
+expect script $090C                 # "There's a knock at the door."
+press c
+wait idle
+expect script $0923                 # Kain
+expect picture 56 64 kain
+expect picture 258 70 rolf
+shot 01_kain_arrives
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect menu $20                     # rename him? YES / NO
+press down
+press c
+wait idle
+expect script $090E
+shot 01b_house_options
+expect menu $29                     # SEE STRENGTH / REORGANIZE / OUTSIDE
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press c
+wait idle
+expect picture 56 64 rudo
+expect pixel 24 136 $EEE       # the top of the B of "Born AW 1249.07.01"
+shot 02_rudo_strength
+press c
+wait idle
+expect menu $29
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press down
+press c
+wait idle
+expect picture 56 64 amy
+shot 03_amy_strength
+press c
+wait idle
+expect menu $29
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press down
+press down
+press c
+wait idle
+expect picture 56 64 hugh
+shot 04_hugh_strength
+press c
+wait idle
+expect menu $29
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press down
+press down
+press down
+press c
+wait idle
+expect picture 56 64 anna
+expect pixel 24 186 $EEE       # the w of "whips", line 4
+expect pixel 24 184 $800       # paper over it
+shot 05_anna_strength
+press c
+wait idle
+expect menu $29
+press c
+wait idle
+expect menu $2A
+press down
+press down
+press down
+press down
+press down
+press down
+press c
+wait idle
+expect picture 56 64 kain
+shot 06_kain_strength
+press c
+wait idle
+expect menu $29
+press down
+press down
+press c                             # OUTSIDE
+wait idle
+expect script $0909
+press c
+wait screen level
+wait idle
+expect level 4 45 18
+expect picture 56 64 none
+expect no-stderr not ported

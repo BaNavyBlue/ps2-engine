@@ -1,0 +1,32 @@
+# Script_TeleportStation, bank 0x0c; script_id = 0x0cNN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Welcome. This is the Teleport Service.{end:C4}
+
+[2]
+Which town would you like
+to teleport to?{end:C5}
+
+[3]
+For just {meseta} meseta, we'll zip you
+to any town you remember.{pause}Once you've memorized a town's name,
+please be sure to come by.{end:C4}
+
+[4]
+Well then, please come again.
+We'll be waiting.{end:C4}
+
+[5]
+It will cost {meseta} meseta.
+Is that all right?{end:C5}
+
+[6]
+A shame that we were unable to help you.{end:C4}
+
+[7]
+You don't seem to have enough money.{end:C4}
+
+[8]
+Teleport machine, switch on!
+Take care on your way!{end:C4}

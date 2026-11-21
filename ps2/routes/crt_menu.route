@@ -1,0 +1,121 @@
+# (build 105) The Escape menu's CRT page, every value it can show. On the
+# title, Escape; down four stops is CRT (its value: what will be drawn), C
+# opens its page. Each `display` describes a screen (crt_display_parse:
+# the output's pixels, fullscreen, fullscreen's size, a desktop that scales
+# the window or is not at the panel's resolution, SDL's HDR state), and the
+# page's values are judged against it: scanlines want two display lines a
+# scanline, the aperture grille four (1080p), slot and shadow masks six
+# (1440p), all of them the panel's own pixels; HDR wants SDL to say the
+# window can. A value that cannot be had says why on the line under it.
+# docs/crt.md. The route reads its own settings.json, never the player's;
+# the probe has no main.c, so nothing is written here. The waits put the
+# cursor's lamp in its lit half.
+start new
+wait screen title
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+expect crt summary OFF
+wait ticks 13
+shot menu_crt_off
+press c
+expect crt scanlines OFF
+expect crt mask OFF
+expect crt subpixels RGB
+expect crt hdr OFF
+wait ticks 10
+shot page_default
+# The platform's own window (960x672 on a 1080p desktop): scanlines yes,
+# the grille only fullscreen, slot and shadow masks not at 1080p.
+press c
+expect crt scanlines ON
+press down
+press c
+expect crt mask APERTURE GRILLE / NEEDS FULLSCREEN
+wait ticks 9
+shot page_window_grille
+press right
+expect crt mask SLOT MASK / NEEDS 1440P
+wait ticks 17
+shot page_window_slot
+press right
+expect crt mask SHADOW MASK / NEEDS 1440P
+press right
+expect crt mask OFF
+press left
+expect crt mask SHADOW MASK / NEEDS 1440P
+# 1080p fullscreen: the grille; slot and shadow still want 1440p.
+display 1920x1080 fullscreen
+expect crt mask SHADOW MASK / NEEDS 1440P
+expect crt summary SCANLINES
+press left
+press left
+expect crt mask APERTURE GRILLE
+expect crt summary GRILLE
+wait ticks 4
+shot page_1080p_grille
+# 1440p fullscreen: every mask.
+display 2560x1440 fullscreen
+press right
+expect crt mask SLOT MASK
+press right
+expect crt mask SHADOW MASK
+expect crt summary SHADOW MASK
+wait ticks 13
+shot page_1440p_shadow
+# A window the desktop scales (a scaled desktop without high pixel density):
+# nothing of the chain, fullscreen would do.
+display 1280x800 full=3840x2400 window-scaled
+expect crt scanlines ON / NEEDS FULLSCREEN
+expect crt mask SHADOW MASK / NEEDS FULLSCREEN
+expect crt summary OFF
+wait ticks 14
+shot page_window_scaled
+# A desktop not at the panel's resolution: nothing of ours helps.
+display 1920x1080 fullscreen desktop-scaled
+expect crt mask SHADOW MASK / DESKTOP SCALED
+# A small fullscreen: scanlines, but no grille.
+display 640x480 fullscreen
+press left
+press left
+expect crt scanlines ON
+expect crt mask APERTURE GRILLE / NEEDS 1080P
+# A window too small for two lines a scanline on a 480-line display.
+display 400x300 full=640x480
+expect crt scanlines ON / NEEDS FULLSCREEN
+display 400x300 full=400x300 fullscreen
+expect crt scanlines ON / NEEDS 480P
+# The subpixels: a setting, never unavailable.
+display 3840x2400 fullscreen
+press down
+expect crt subpixels RGB
+press right
+expect crt subpixels BGR
+press right
+expect crt subpixels OTHER
+wait ticks 7
+shot page_3840x2400_other
+press right
+expect crt subpixels RGB
+press left
+expect crt subpixels OTHER
+# HDR: none on this screen.
+press down
+press right
+expect crt hdr ON / NO HDR
+wait ticks 13
+shot page_no_hdr
+press left
+expect crt hdr OFF
+# B goes back to the menu, its cursor on CRT; B again closes.
+press b
+expect escape-menu open
+expect crt summary GRILLE
+wait ticks 8
+shot menu_crt_grille
+press b
+expect escape-menu closed
+expect screen title

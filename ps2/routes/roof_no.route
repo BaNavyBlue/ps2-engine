@@ -1,0 +1,32 @@
+# Building_Roof (ps2.asm:18055), NO: loc_C500 -- $F03, then
+# CloseAllWindows and the street (build 84). Fails on build 83a's code at
+# `wait screen building`: "building: 11 is not ported", back to the street.
+start building 8 21 0 0 32 16
+flag $C73F 1
+wait idle
+expect script $0D01
+press down
+press down
+press c
+wait screen building
+wait idle
+expect script $0F01
+press c
+wait idle
+press c
+wait idle
+expect menu $1F
+press down
+press c                         # NO: event_routine_sub 1
+wait idle
+expect script $0F03             # "The party leaves Central Tower ..."
+shot 01_f03
+press c                         # its {pause}
+wait idle
+press c                         # sub 2: CloseAllWindows
+wait screen level
+wait idle
+expect level $04 32 16          # the street the desk's door gives
+expect flag $C73F 1             # nothing written
+expect no-stderr not ported
+shot 02_street

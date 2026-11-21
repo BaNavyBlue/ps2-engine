@@ -1,0 +1,39 @@
+# Build 87. Obj_MovingEsper ($30) at EsperMansionF1's door, 15,27 and
+# 17,27 (x $F0/$110, y $1B8), dialogue $88: loc_E05A gives $1687 to a
+# standing Rolf and sets $C742; both step eight pixels apart (the one
+# spoken to once the talk ends), which opens column 15. On build 85 the
+# slot was empty: $1708 and no flag.
+start level $11 15 28
+wait idle
+press up
+wait idle
+press a
+wait idle
+expect script $1687
+expect flag $C742 1
+shot 01_expecting_you
+press c
+wait idle
+press c
+wait idle
+wait ticks 30
+shot 02_stepped_aside
+walk up 3
+wait idle
+expect level $11 15 25
+# Spoken to again from inside, the six Espers before $C743 is 3 give their
+# own lines (loc_E730): $8B at 17,19.
+walk right 2
+wait idle
+walk up 5
+wait idle
+expect level $11 17 20
+press up
+press a
+wait idle
+expect script $168B
+press c
+wait idle
+press c
+wait idle
+expect no-stderr level:

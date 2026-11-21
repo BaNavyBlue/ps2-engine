@@ -1,0 +1,16 @@
+{
+  "about": "(build 112) make patches_check's fixture: the reader's edge cases. Not the game's file.",
+  "patches": [
+    { "instrument": 74, "name": "only the release of operator 4, and a volume",
+      "volume_db": -3.5,
+      "operators": [ {}, {}, {}, { "release": 2 } ] },
+    { "instrument": 70, "name": "ring, a new algorithm, detune down, fine cents, out of range",
+      "tail": "ring", "algorithm": 4, "feedback": 9,
+      "operators": [ { "detune": -2, "fine_cents": 7.5, "level": 200, "multiple": 3 } ] },
+    { "instrument": 70, "name": "the same instrument again: replaces the one above",
+      "tail": "fade", "operators": [ { "detune": -1 } ] },
+    { "instrument": 64, "enabled": false, "operators": [ { "level": 0 } ] },
+    { "instrument": 300 },
+    { "name": "no instrument" }
+  ]
+}

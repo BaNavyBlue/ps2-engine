@@ -1,0 +1,141 @@
+# Neifirst on Climatrol F7, and the death of Nei when Nei wins the fight
+# alone: A on Neifirst ($180A-$180D, $180F $1810, YES, $1823), the battle
+# with Nei alone (formation $100, one FIGHT repeated to the end), then
+# loc_7E02's seven reloads -- the picture and $1826, Nei's body and $1827
+# with $C737 set and Nei out of the party, the shaking and $1825, Motavia,
+# the explosions, Motavia again, $1828 at Neifirst's spot, and demo walk 6
+# from Paseo's west edge into the clone lab ($408). The save is
+# story_gum.json on F7 at 48,23 with Nei's HP and attack raised so she
+# wins; on build 77 the door to the scene is "event $25 is not ported".
+
+start slot 1 routes/saves/climatrol_nei_wins.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press b                      # out of Data Memory
+wait screen level
+wait idle
+expect level $3D 48 23
+shot 01_neifirst
+walk down 1
+wait idle
+press a
+wait idle
+expect script $180A
+shot 02_neifirst_speaks
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180B
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180C
+expect script $180D
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $180F
+expect script $1810
+expect menu $1F              # WinID_YesNo2
+press c                      # YES
+wait idle
+expect script $1823
+press c
+wait screen battle
+wait idle                    # FIGHT / STGY, Nei alone
+expect party Nei
+expect music $93             # formation $100: ThePlaceOfDeath
+shot 03_nei_alone
+press c                      # FIGHT, repeated until the fight ends
+limit 60000
+wait idle
+expect script $1211          # victory
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+limit 3000
+wait screen level
+wait idle
+expect level $3D 48 24
+expect script $1826          # "there's no hope for me"
+expect party Nei
+expect music $90             # case 1: Power
+expect pixel 18 131 $000     # the picture on black (ClearSpriteAndScroll)
+shot 04_nei_death
+press c
+wait idle
+press c
+wait idle
+expect script $1827          # "{char} calls Nei's name once again"
+expect party Rolf Nei Rudo Anna
+expect flag $C737 1
+expect music $90             # case 2 queues nothing with Nei alive: Power on
+expect pixel 18 131 $000
+shot 05_nei_body
+press c
+wait idle
+expect script $1825          # "The weather control system is shaking"
+expect party Rolf Rudo Anna
+shot 06_shaking
+press c
+wait idle
+press c
+limit 3000
+wait level 0                 # case 4: the pump, pumping
+expect object $3D visible
+shot 07_pump
+wait level $3D               # case 5: the party on F7, the explosions
+expect level $3D 48 26
+wait ticks 130
+shot 08_explosions
+wait level 0                 # case 6: the lake full
+expect flag $C735 1
+shot 09_lake_full
+wait level $3D
+limit 8000
+wait idle
+expect level $3D 48 26
+expect script $1828          # "decide to return to Paseo"
+expect music $90
+shot 10_explosions_1828
+press c
+limit 3000
+wait screen building
+wait idle
+expect script $0408          # the clone lab: Nei cannot be brought back
+shot 11_clone_lab
+expect no-stderr not ported

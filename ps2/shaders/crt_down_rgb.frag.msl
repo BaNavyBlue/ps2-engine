@@ -1,0 +1,63 @@
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+struct type_Down
+{
+    int pic_y;
+    int k;
+    int reach;
+    int lines;
+};
+
+struct main0_out
+{
+    float4 out_var_SV_Target0 [[color(0)]];
+};
+
+fragment main0_out main0(constant type_Down& Down [[buffer(0)]], texture2d<float> Frame [[texture(0)]], texture2d<float> Beam [[texture(1)]], float4 gl_FragCoord [[position]])
+{
+    main0_out out = {};
+    int _42 = int(gl_FragCoord.x);
+    int _48 = int(gl_FragCoord.y) - Down.pic_y;
+    int _60;
+    if (_48 >= 0)
+    {
+        _60 = _48 / Down.k;
+    }
+    else
+    {
+        _60 = -(((Down.k - _48) - 1) / Down.k);
+    }
+    int _63 = -Down.reach;
+    float3 _65;
+    _65 = float3(0.0);
+    float3 _66;
+    for (int _68 = _63; _68 <= Down.reach; _65 = _66, _68++)
+    {
+        int _73 = _60 + _68;
+        bool _80;
+        if (_73 >= 0)
+        {
+            _80 = _73 < Down.lines;
+        }
+        else
+        {
+            _80 = false;
+        }
+        if (_80)
+        {
+            int _86 = (_48 - (_73 * Down.k)) + (Down.reach * Down.k);
+            int3 _94 = int3((Frame.read(uint2(int3(_42, _73, 0).xy), 0).xyz * 255.0) + float3(0.5));
+            _66 = float3(_65.x + Beam.read(uint2(int3(_86, _94.x, 0).xy), 0).x, _65.y + Beam.read(uint2(int3(_86, _94.y, 0).xy), 0).x, _65.z + Beam.read(uint2(int3(_86, _94.z, 0).xy), 0).x);
+        }
+        else
+        {
+            _66 = _65;
+        }
+    }
+    out.out_var_SV_Target0 = float4(_65, 1.0);
+    return out;
+}
+

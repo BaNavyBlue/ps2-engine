@@ -1,0 +1,13 @@
+# (build 100b) Two Locustas: in the first one's attack its arm reaches up
+# over the first group's name box. The box is a plane B window (bit 13 of
+# its position word), and loc_978C writes a plane B window's frame with
+# $500 -- no priority -- where a plane A one gets $8500; the enemies' own
+# cells are plane A with no priority, so the arm is drawn over the box's
+# border. Up to build 100b every frame cell had priority and the border
+# covered the arm's tip. The pixel is the arm on the box's bottom border.
+start battle 29
+wait idle
+press c
+wait ticks 27
+shot arm_over_box
+expect pixel 106 33 $6C4

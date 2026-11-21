@@ -1,0 +1,35 @@
+# A on Control Tower F1's keyboard: ObjType_Events 7, loc_DAD4
+# (ps2.asm:20054). "Here's a key board. Oh, here's some music, too.
+# Shall I touch it?" ($1711), WinID_YesNo2; YES is a jump to where a
+# Telepipe goes -- $C64C level, $C64E y, $C650 x -- with SXFID_Teleport
+# waited out in place. NO: the box closes and nothing happens. Before
+# build 73: $1708 and "... is not ported" on stderr.
+#
+# A new game on 47,27: $C64C-$C650 are the new game's, Paseo.
+
+start level $3F 47 27
+wait idle
+press up
+wait idle
+press a
+wait idle
+expect script $1711
+shot 01_keyboard
+press c
+wait idle
+press down                   # NO
+press c
+wait idle
+wait ticks 30
+expect level $3F 47 27
+press a
+wait idle
+expect script $1711
+press c
+wait idle
+press c                      # YES
+wait screen level
+wait idle
+expect level 4
+shot 02_paseo
+expect no-stderr not ported

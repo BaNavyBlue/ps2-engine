@@ -1,0 +1,12 @@
+# The other half of dezolis_prism.route: a new game on the same cell has
+# no Prism, loc_92CC leaves the map alone, and the step up onto Ikuto's
+# block is an ordinary step on open ground.
+
+start level 3 88 8
+wait idle
+shot 01_below_ikuto
+walk up 1
+wait idle
+expect level 3 88 7
+shot 02_open_ground
+expect no-stderr map_patches

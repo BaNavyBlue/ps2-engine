@@ -1,0 +1,31 @@
+# One fight to the end: formation 1 (three Fire Ants) from a new game,
+# FIGHT, the round played out by the objects, victory, the experience
+# and meseta, and the map again with the pad live.
+
+start battle 1
+wait idle                    # FIGHT / STGY
+shot 01_standby
+press c                      # FIGHT
+wait ticks 400
+shot 02_fighting
+wait idle
+expect script $1211          # "{char} and party are victorious!"
+shot 03_victory
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+expect script $1212          # "{meseta} experience points!"
+expect script $1213          # "Receive {meseta} meseta!"
+wait screen level
+wait idle
+expect screen level
+shot 04_map
+expect no-stderr not ported

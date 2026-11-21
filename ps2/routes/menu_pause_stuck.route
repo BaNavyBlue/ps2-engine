@@ -1,0 +1,36 @@
+# (build 129d; lost from the tree at 130, restored in 132a) A guard for the
+# lost music part the owner hears on the Mega Drive: a music track lent to an
+# effect that no longer holds it stays silent until the next song. Motavia
+# under its music: the C menu opened and a cursor moved (their sounds), a
+# pause over them, the unpause; no music track left lent (`expect stuck`,
+# smps_stuck_tracks) and the music playing again. tools/stuck_hunt.py runs
+# 224 orders of this shape (docs/history.md, Builds 129d-129e); none has
+# left a part lent yet.
+
+start slot 1 routes/saves/jet_scooter.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+wait ticks 30
+sound render on
+press c
+wait idle
+press down
+wait ticks 3
+press start
+wait ticks 20
+press start
+wait ticks 150
+expect stuck none
+expect sound playing         # the music back after the unpause

@@ -1,0 +1,27 @@
+# (build 145) The item keeper's portrait (portrait 20, item_keeper) in the
+# Central Tower's room (Building_CentralTowerRoom), from its picture: one
+# of the twelve no route drew after build 142 (see paseo_hospital_picture).
+# The way a player goes: the tower's desk, ROOM from "Where to?" (TO_CHOSEN:
+# building 9, portrait $14), the keeper's greeting and menu, B, "take
+# care", and out to the street.
+
+start building 8 21 0 0 32 16       # the desk; the street is 32,16
+wait idle
+expect menu $35                     # ROOM / LIBRARY / OUTSIDE
+press c
+wait idle
+expect script $0E01                 # "How're you doing?"
+expect picture 56 64 item_keeper
+shot 01_item_keeper
+press c
+wait idle
+expect menu $38
+press b
+wait idle
+expect script $0E08                 # "Well, then, take care!"
+press c
+wait screen level
+wait idle
+expect level 4 32 16
+expect picture 56 64 none
+expect no-stderr not ported

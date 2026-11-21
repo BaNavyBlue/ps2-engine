@@ -1,0 +1,43 @@
+# (build 165) The Japanese name board: new_game's way in JAPANESE, the
+# cartridge's board (six rows of katakana, its art's places, every cell a
+# stop; ススム, モドル, オワル advance, back, end), アイウ typed and オワル,
+# then the dream's 1504 with the name in it.
+start new
+language ja
+wait screen title
+wait idle                   # TITLE_WAIT: the finished title
+press start
+
+wait screen intro
+wait idle                   # NEW GAME / CONTINUE / ERASE GAME
+expect script $130B         # "Let me check the backup data."
+expect script $1310         # "Data check complete."
+press c                     # NEW GAME
+
+wait idle                   # the name board, the lamp on A
+expect script $1302         # "What is the name of your character?"
+press c                     # ア
+press right
+press c                     # イ
+press right
+press c                     # ウ
+press up                    # the last row, フ
+press left                  # ヒ
+press left                  # ハ
+press left                  # round to オワル
+wait ticks 7
+shot 01_board
+press c                     # END
+
+wait idle
+expect script $1304
+press c
+wait idle                    # the dream: $1501, $1502
+press c
+wait idle
+press c
+wait idle                    # $1503
+press c
+wait idle                    # $1504's first page
+expect script $1504
+expect text "ぼくの なまえは アイウ。"

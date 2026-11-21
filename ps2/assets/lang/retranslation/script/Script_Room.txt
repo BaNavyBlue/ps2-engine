@@ -1,0 +1,55 @@
+# Script_Room, bank 0x0e; script_id = 0x0eNN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Hey, how have you been?
+Anything I can do for you?{end:C5}
+
+[2]
+Whose belongings will you leave
+with me?{end:C5}
+
+[3]
+Which ones will you leave?{end:C5}
+
+[4]
+Got it. I'll keep them safe for you
+until you come back.{end:C4}
+
+[5]
+Sorry. My locker is already
+packed full of stuff.{end:C4}
+
+[6]
+I don't mean to presume, but maybe
+it would be better if you held on to that?{end:C4}
+
+[7]
+Anything else I can do for you?{end:C5}
+
+[8]
+Take care, then.
+And come by to see me again!{end:C4}
+
+[9]
+This is everything of yours I have for now.
+Which ones will you take?{end:C5}
+
+[10]
+That's odd. I'm pretty sure you
+didn't leave anything with me.{end:C4}
+
+[11]
+Taking this one, huh?
+There you go. It's all yours.{end:C4}
+
+[12]
+Huh? What luggage?
+I don't see any.{end:C4}
+
+[13]
+Who's carrying it?{end:C5}
+
+[14]
+You can't carry any more.
+Will someone else take it?{end:C5}

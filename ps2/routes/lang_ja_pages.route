@@ -1,0 +1,68 @@
+# (build 165) The C menu in Japanese (lang_menu_pages' way): the window
+# labels from the cartridge's art (アイテム じょうたい テクニック つよさ
+# そうび, the dakuten in the row above), だれが? and だれに? on the party
+# list's border, the items, techniques and Strength page in kana, the
+# stock windows' widths (the Japanese words are the windows' own).
+start level $64 33 10
+language ja
+party 4 50
+wait idle
+press c
+wait idle
+expect menu $01
+expect pixel 36 30 $EEE        # the dakuten over じ of じょうたい, in the
+                               # row above the label
+shot 01_menu
+press c                      # Items
+wait idle
+press c                      # Eusis
+wait idle
+press c                      # the Knife
+wait idle
+press down                   # Give
+wait ticks 3
+press c
+wait idle
+shot 02_to_whom
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press c
+wait idle
+press down
+wait ticks 3
+press down                   # Techniques
+wait ticks 3
+press c
+wait idle
+press c                      # Eusis
+wait idle
+shot 03_techniques
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press b
+wait idle
+press c
+wait idle
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down                   # Strength
+wait ticks 3
+press c
+wait idle
+press c                      # Eusis
+wait idle
+shot 04_strength

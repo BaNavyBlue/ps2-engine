@@ -1,0 +1,176 @@
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+struct type_AcrossParams
+{
+    float4 gain;
+    float4 to2020_0;
+    float4 to2020_1;
+    float4 to2020_2;
+    float4 enc;
+    int mask_phase;
+    int k;
+    int mask_w;
+    int src_w;
+    int encode;
+    int pad0;
+    int pad1;
+    int pad2;
+};
+
+struct main0_out
+{
+    float4 out_var_SV_Target0 [[color(0)]];
+};
+
+fragment main0_out main0(constant type_AcrossParams& AcrossParams [[buffer(0)]], texture2d<float> Down [[texture(0)]], texture2d<float> Across [[texture(1)]], texture2d<float> Mask [[texture(2)]], float4 gl_FragCoord [[position]])
+{
+    main0_out out = {};
+    int _60 = int(gl_FragCoord.x);
+    int _63 = int(gl_FragCoord.y);
+    float4 _67 = Across.read(uint2(int3(_60, 0, 0).xy), 0);
+    float4 _71 = Across.read(uint2(int3(_60, 1, 0).xy), 0);
+    int _77 = int(Across.read(uint2(int3(_60, 2, 0).xy), 0).x);
+    int _88 = AcrossParams.src_w - 1;
+    float3 _158 = (((((((Down.read(uint2(int3(clamp(_77, 0, _88), _63, 0).xy), 0).xyz * _67.x) + (Down.read(uint2(int3(clamp(_77 + 1, 0, _88), _63, 0).xy), 0).xyz * _67.y)) + (Down.read(uint2(int3(clamp(_77 + 2, 0, _88), _63, 0).xy), 0).xyz * _67.z)) + (Down.read(uint2(int3(clamp(_77 + 3, 0, _88), _63, 0).xy), 0).xyz * _67.w)) + (Down.read(uint2(int3(clamp(_77 + 4, 0, _88), _63, 0).xy), 0).xyz * _71.x)) + (Down.read(uint2(int3(clamp(_77 + 5, 0, _88), _63, 0).xy), 0).xyz * _71.y)) + (Down.read(uint2(int3(clamp(_77 + 6, 0, _88), _63, 0).xy), 0).xyz * _71.z)) + (Down.read(uint2(int3(clamp(_77 + 7, 0, _88), _63, 0).xy), 0).xyz * _71.w);
+    float3 _177 = (AcrossParams.gain.xyz * _158) * Mask.read(uint2(int3(_60 - AcrossParams.mask_w * (_60 / AcrossParams.mask_w), (_63 + AcrossParams.mask_phase) - AcrossParams.k * ((_63 + AcrossParams.mask_phase) / AcrossParams.k), 0).xy), 0).xyz;
+    float4 _315;
+    do
+    {
+        if (AcrossParams.encode == 1)
+        {
+            float3 _200 = float3(dot(AcrossParams.to2020_0.xyz, _177), dot(AcrossParams.to2020_1.xyz, _177), dot(AcrossParams.to2020_2.xyz, _177)) * AcrossParams.enc.x;
+            float _201 = _200.x;
+            float _215;
+            do
+            {
+                if (_201 <= 0.0)
+                {
+                    _215 = 0.0;
+                    break;
+                }
+                float _208 = powr(precise::min(_201, 1.0), 0.1593017578125);
+                _215 = powr((0.8359375 + (18.8515625 * _208)) / (1.0 + (18.6875 * _208)), 78.84375);
+                break;
+            } while(false);
+            float _216 = _200.y;
+            float _230;
+            do
+            {
+                if (_216 <= 0.0)
+                {
+                    _230 = 0.0;
+                    break;
+                }
+                float _223 = powr(precise::min(_216, 1.0), 0.1593017578125);
+                _230 = powr((0.8359375 + (18.8515625 * _223)) / (1.0 + (18.6875 * _223)), 78.84375);
+                break;
+            } while(false);
+            float _231 = _200.z;
+            float _245;
+            do
+            {
+                if (_231 <= 0.0)
+                {
+                    _245 = 0.0;
+                    break;
+                }
+                float _238 = powr(precise::min(_231, 1.0), 0.1593017578125);
+                _245 = powr((0.8359375 + (18.8515625 * _238)) / (1.0 + (18.6875 * _238)), 78.84375);
+                break;
+            } while(false);
+            _315 = float4(_215, _230, _245, 1.0);
+            break;
+        }
+        if (AcrossParams.encode == 2)
+        {
+            _315 = float4(_177 * AcrossParams.enc.x, 1.0);
+            break;
+        }
+        float _257 = _177.x;
+        float _275;
+        do
+        {
+            if (_257 <= 0.0)
+            {
+                _275 = 0.0;
+                break;
+            }
+            if (_257 >= 1.0)
+            {
+                _275 = 1.0;
+                break;
+            }
+            float _274;
+            if (_257 <= 0.003130800090730190277099609375)
+            {
+                _274 = 12.9200000762939453125 * _257;
+            }
+            else
+            {
+                _274 = (1.05499994754791259765625 * powr(_257, 0.4166666567325592041015625)) - 0.054999999701976776123046875;
+            }
+            _275 = _274;
+            break;
+        } while(false);
+        float _276 = _177.y;
+        float _294;
+        do
+        {
+            if (_276 <= 0.0)
+            {
+                _294 = 0.0;
+                break;
+            }
+            if (_276 >= 1.0)
+            {
+                _294 = 1.0;
+                break;
+            }
+            float _293;
+            if (_276 <= 0.003130800090730190277099609375)
+            {
+                _293 = 12.9200000762939453125 * _276;
+            }
+            else
+            {
+                _293 = (1.05499994754791259765625 * powr(_276, 0.4166666567325592041015625)) - 0.054999999701976776123046875;
+            }
+            _294 = _293;
+            break;
+        } while(false);
+        float _295 = _177.z;
+        float _313;
+        do
+        {
+            if (_295 <= 0.0)
+            {
+                _313 = 0.0;
+                break;
+            }
+            if (_295 >= 1.0)
+            {
+                _313 = 1.0;
+                break;
+            }
+            float _312;
+            if (_295 <= 0.003130800090730190277099609375)
+            {
+                _312 = 12.9200000762939453125 * _295;
+            }
+            else
+            {
+                _312 = (1.05499994754791259765625 * powr(_295, 0.4166666567325592041015625)) - 0.054999999701976776123046875;
+            }
+            _313 = _312;
+            break;
+        } while(false);
+        _315 = float4(_275, _294, _313, 1.0);
+        break;
+    } while(false);
+    out.out_var_SV_Target0 = _315;
+    return out;
+}
+

@@ -1,0 +1,23 @@
+# Build 97d: a one-shot case past the last ($11 and up) at a level load.
+# loc_8094 clears the whole event word -- the one-shot byte and the camera
+# byte -- and nothing else: the level runs as if no case had been asked
+# for. Nothing in the ROM writes a high byte past $10 (every write to the
+# word was read); the probe puts $11 there before a warp onto Noah F1.
+# Before 97d the port's load reported "one-shot event $11 is not ported".
+start level $64 33 10
+party 4 50
+wait idle
+oneshot $11
+warp $64 33 10
+wait level $64
+wait idle
+expect no-stderr not ported
+press c                      # the word is clear: the C menu opens
+wait idle
+expect menu $01
+shot 01_menu
+press b
+wait idle
+walk up 1
+wait idle
+expect level $64 33 9

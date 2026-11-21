@@ -1,0 +1,50 @@
+# (build 111a) The AUDIO page's OVERSAMPLE: the rate Q's PM voices run at,
+# 1X, 2X or 4X the output's (docs/audio.md, "Build 111a"). 4X, the default,
+# puts nothing folded back in the audible band; 1X has the chip's images --
+# its crunch on the bright effects. It is Q's: route_probe is built without Q
+# and the chip plays, so the line under it says Q ONLY, and the chip sounds
+# the same whatever it is (the title's theme plays on through every change).
+# Left and right step and stop at the ends; C steps on and goes round (4X to
+# 1X). The route reads its own settings.json, never the player's.
+start new
+sound render on
+wait screen title
+wait ticks 420
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press c
+press down
+press down
+press down
+press down
+expect audio oversample 4X / Q ONLY
+press right
+expect audio oversample 4X / Q ONLY
+press left
+expect audio oversample 2X / Q ONLY
+press left
+expect audio oversample 1X / Q ONLY
+press left
+expect audio oversample 1X / Q ONLY
+wait ticks 10
+shot page_oversample_1x
+expect sound playing
+press c
+expect audio oversample 2X / Q ONLY
+press c
+expect audio oversample 4X / Q ONLY
+press c
+expect audio oversample 1X / Q ONLY
+press right
+press right
+expect audio oversample 4X / Q ONLY
+wait ticks 12
+expect sound playing
+press b
+press b
+expect escape-menu closed

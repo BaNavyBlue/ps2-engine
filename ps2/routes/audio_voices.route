@@ -1,0 +1,45 @@
+# (build 112) The AUDIO page's VOICES: EXTRA puts an effect on voices of its own and the music plays on
+# under it (the default, 111's); LIMITED has the effect take the music's
+# channel as the chip's six do, the music's note there stopping (111b's
+# PS2_Q_EFFECTS=take)
+# (docs/audio.md, "Build 112"). It was Q's: route_probe is built without Q
+# and the chip plays, so the line under it said Q ONLY. (build 124) The
+# chip's too, with a second chip for the effects (docs/second_chip.md): no
+# Q ONLY beside it, and the title's theme plays on through every change
+# (each replays the chip onto its new way). Two values: left, right and C
+# each flip it.
+# The route reads its own settings.json, never the player's.
+start new
+sound render on
+wait screen title
+wait ticks 420
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press c
+press down
+press down
+press down
+press down
+press down
+expect audio voices EXTRA
+press right
+expect audio voices LIMITED
+wait ticks 10
+shot page_voices_limited
+expect sound playing
+press left
+expect audio voices EXTRA
+press c
+expect audio voices LIMITED
+press c
+expect audio voices EXTRA
+wait ticks 12
+expect sound playing
+press b
+press b
+expect escape-menu closed

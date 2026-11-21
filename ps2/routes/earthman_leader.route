@@ -1,0 +1,37 @@
+# The Earthmen's leader (build 97d): object $28 (loc_4DD8), the only object
+# on Noah F1's sprite list, at 33,7 -- the far end of the corridor, two
+# cells above where the walk to the Earthmen stops. Before 97d the port
+# left his slot empty (the figure was not ported), so the Earthmen's
+# "Welcome to the spaceship Noah" was spoken to bare floor.
+#
+# He stands from the level's load whatever the flags: here Mother Brain
+# not yet fought. His init runs every frame -- frame 0, hit-box row 4 --
+# so he blocks the way and never moves; his $2E is 0, so A at him is
+# event 0, "nothing unusual here" ($1708).
+
+start level $64 33 10
+party 4 50
+wait idle
+expect flag $C747 0
+expect object $28 visible
+shot 01_standing
+walk up 1
+wait step
+wait idle
+expect level $64 33 9
+walk up 1
+wait step
+wait idle
+expect level $64 33 8
+objects
+shot 02_face_to_face
+press a
+wait idle
+expect script $1708
+shot 03_nothing_unusual
+press c
+wait idle
+press up                     # he blocks the step: still on 33,8
+wait ticks 30
+wait idle
+expect level $64 33 8

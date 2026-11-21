@@ -1,0 +1,49 @@
+# The Key Tube on the tube's locked door (level $0F, object $3B,
+# Obj_OpenableDoor, ps2.asm:7915, index $1B, cell 9,15). A on it is
+# ObjType_Events $1B (loc_DC90): $170E. ItemAction_KeyTube (14360): the
+# flag's bit 0 set, "{char} puts KEYTUBE inside." ($0018), demo 5 and the
+# tube out of the bag. Demo_KeyUsed (5504) is seven idle reads and $FD:
+# the door SFX and routine 2 into slot 0, which slides the door open over
+# two frames of $F ticks and then clears its box.
+
+start level $0F 9 18
+wait screen level
+wait idle
+give KeyTube
+walk up 2                    # 17, 16
+wait step
+press up                     # the door does not give
+wait ticks 20
+expect level $0F 9 16
+press a
+wait idle
+expect script $170E
+press c
+wait idle
+shot 01_shut
+press c                      # ITEM
+wait idle
+press c                      # ROLF
+wait idle
+press c                      # the bag
+wait idle
+press down
+press down
+press down                   # KEYTUBE, slot 3
+press c
+wait idle
+press c                      # USE
+wait idle
+expect script $0018
+press c                      # the menu closes; demo 5 runs
+wait idle
+expect level $0F 9 16
+wait ticks 20
+shot 02_sliding
+wait ticks 40
+shot 03_open
+walk up 3                    # 15 (the door's cell), 14, 13
+wait step
+expect level $0F 9 13
+shot 04_through
+expect no-stderr not ported

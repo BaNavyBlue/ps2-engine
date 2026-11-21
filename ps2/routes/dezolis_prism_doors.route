@@ -1,0 +1,52 @@
+# (build 89) The Prism's four doors on the game's own map. loc_92CC
+# writes block $63 at $FFFF9000 + $96, $EC, $7B9, $ED0; loc_6DE8 reads
+# that map at row * ($F722 >> 5) + column, 64 on DezolisSkure -- the tmx
+# layer's width, so offsets 150, 236, 1977 and 3792 are the blocks at
+# cells 44,4 88,6 114,60 32,118, each just above its dungeon's arrival
+# cell. play.py's patched map puts them in the same cells; this route
+# steps up into each from the cell door_cells gives for it. It passed on
+# 88a too: it shows the patches were never the cause of plan()'s stall
+# (tools/plan_check.py is that fix's check). dezolis_prism.route covers
+# Ikuto. The save is dezolis_prism.json, the Prism in Rolf's bag.
+
+start slot 1 routes/saves/dezolis_prism.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 3 88 8
+warp 3 44 6                  # Menobe: block at 44-45, 4-5
+wait screen level
+wait idle
+shot 01_menobe
+walk up 1
+wait screen level
+wait idle
+expect level $48 48 61
+warp 3 114 62                # Guaron: block at 114-115, 60-61
+wait screen level
+wait idle
+shot 02_guaron
+walk up 1
+wait screen level
+wait idle
+expect level $53 68 45
+warp 3 32 120                # Naval: block at 32-33, 118-119
+wait screen level
+wait idle
+shot 03_naval
+walk up 1
+wait screen level
+wait idle
+expect level $43 5 43
+expect no-stderr map_patches

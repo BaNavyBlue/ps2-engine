@@ -1,0 +1,21 @@
+# (build 142b) Line endings and binaries, the same on every machine: text
+# is LF in the repository and in every checkout -- on Windows too, where
+# git would otherwise check text out with CRLF and MSYS2's bash refuses a
+# CRLF script -- and these are never touched as text.
+* text=auto eol=lf
+*.png   binary
+*.wav   binary
+*.ico   binary
+*.spv   binary
+*.dxil  binary
+*.bin   binary
+*.srm   binary
+*.flac  binary
+*.zip   binary
+*.gz    binary
+# (build 168b) The running notes merge by keeping both sides' new lines
+# (git's union merge), so builds pushed from two machines one after the
+# other don't conflict where each adds its entry. After such a merge, look
+# the notes over. Only for notes where entries are only ever added: on a
+# line one side edited and the other wrote beside, git keeps both, silently.
+docs/history.md merge=union

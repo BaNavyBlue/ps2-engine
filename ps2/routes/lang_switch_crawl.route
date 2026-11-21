@@ -1,0 +1,11 @@
+# (build 166) LANGUAGE changed during the attract crawl: the crawl's
+# script, dropped with the banks, read again in the new language. Until
+# 166 the message box was gone for the rest of the crawl.
+start new
+wait screen level
+wait script $1402
+wait ticks 30
+language ja
+wait ticks 2
+expect pixel 172 150 $EEE      # the mark over ゴ (lang_ja_crawl's)
+shot 01_japanese

@@ -1,0 +1,27 @@
+# A Skure B1 container that holds an event, not an item: Obj_MotaTreasure
+# Chest ($3A) at 47,45 with $2E = $0008, so A on it is ObjType_Events 8 --
+# loc_DB22 (ps2.asm:20085), script_id = $1719 and $CD02 = $1712: "I
+# found an old newspaper!" and then "When you're lonely, the best way to
+# console yourself is to keep a pet!". Before build 69 it was $1708 and
+# "event $08 is not ported" on stderr.
+
+start level 2 47 47          # Skure B1, two below it
+wait screen level
+wait idle
+walk up 1                    # 47,46, facing it
+wait step
+expect level 2 47 46
+press a
+wait idle
+expect script $1719          # "I found an old newspaper!"
+shot 01_found
+press c
+wait idle
+expect script $1712          # the notice itself
+shot 02_notice
+press c                      # {pause}
+wait idle
+press c
+wait idle
+expect level 2 47 46
+expect no-stderr not ported

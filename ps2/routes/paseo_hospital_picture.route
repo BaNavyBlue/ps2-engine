@@ -1,0 +1,22 @@
+# (build 145) The doctor's portrait (portrait 10, the picture doctor) in
+# Paseo's hospital (Building_Hospital), from its picture: one of the
+# twelve pictures no route drew after build 142, so colour_check had never
+# held it to its tiles. Build 146 deletes the tiles' loader; this route is
+# part of what proves the pictures alone draw the same frames. In through
+# the door's own bytes (building 4, portrait 10, the price row 8), HEAL and
+# CURE, B, the goodbye, and the fade out to the street with the portrait up.
+
+start building 4 10 8 0 15 22       # the hospital; the street is 15,22
+wait idle
+expect script $0501                 # "May I help you?"
+expect picture 56 64 doctor
+shot 01_doctor
+press b
+wait idle
+expect script $0505
+press c
+wait screen level
+wait idle
+expect level 4 15 22
+expect picture 56 64 none
+expect no-stderr not ported

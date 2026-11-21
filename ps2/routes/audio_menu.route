@@ -1,0 +1,78 @@
+# (build 110) The Escape menu's AUDIO page. On the title, Escape; down five
+# stops is AUDIO (its value: the synth that plays), C opens its page: SYNTH
+# (CHIP, Q), MASTER and MUSIC (OFF, then -30 dB up to 0 dB a dB at a time).
+# route_probe is built without Q, so Q shows NOT BUILT under it and the chip
+# plays on -- the menu's AUDIO still says CHIP. Left and right step a value
+# and stop at its ends; C steps on and goes round (0 dB to OFF). Escape or B
+# goes back a page. docs/audio.md, "The AUDIO page". The route reads its own
+# settings.json, never the player's; the probe has no main.c, so nothing is
+# written here. The waits put the cursor's lamp in its lit half.
+start new
+wait screen title
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+expect audio summary CHIP
+wait ticks 12
+shot menu_audio
+press c
+expect audio synth CHIP
+expect audio master 0 DB
+expect audio music 0 DB
+wait ticks 10
+shot page_default
+# SYNTH: Q, which this build has not got; the chip still plays.
+press right
+expect audio synth Q / NOT BUILT
+expect audio summary CHIP
+wait ticks 8
+shot page_q_not_built
+press c
+expect audio synth CHIP
+# MASTER: right stops at 0 dB; left steps down a dB; C from 0 dB goes
+# round to OFF, and on to -30 dB.
+press down
+press right
+expect audio master 0 DB
+press left
+press left
+press left
+expect audio master -3 DB
+press c
+press c
+press c
+expect audio master 0 DB
+press c
+expect audio master OFF
+press left
+expect audio master OFF
+press c
+expect audio master -30 DB
+press left
+expect audio master OFF
+press right
+press right
+expect audio master -29 DB
+# MUSIC, a dB a press.
+press down
+press left
+expect audio music -1 DB
+press left
+press left
+press left
+press left
+press left
+expect audio music -6 DB
+wait ticks 8
+shot page_volumes
+# B back to the menu, the page's values kept; B again closes it.
+press b
+expect escape-menu open
+expect audio summary CHIP
+expect audio master -29 DB
+press b
+expect escape-menu closed

@@ -1,0 +1,102 @@
+# Script_Governor, bank 0x11; script_id = 0x11NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Good morning, {char}. How are you?
+It's been nearly two years since you
+came to work under me, the Governor
+of Motavia.{pause}What I'm about to ask of you will be
+the hardest task yet. It is a grave matter
+critical to the very future of Motavia.{pause}
+
+[2]
+As you know, Algol has been nurtured
+by Mother Brain. My work as Governor has
+been to ensure that Mother Brain's plans{pause}
+
+[3]
+proceed smoothly. I always believed
+Mother Brain to be infallible. However, the
+biomonsters now rampaging through Motavia
+are simply out of control.{pause}
+
+[4]
+Why were the biomonsters created, and
+how can they be stopped? We must find
+that out for ourselves.{end:C4}
+
+[5]
+{char}, your mission is to go to the
+Biosystem and bring back the System
+Recorder you'll find there.{pause}If we study its data, I'm sure we'll
+learn why the Biosystem wound up
+creating monsters.{pause}
+
+[6]
+{char}, I pray with all my heart
+that you come back safely with the
+System Recorder. Until we meet again!{end:C4}
+
+[7]
+Good work, {char}. I'll have this
+System Recorder cross-checked against the
+Library's data right away.{pause}{char}, until now, I believed that
+whatever Mother Brain did was
+absolutely right.{pause}
+
+[8]
+That our lives were protected by
+Mother Brain.
+But under Mother Brain, how frail
+and indolent we have become.{pause}
+
+[9]
+When something like this happens,
+one can't help but feel that keenly.
+Now, the data should be ready.
+You should head over to the Library.{end:C4}
+
+[10]
+{char}, something truly troubling
+has happened. Just when we were relieved
+that the biomonsters were gone, this
+crisis began.{pause}
+
+[11]
+If we could at least open the dams,
+we'd avoid the worst-case scenario, but the
+controls aren't responding. Someone
+needs to go and open them manually.{end:C4}
+
+[12]
+{cont}"Please, let me do it!"{end:C4}
+
+[13]
+{cont}Hmm{47}{47}{47} But{47}{47}{47} It's quite unfortunate,
+but the Palma government has
+labeled you as the criminals who
+drove Mother Brain haywire{47}{47}{47}{pause}
+
+[14]
+Right now the security system is
+searching for you frantically.
+It's dangerous to draw attention now.{end:C4}
+
+[15]
+{cont}"But even if we stay home and keep a low
+profile, we'll be caught anyway.
+Therefore, I'll go and open the dams.{pause}Who is trying to bring ruin to Motavia?
+That's what I want to find out!"{end:C4}
+
+[16]
+{cont}I see. Then I'll say no more.
+Take care.{end:C4}
+
+[17]
+You made it back. I was worried.
+What did you say? You're going to Dezolis
+without even taking time to rest{47}{47}{47} I see.{pause}You must have given this careful
+consideration.
+Then, use the spaceship on the roof.{pause}But remember, you're still under suspicion.
+After the Palma incident, they're more
+agitated than ever. Be careful out there.{end:C4}

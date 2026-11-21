@@ -1,0 +1,60 @@
+# A card at its dam's control panel: ItemAction_GreenCard (ps2.asm:14406)
+# faced at index $1D, the Green Dam F1 panel (object $38 at 113,28, an
+# invisible block with hit-box row 7). loc_9D70: bset #0 on event_flags
+# + $1D ($C72D), `move.w #8, (event_flags).w`, $18 and the card removed;
+# the next visit is $1B, "The dam locks open, and rushing water is
+# heard.", with SXFID_DamOpened. Camera case 8 (loc_81E6) then finds the
+# other three dams shut and clears event_flags: no battle. Before build
+# 80 the port printed "the dam panel is not ported" and kept the card.
+# The save is story_climatrol.json moved to 113,29.
+
+start slot 1 routes/saves/green_dam_panel.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $31 113 29
+expect object $38 visible
+give GreenCard 1             # Rudo's bag, slot 5
+press up                     # face the panel
+wait idle
+press a
+wait idle
+expect script $171B          # ObjType_Events $1C-$23 (loc_DC9C)
+press c
+wait idle
+press c                      # the C menu
+wait idle
+press c                      # ITEM
+wait idle
+press down
+press c                      # RUDO
+wait idle
+press down
+press down
+press down
+press down
+press down                   # GREENCARD, slot 5
+press c
+wait idle
+press c                      # USE
+wait idle
+expect script $0018          # "'Character' puts 'Item' inside."
+expect flag $C72D 1
+press c
+wait idle
+expect script $001B          # "The dam locks open..."
+shot 01_dam_opened
+press c
+wait idle
+expect screen level
+expect flag $C72D 1
+expect no-stderr not ported

@@ -1,0 +1,29 @@
+# (build 133) A window asked for while the screen scrolls. ProcessWindows
+# (ps2.asm:13502) tests the main camera's x and y against the 16px grid
+# before it starts a window, and off it returns (loc_9478) -- the word
+# waits and is tried every frame, so the window opens as the step ends.
+# In Aukba the step down from 12,12 scrolls the screen; A four pixels in,
+# at nothing. Five ticks later the frame at 160,196 is still the map
+# ($888): without the test the box is already opening there (index 11,
+# $800), and slides with plane A for the rest of the step. Then $1708,
+# "There seems to be nothing unusual here." Until build 133 the port never
+# answered A mid-step, so the case did not arise.
+
+start level 10 11 9          # Aukba
+wait screen level
+wait idle
+press right                  # 12,9
+wait idle
+walk down 3                  # 12,12, on the camera's follow line
+wait step
+walk down 1                  # this step scrolls the screen
+wait ticks 2
+press a                      # four pixels in, nothing ahead
+wait ticks 5
+expect pixel 160 196 $888    # the map: no window yet
+shot 01_mid_scroll
+wait step
+expect level 10 12 13
+wait idle
+expect script $1708
+shot 02_opened

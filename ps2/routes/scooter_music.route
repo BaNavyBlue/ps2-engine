@@ -1,0 +1,121 @@
+# (build 139f) The music after a fight on the jet scooter, and out of a
+# dam riding it: Motavia's (Restoration, $82) both times. jet_scooter_dam's
+# ride, with `expect song` (the music the sequencer last started) where the
+# level changes.
+#
+# LevelScreen's loads run with the vertical blank on, and VBlankExit runs
+# SoundDriverInput every field, so the music LoadLevelData queues is
+# started fields before RunObjects runs the scooter's init and its engine
+# ($D8, ObjJetSctr_Init) goes into the same one-byte queue. Until 139f the
+# port loaded in one tick and the engine overwrote the music: the victory
+# music (Movement, $94, which goes on as Movement Ver.2, $96) played on
+# after a fight, and Mystery ($88) out of the dam. The owner heard the first.
+# Fails on 139e at the first fight's `expect song $82` ("the song playing
+# is $96").
+start slot 1 routes/saves/jet_scooter.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 0 89 116
+expect song $82                # Restoration: Motavia's, on foot
+shot 01_parked
+press up                     # the scooter's box stops the step; he turns
+wait idle
+press a
+wait idle
+expect script $1686          # the note, first boarding only
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $171C          # "Let's get on the jet scooter!"
+press c
+wait idle                    # riding: the party hidden, the engine on
+expect song $82                # boarding changes no music
+shot 02_riding
+walk up 6
+walk left 3
+walk up 1
+walk left 1
+walk up 1
+wait idle
+walk left 1
+wait idle
+walk left 1                  # the step begins, and at once:
+wait screen battle           # an encounter. On the scooter the roll comes
+                             # on the step's first frame, while the
+                             # leader's copy is still on the cell it
+                             # leaves (loc_11700); BattleScreen saves that
+                             # cell, so the step never happens
+wait idle                    # FIGHT / STGY
+press c                      # FIGHT
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level            # LevelScreen parks the scooter where the
+wait idle                    # fight began; the party is riding again
+expect level 0 84 107
+expect song $82                # back from the fight: Motavia's again,
+                               # not the victory music (Movement, $94)
+shot 03_back_on_the_scooter
+walk left 3
+walk up 24                   # and on the 24th step's first frame
+wait screen battle           # (build 129a) another encounter, at 81,84
+wait idle
+press c                      # FIGHT
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 0 81 84         # parked where that fight began, riding
+expect song $82                # and after the second fight
+walk up 3                    # 2 steps, then the push into the entrance
+wait screen level
+wait idle
+expect level $29 47 25
+expect song $88                # Mystery, the dam's
+shot 04_red_dam_f1
+expect no-stderr not ported
+expect no-stderr jet scooter
+walk down 4                  # out the way we came: loc_28546, back to 81,82
+wait screen level
+wait idle
+expect level 0 81 82         # on the scooter, parked on the arrival cell
+expect song $82                # out of the dam riding: Motavia's, not
+                               # the dam's

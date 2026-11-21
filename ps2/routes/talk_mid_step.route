@@ -1,0 +1,24 @@
+# (build 133) A pressed mid-step. The level loop calls ProcessAButtonPress
+# (ps2.asm:19781) every frame and it never looks at the party's step; the
+# target test, Level_ChkTargetInteract (10503), puts loc_7278's box for the
+# leader's facing about his pixel position and overlaps it with each
+# person's own box. From Aukba 11,9 a step up toward the Dezolian at 11,7
+# (dezolis_talk's), A five pixels into it: the box ahead (y 123..138)
+# already reaches his (112..127), and he answers -- $1651, Rolf with no
+# cap. The step runs on to 11,8 under the window. Until build 133 the port
+# held an A on foot back to the end of the step ("ignored: mid-step" under
+# PS2_ATRACE) and nothing came up.
+
+start level 10 11 9          # Aukba, two cells below $67 at 11,7
+wait screen level
+wait idle
+walk up 1                    # the step to 11,8 begins
+wait ticks 3
+press a                      # five pixels into it
+wait idle
+expect script $1651
+expect level 10 11 8
+shot 01_answered
+press c
+wait idle
+expect level 10 11 8

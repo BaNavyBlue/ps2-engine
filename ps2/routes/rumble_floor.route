@@ -1,0 +1,66 @@
+# (build 160) The rumble on a damage floor (loc_7108): Gaira, from the
+# open cell above the floor (damage_floor_field's way). The bite is felt
+# with its white field and SXFID_DangerousFloor, a buzz; the point of HP
+# it takes off everyone standing, eight fields on, is the same bite and not
+# felt again. Eighteen more bites up and down (map_wipeout's walk, build
+# 157c), and the last point leaves Rolf at 0: he falls ("ROLF is dead!"),
+# then the game over.
+
+start level $41 3 5
+party 1 1
+rumble-log motors.txt 3
+wait idle
+walk down 2                  # onto 3,7: the white field is this tick
+expect rumble floor 1
+expect rumble going
+expect stat 0 hp 19          # loc_7162 comes after the fields
+wait ticks 8
+expect stat 0 hp 18
+expect rumble hurt 0         # the point is the bite's, felt already
+wait ticks 6                 # (build 161) the buzz's 8 + 6
+expect rumble still
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+expect script $1721          # "ROLF is dead!"
+expect rumble floor 18
+expect rumble hurt 0
+expect rumble fell 1
+expect stat 0 hp 0
+press c
+wait screen gameover
+expect rumble lost 1

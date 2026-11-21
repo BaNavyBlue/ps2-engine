@@ -1,0 +1,50 @@
+# Build 88. Kain's EIJIA on four Poleziaxes (formation 148, x layout 4:
+# $A8 $F8 $148 $198). Its cast ends in loc_3462 ($F9): an effect over
+# each shown enemy whose script is loc_34EE[(d3A & $7F) * 7 + column],
+# the column from the enemy's x -- $198 is none of the six named, so
+# column 6 and script $47 of loc_27364.
+#
+# loc_27364 has 72 entries; its $41 is `(loc_274C6+6)-loc_27364`, which
+# extract_battle.py's regex skipped until this build. Every entry after it
+# moved down one and $47 fell off the end: the effect over the fourth
+# Poleziax had no script, never reached $FE, and held $CC06 at 1 -- the
+# fight stood at "actions animating" for good (the harness's first
+# fight_smart EIJIA on Red Dam F2 found it). Three enemies (layout 3)
+# never use column 6, which is why EIJIA had worked before.
+#
+# Fails on 87b's battle.json at the `wait idle` after FIGHT.
+
+start battle 148
+members Rolf Kain
+member Rolf 23
+member Kain 15
+wait idle
+press down                   # STGY
+press c
+wait idle
+press c                      # ORDR
+wait idle
+press right                  # Kain
+wait ticks 3
+press c
+wait idle
+press right                  # TECH
+wait ticks 3
+press c
+wait idle
+press down                   # stop 1 is FOI, NEXT above it
+wait ticks 3
+press down                   # EIJIA
+wait ticks 3
+press c
+wait idle
+expect screen battle
+limit 3000
+press c                      # FIGHT
+wait ticks 60
+shot 01_eijia
+wait idle
+expect command tech
+expect screen battle
+expect no-stderr no animation script
+shot 02_next_round

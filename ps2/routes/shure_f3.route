@@ -1,0 +1,38 @@
+# Shure's top floor, the body with the pocket (event $11, loc_DBB2):
+# $170B, $170C, then the Small Key and the Letter through loc_E84A.
+# Searched again with both taken, it is $170B alone.
+
+start level $1A 21 38        # two cells below the body at $158,$238
+wait screen level
+wait idle
+walk up 2                    # the second step ends against it
+wait step
+press a
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle                    # the pad back
+expect script $170B          # "Those are bodies of the scoundrels. ..."
+expect script $170C          # "Oh, my! There is something inside ..."
+expect script $1702          # "{char} has found {item}."  the key
+expect script $1703          # "{char} has gotten hold of {item}."
+expect script $1702          # the letter
+expect script $1703
+shot 01_searched
+press a                      # again: the pocket is empty
+wait idle
+shot 02_again
+expect script $170B
+press c
+wait idle
+press c
+wait idle
+expect screen level
+expect no-stderr not ported

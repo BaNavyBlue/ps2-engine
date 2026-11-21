@@ -1,0 +1,13 @@
+# (build 165) A name across scripts: the Japanese cartridge chosen (Rolf's
+# default its ユーシス), then the retranslation before the fight. The names
+# cross as text, and a default of any language is the new one's: Eusis --
+# kana made codes in the script charset would be blanks.
+start battle 1
+language ja
+wait idle
+language retranslation
+wait ticks 1
+press c                      # FIGHT
+wait idle
+expect script $1211
+expect text "Eusis and the others won!"

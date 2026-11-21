@@ -1,0 +1,22 @@
+# $10 EsperMansionB1 is 16 x 8 blocks, the size of a backdrop plane, and
+# until build 62 the level extractor placed a plane by its size: plane A
+# landed in 10_EsperMansionB1.tmx beside plane B and not in
+# 10_EsperMansionB1_A.tmx, where level_load looks whenever the flag
+# byte's backdrop bit is set -- "cannot open ..._A.tmx", "no planeA
+# layer", a black screen and no level. $52 IkutoGroundF, the other
+# 16 x 8 level, is ikuto_ground.route.
+#
+# Needs `make extract-levels` then `make manifest` with build 62's
+# tools/extract_levels.py.
+
+# The mansion's stairs down, F1 15,13.
+start level $11 15 14
+wait idle
+walk up 2
+wait idle
+expect level $10 16 14
+shot 01_esper_b1
+walk left 3
+wait idle
+shot 02_three_left
+expect no-stderr level:

@@ -1,0 +1,62 @@
+# (build 143) The click a sound effect's end made under VOICES EXTRA, the
+# default (The owner: "a slight click after pushing the continue button
+# on dialog boxes"). Every stop in a dialog plays the selection sound on
+# FM5, ten ticks; at its end RestoreBGMChn gives the channel back to the
+# music by uploading the music track's instrument (SetFMIns, then the
+# track's volume, RefreshVolume). On the one chip that lands on the
+# channel the effect was sounding, and the upload's few writes at the
+# instrument's own levels go unheard. Under EXTRA the music's part played
+# on under the effect on a voice of its own, and those writes, up to 27 dB
+# over the track's volume for a few write slots, were a click on its
+# sounding note -- on the chip (A, the music's) and on Q alike. Now that
+# upload reaches the effect's releasing voice only (smps.h,
+# SMPS_HOOK_RESTORE; docs/audio.md, "Build 143").
+#
+# The Governor's briefing, each stop pressed and 18 ticks waited (the
+# music's place at each end depends on it). `expect sound clicks below`:
+# the sharpest bend (second difference) over the last four ticks rendered.
+# Eleven ticks after the press the window holds the effect's end. Fails on
+# 142d: -18.7, -18.8 and -16.0 dBFS at stops 4, 9 and 10 (-32.4, -36.6 and
+# -37.0 now); everywhere else the two are the same to the tick.
+
+start building 14 23 0 0 32 16      # the Governor; the street is 32,16
+sound render on
+wait idle
+press c                             # stop 1
+wait ticks 18
+wait idle
+press c                             # stop 2
+wait ticks 18
+wait idle
+press c                             # stop 3
+wait ticks 18
+wait idle
+press c                             # stop 4
+wait ticks 11
+expect sound clicks below -28       # the selection's end: -18.7 on 142d
+expect sound playing
+wait ticks 7
+wait idle
+press c                             # stop 5
+wait ticks 18
+wait idle
+press c                             # stop 6
+wait ticks 18
+wait idle
+press c                             # stop 7
+wait ticks 18
+wait idle
+press c                             # stop 8
+wait ticks 18
+wait idle
+press c                             # stop 9
+wait ticks 11
+expect sound clicks below -28       # -18.8 on 142d
+wait ticks 7
+wait idle
+press c                             # stop 10
+wait ticks 11
+expect sound clicks below -28       # -16.0 on 142d
+wait ticks 7
+expect script $1101
+expect no-stderr not ported

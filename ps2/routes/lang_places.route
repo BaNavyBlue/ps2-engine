@@ -1,0 +1,16 @@
+# (build 164) The teleport station's list in the retranslation: his
+# places from names.json ("Arimaya", "Optano", "Skure": the JP's, where
+# the stock has ARIMA, OPUTA, SKURE), the towns known set by hand ($C704
+# on: Arima, Oputa, Skure) in a new game's Paseo station. His greeting
+# ends with a press ({END}), and the question and the list follow it.
+start building 15 30 0 0 7 18
+language retranslation
+flag $C704 5
+flag $C705 6
+flag $C706 3
+wait idle
+press c
+wait idle
+expect menu $73
+expect pixel 169 72 $EEE       # the top of Arimaya's A
+shot 01_places

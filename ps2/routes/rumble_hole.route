@@ -1,0 +1,23 @@
+# (build 161) The rumble falling through a hole: Crevice's ground floor
+# ($16), a level-5 Rolf walked down from cell 50,6 onto the crevice
+# (blocks $50-$62, loc_6FCA's fall to Crevice B1 and SXFID_FellInHole,
+# asked at tick 54). The sound driver starts it at the next tick's start:
+# the shake follows it from there -- the big motor 70%, the small its
+# first 6 ticks -- as long as its track plays (55-138), and is still at
+# 139 (src/game/rumble.c).
+
+start level $16 50 6
+party 1 5
+rumble-log motors.txt 3      # the motors at HIGH, change by change
+wait idle
+walk down 3                  # 54: onto the crevice, the screen fading
+expect rumble hole 0         # the fall's sound asked, not yet started
+wait ticks 1                 # 55: started
+expect rumble hole 1
+expect rumble going
+wait ticks 83                # 138: its last tick
+expect rumble going
+wait ticks 1                 # 139: over, and no tail left above nothing
+expect rumble still
+wait idle
+expect level $15             # Crevice B1

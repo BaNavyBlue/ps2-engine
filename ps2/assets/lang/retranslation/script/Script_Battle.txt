@@ -1,0 +1,135 @@
+# Script_Battle, bank 0x12; script_id = 0x12NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+{char} fell asleep!{end:C6}
+
+[2]
+{char} and the others ran!{end:C6}
+
+[3]
+But they couldn't escape!{end:C6}
+
+[4]
+It had no effect!{end:C6}
+
+[5]
+{char} can't fight!{end:C4}
+
+[6]
+{char} died!{end:C6}
+
+[7]
+{char} has no combat Techniques!{end:C4}
+
+[8]
+{char} and the others were wiped out.{end:C6}
+
+[9]
+Attack, Dexterity, and Agility up!{end:C6}
+
+[10]
+{enemy} fell silent.{end:C6}
+
+[11]
+{enemy} became confused!{end:C6}
+
+[12]
+{enemy} was paralyzed.{end:C6}
+
+[13]
+Defense up!{end:C6}
+
+[14]
+Agility up!{end:C6}
+
+[15]
+{char} shared their life!{end:C6}
+
+[16]
+Huh? Something's not right!{end:C6}
+
+[17]
+{char} and the others won!{end:C4}
+
+[18]
+Got {meseta} experience points!{end:C4}
+
+[19]
+Got {meseta} meseta!{end:C4}
+
+[20]
+{char}'s level increased!{end:C4}
+
+[21]
+Max HP increased!{end:C4}
+
+[22]
+Max TP increased!{end:C4}
+
+[23]
+Mastered a Technique!{end:C4}
+
+[24]
+{char} and the others fell in vain,
+without bringing peace to Algol{47}{47}{47}{end:C5}
+
+[25]
+Plasma Rings clamped on!{end:C4}
+
+[26]
+Can't fight anymore{47}{47}{47}{end:C6}
+
+[27]
+Can't fight anymore{47}{47}{47}{end:C6}
+
+[28]
+Can't fight anymore{47}{47}{47}{end:C6}
+
+[29]
+{char} was poisoned!{end:C6}
+
+[30]
+Defense down!{end:C6}
+
+[31]
+Agility down!{end:C6}
+
+[32]
+Attack down!{end:C6}
+
+[33]
+{char} was paralyzed!{end:C6}
+
+[34]
+{char}'s paralysis wore off.{end:C6}
+
+[35]
+{char}'s heart was stained with evil!{end:C6}
+
+[36]
+Trying to betray the party!
+{char} ran off! But couldn't get away!{end:C6}
+
+[37]
+Crushed by despair!{end:C6}
+
+[38]
+{char} turned greedy!
+Rifling through the others' bags!{end:C6}
+
+[39]
+{char} grew suspicious!
+Can't help holding back on attacks!{end:C6}
+
+[40]
+{char} lost confidence!
+Can't use Techniques.{end:C6}
+
+[41]
+{char} became lazy!
+Agility down!{end:C6}
+
+[42]
+The Nei Sword emitted a bright light!
+The evil washed away from their hearts.{end:C6}

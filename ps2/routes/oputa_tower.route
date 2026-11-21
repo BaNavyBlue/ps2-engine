@@ -1,0 +1,23 @@
+# A on Oputa's control towers (ObjID $38 at 41,27 and 55,27, index 2):
+# ObjType_Events 2, loc_DA80 (ps2.asm:20026), "This is the control tower
+# which links the town and Mother Brain in one network." ($1709). Before
+# build 69: "There seems to be nothing unusual here." ($1708) and "event
+# $02 is not ported" on stderr. Paseo's four, Zema's, Kueri's two and
+# Piata's five towers are the same object.
+
+start level 6 41 29          # Oputa, below the west tower
+wait screen level
+wait idle
+walk up 1                    # 41,28, facing the tower's event at 41,27
+wait step
+expect level 6 41 28
+press a
+wait idle
+expect script $1709
+shot 01_west_tower
+press c
+wait idle
+press c
+wait idle
+expect level 6 41 28         # the box closed, the pad back
+expect no-stderr not ported

@@ -1,0 +1,34 @@
+# Script_InventorHouse, bank 0x0b; script_id = 0x0bNN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Hi! I'm doing research on making
+a mysterious chewing gum.{end:C4}
+
+[2]
+Do you know about Maruera Leaves?{end:C5}
+
+[3]
+I want some. If you find any, let me know!{end:C4}
+
+[4]
+At the top of a small island in the
+Motavian sea, there's a Maruera tree.{pause}Its leaves efficiently produce oxygen,
+so if I take their extract and make{pause}gum from it, it'll become possible to breathe
+underwater!{end:C4}
+
+[5]
+Ah! That! Could that be a Maruera
+Leaf?! Wow! Hey, will you give it to me?{end:C5}
+
+[6]
+Thanks. You're a good person!
+Wait a moment. The gum's nearly ready.{pause}There, done. I made plenty, so you can
+have some too. Take it. See you!{end:C4}
+
+[7]
+That's too bad. Goodbye.{end:C4}
+
+[8]
+What should I study next, I wonder?
+If you find anything fun, tell me, okay?{end:C4}

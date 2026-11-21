@@ -1,0 +1,53 @@
+# (build 142) The portraits drawn from their pictures (assets/art/portraits,
+# docs/asset_format.md): each portrait window's interior takes its colours
+# from the picture tools/extract_pictures.py made of its tiles, map and
+# palette, and its indices from the tiles as before (video.c's
+# VideoPicture; the proof that the two are the same is
+# tools/colour_check.py over every route). `expect picture X Y THING` says
+# which picture a pixel's colour came from.
+#
+# The Governor at the start of the game (portrait 23, line 2), then the
+# walk home and Rolf's house: Rolf's own window (his art at $4A0, line 1,
+# which BuildingScreen loads there), and Nei's portrait arriving mid-scene
+# (LoadPortraits' art at $400, line 2). Fails on b141d: the probe has no
+# `expect picture`, and nothing was drawn from a picture.
+
+start building 14 23 0 0 32 16      # the Governor; the street is 32,16
+wait idle
+expect picture 125 60 governor
+expect picture 40 40 none           # the room: black, no window
+shot 01_governor
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level                   # Demo_TowerToHouse
+wait screen building
+wait idle
+expect picture 258 70 rolf
+press c
+wait idle
+press c
+wait idle                           # "Nei, I have to leave for awhile..."
+expect picture 60 80 nei
+expect picture 258 70 rolf
+shot 02_house_nei

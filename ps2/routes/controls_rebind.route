@@ -1,0 +1,64 @@
+# (build 160) A rebind end to end: START's KEY 1 set to Q on the CONTROLS
+# page, DOWN's 1ST to the right stick down on the BUTTONS page, then each
+# raw press made what the platform makes of it through the menu's
+# controls (`key`, `pad`): on the title Enter, the old Start key, does
+# nothing and Q leaves it; on NEW GAME / CONTINUE the d-pad down, the old
+# down, does nothing and the right stick down moves the cursor, as the
+# down arrow (DOWN's KEY 1, unchanged) still does. tools/controls_check.py
+# does the same through the headless game, its platform and settings.json.
+
+start new
+wait screen title
+press esc
+press down                   # CONTROLS
+press c
+press down
+press down
+press down
+press down
+press down
+press down
+press down                   # START
+press c
+key Q
+expect keys start Q / -
+press b                      # the menu, on CONTROLS
+press down
+press down
+press down
+press down
+press down
+press down
+press down                   # GAMEPAD
+press c
+press down
+press down
+press down                   # BUTTONS
+press c
+press down                   # DOWN
+press c
+pad RSDOWN
+expect buttons down RS DOWN / LS DOWN
+press b                      # the GAMEPAD page
+press b                      # the menu
+press b
+expect escape-menu closed
+
+expect screen title
+key RETURN                   # Start no more
+wait ticks 20
+expect screen title
+key Q                        # Start now
+wait screen intro
+wait idle
+expect menu $37 0            # NEW GAME
+pad DDOWN                    # down no more
+wait ticks 10
+expect menu $37 0
+pad RSDOWN                   # down now
+wait idle
+expect menu $37 1            # CONTINUE
+key DOWN                     # the arrow, still down
+wait idle
+expect menu $37 2            # ERASE GAME
+shot 01_moved

@@ -1,0 +1,222 @@
+routine	class	where	what
+# (build 181) The reading of every routine tools/rom_left.py finds that src/
+# never names (by label or ps2.asm line) and that control can reach. One line a
+# routine, by the name rom_left.py gives it (routines.tsv's third column).
+# PORTED: in src/ under another name or as a case of a cited dispatcher.
+# REPLACED: plumbing the port's design does without, and what does its job.
+# DEAD: never runs in the game, and why. MISSING: the game does it, the port not.
+# The map menu, items, techniques, shops, the save (ps2.asm 14064-20920).
+loc_997E	REPLACED	window.c text_scroll, win_render	a rectangle of words from RAM into the nametable (the message window's scroll); the port redraws its window stack every frame
+loc_99A8	REPLACED	window.c text_scroll, win_render	a nametable rectangle into the $DE00 buffer (what lies under a window, the scroll); nothing is saved from VRAM in the port
+Menu_Item_RoutineOpened	PORTED	menu.c item_entry case 1	ITEM: the "whose items?" list
+Menu_Item_RoutineCharSelected	PORTED	menu.c item_entry case 2	ITEM: "isn't carrying anything" or the item list
+Menu_Item_RoutineItemWindowOpened	PORTED	menu.c item_entry case 3	ITEM: the USE/GIVE/DROP window
+Menu_Item_RoutineItemActionEntries	PORTED	menu.c item_entry (item_action % 3)	ITEM: to USE, GIVE or DROP
+ItemAction_Escapipe	PORTED	menu.c use_escapipe	the Escapipe: back to the dungeon's entrance, the teleport sound
+loc_A358	PORTED	menu.c item_give	GIVE: unequip, from the giver to the receiver
+loc_A368	PORTED	menu.c item_give	GIVE refused: the window closes
+ItemToss_CancelAction	PORTED	menu.c item_toss	DROP refused: the window closes
+ItemToss_CompleteAction	PORTED	menu.c item_toss	DROP: the YES/NO, "drops" or "changes his mind"
+loc_A440	PORTED	menu.c state_entry	STATE: the STATE/ORDER window
+loc_A44C	PORTED	menu.c state_entry	STATE: to STATE or ORDER
+loc_A576	PORTED	menu.c tech_entry case 1	TECH: the stats window and the character list
+loc_A584	PORTED	menu.c tech_entry case 2	TECH: "is dead", "can't use techniques" or the list
+TechEffect_Sar	PORTED	menu.c tech_sar	Sar, Gisar and Nasar on the map
+TechEffect_Sak	PORTED	menu.c tech_sak	Sak on the map
+TechEffect_Nasak	PORTED	menu.c tech_nasak, heal_party_full	Nasak on the map
+TechEffect_Anti	PORTED	menu.c tech_anti	Anti on the map
+TechEffect_Ryuka	PORTED	menu.c tech_entry, use_telepipe	Ryuka: the message, then the Telepipe's code
+TechEffect_Hinas	PORTED	menu.c tech_entry, use_escapipe	Hinas: the message, then the Escapipe's code
+loc_AADA	PORTED	menu.c eqp_entry case 1	EQP: the character list
+loc_AD8C	PORTED	gamedata.c gamedata_equip_bonuses_add	one worn piece's attack and defence added
+loc_ADF8	PORTED	gamedata.c gamedata_equip_bonuses_remove	one worn piece's attack and defence taken off
+SetCharNames	REPLACED	window.c put_char_name, win_glyph	the names' letter codes made tile pairs at $C038; the port keeps the codes and draws them
+line_16540	REPLACED	window.c put_char_name, win_glyph	SetCharNames' one letter through VDPCharacterMaps
+loc_BC3E	PORTED	building.c equipment_store	the armour shop's greeting (the language barrier's line or $701)
+loc_BC64	PORTED	building.c equipment_store	the armour shop's stock
+loc_BC70	PORTED	building.c equipment_store	the armour shop's "who will wear it?"
+loc_BC7C	PORTED	building.c equipment_store	the armour shop's buyer list
+loc_BC88	PORTED	building.c equipment_store, equipment_buy	the armour shop's sale: bag full, can't equip, the Magic Cap's price, too poor, sold
+loc_BD0A	PORTED	building.c equipment_store	the armour shop's "joking?" YES/NO
+loc_BD16	PORTED	building.c equipment_store	the armour shop's answer to it
+loc_BD3E	PORTED	building.c equipment_store	the armour shop back to the buyers
+loc_BD4A	PORTED	building.c equipment_store	the armour shop's "anything else?"
+loc_BD5C	PORTED	building.c equipment_store	the armour shop's answer to it
+loc_D1E0	PORTED	intro_select.c backup_check case 0	"Let me check the backup data", once a power-on
+loc_D20E	PORTED	intro_select.c backup_check, gamedata.c gamedata_slot_summary, gamedata_quarantine	each slot checked; a bad one set aside (the mirror's repair cannot happen: no mirror)
+loc_D298	PORTED	intro_select.c backup_check	"Data check complete"
+loc_D2A4	PORTED	intro_select.c backup_check	the window closed, on to the game select
+line_19610	REPLACED	gamedata.c gamedata_save (JSON)	a save's copy written to the battery RAM's odd bytes, its checksum and stamp
+loc_D676	REPLACED	gamedata.c gamedata_slot_summary (the JSON parsed)	the battery copy's checksum
+loc_D6AA	REPLACED	none needed (a file is a slot)	the battery copy's copyright stamp
+loc_D6D4	REPLACED	none needed (no mirror; gamedata.h)	one battery copy over the other
+loc_D700	REPLACED	none needed (a missing file is an empty slot)	the battery RAM formatted at the first power-on
+LoadSavedData	REPLACED	gamedata.c gamedata_load	a slot read back from the battery RAM
+loc_E48C	PORTED	game.c enter_level, tick_level, CRAWL	the opening crawl's page: the big box, 270 frames, the next
+# The start-up, the interrupts, the joypad, the VDP, decompression, the level planes (ps2.asm 83-13960).
+EndOfHeader	DEAD	only the CPU exception vectors	the crash trap (ErrorTrap): three nops into EntryPoint; the port has no 68000 exceptions
+loc_8D4	PORTED	battle.c battle_enter (the per-group loop)	one enemy group: its colours, art, stats, escape rate and battle objects
+loc_5B52	REPLACED	video.c video_compose	VBlank job $0C: the joypad, the palette and sprite DMA
+loc_5B58	REPLACED	platform input; game.c's pause	VBlank job $20, the pause: the joypads only
+VBlankSub_14	REPLACED	video.c video_compose, window.c win_process	VBlank job $14: palette and sprite DMA, then ProcessWindows
+loc_5BB0	REPLACED	battle.c battle_render, window.c win_render	VBlank job $18, the battle: plane A's buffer to VRAM, ProcessWindows, the effect art
+HBlank	DEAD	the line interrupt is never enabled (VDP $8006, sr $2500)	rte
+JoypadInit	REPLACED	platform_sdl3.c platform_pump	the joypad ports set up
+ReadJoypads	REPLACED	platform_sdl3.c platform_pump	both pads read (the second's bytes are never read)
+JoypadRead	REPLACED	platform_sdl3.c platform_pump	the three-button pad: held and newly pressed
+VDPSetupGame	REPLACED	video.c video_init	the VDP's registers, CRAM, scroll and VRAM cleared at power-on
+LoadPCMDrums	REPLACED	tools/extract_drums.py, drums.c drums_load	the drum program and samples into the Z80's RAM
+DecompressArt2	REPLACED	tools/ps2art.py (extraction), tileset.c tileset_load	the art format unpacked into RAM
+loc_6018	REPLACED	battle.c battle_effect_art_load	a battle effect's art streamed to VRAM, 16 tiles a frame (the port places it at once)
+NemDec	REPLACED	tools/nemesis.py	the Nemesis decompressor's entry (the level tiles)
+NemDec_Run	REPLACED	tools/nemesis.py	Nemesis: codes and runs into rows
+NemDec_WriteAndStay	REPLACED	tools/nemesis.py	Nemesis: a row to the VDP
+NemDec_WriteAndStay_XOR	REPLACED	tools/nemesis.py	Nemesis: a row XORed with the last
+NemDec_Prepare	REPLACED	tools/nemesis.py _build_table	Nemesis: the code table
+loc_6302	PORTED	palette.c palette_fade_from_white_step	one frame of the fade down from white
+loc_636C	PORTED	palette.c palette_fade_to_white_step	one frame of the fade into white
+loc_6D6A	REPLACED	gamedata.c gamedata_new_game (a C copy)	96 bytes copied: the save's signature text
+loc_6D82	REPLACED	battle.c battle_effect_art_load	48 bytes copied: the effect art's queue moved up
+loc_6D8A	REPLACED	gamedata.c gamedata_new_game	32 bytes copied: the default names
+line_12486	PORTED	gamedata.c (g_initial), gamedata_new_game	each member's starting stats from the level table
+loc_8E30	REPLACED	level.c level_draw_plane (the whole plane every frame)	the scroll's edge redraw, by four dirty bits
+loc_8E5A	REPLACED	level.c level_draw_plane	the top row of blocks redrawn
+loc_8E6C	REPLACED	level.c level_draw_plane	the bottom row of blocks redrawn
+loc_8E80	REPLACED	level.c level_draw_plane	the left column of blocks redrawn
+loc_8E92	REPLACED	level.c level_draw_plane	the right column of blocks redrawn
+loc_8EA8	REPLACED	level.c level_draw_plane	a row of 16 blocks into the nametable
+loc_8EEA	REPLACED	level.c level_draw_plane	a column of 8 blocks into the nametable
+loc_8F2E	REPLACED	level.c level_draw_plane	one 4x4-tile block to VRAM
+loc_902A	REPLACED	level.c level_draw_plane	a whole plane redrawn on a level's entry
+loc_9722	PORTED	window.c equip_stats_step	the equipment screen's stats rolling to their new values
+loc_9858	REPLACED	window.c win_render, video.c video_set_tile	the VDP's address set to a window cell, the next cell
+# The windows (ps2.asm 23148-26696): ported by the window's id (window.c's run_handler and build_entry).
+Win_ItemAction	PORTED	window.c run_handler	the USE/GIVE/DROP window
+Win_ScriptMessage	PORTED	window.c script_window	the small message box
+loc_FC00	PORTED	window.c text_poll (TXT_END)	text code $C4: a button, then the text ends
+Win_YesNo2	PORTED	window.c run_handler	the second YES/NO
+Win_YesNo3	PORTED	window.c run_handler	the third YES/NO
+Win_StateOrder	PORTED	window.c run_handler	the STATE/ORDER window
+Win_SecondCharStats	PORTED	window.c build_entry, fill_individual_stats	the second member's stats box
+Win_ThirdCharStats	PORTED	window.c build_entry, fill_individual_stats	the third member's stats box
+loc_FF18	PORTED	window.c fill_level_tech_list, fill_battle_tech_list	a technique's name as two rows of glyphs
+loc_FF1C	PORTED	window.c fill_level_tech_list, fill_battle_tech_list, fill_battle_tech_used	a technique's name as two rows of glyphs
+Win_StrngHPTP	PORTED	window.c fill_strng_hptp	STRNG's HP and TP box
+Win_StrngStats	PORTED	window.c fill_strng_stats	STRNG's stats box
+Win_EquipStats	PORTED	window.c fill_equip_stats	EQP's stats box
+Win_ScriptMessageBig	PORTED	window.c script_window	the big message box (its $DEB0 store is read by nothing)
+loc_1032E	PORTED	window.c fill_tech_list	a technique's name in the full list
+Win_FullTechList2	PORTED	window.c build_entry, run_handler	the full list's battle techniques
+Win_BuySell	PORTED	window.c run_handler	the BUY/SELL window
+Win_NameInput	PORTED	window.c name_input	the name-entry window
+loc_1051C	PORTED	window.c fill_save_slots	a save slot's name
+Win_LibraryOptions	PORTED	window.c run_handler	the library's topics
+Win_HealCure	PORTED	window.c run_handler	the hospital's HEAL/CURE
+Win_CentTowerOptions	PORTED	window.c run_handler	the Central Tower's three options
+Win_CentTowerOptions2	PORTED	window.c run_handler	the Central Tower's four options
+Win_GameSelect	PORTED	window.c run_handler	the title's game select
+Win_BattleSecondCharStats	PORTED	window.c build_entry, fill_battle_char_stats	the second member's battle stats
+Win_BattleThirdCharStats	PORTED	window.c build_entry, fill_battle_char_stats	the third member's battle stats
+loc_10A64	PORTED	window.c run_handler (three cases)	the B/C answer of the battle's option, command and target windows
+loc_10B38	PORTED	window.c fill_enemy_groups	the enemy groups' names
+Win_BattleEmptySpots	PORTED	window.c run_handler	the battle's empty stats spots
+loc_10F86	PORTED	window.c fill_teleport, put_town	a town's name in the teleport list
+line_25375	PORTED	window.c fill_ustvestia	a song's name in Ustvestia's window
+JmpTo_CloseCurrentWindow	PORTED	menu.c close_current, window.c win_close_current	the menus' "close the current window"
+loc_112D6	PORTED	gamedata.c gamedata_known_techs	a member's known techniques (MUSIK last)
+Meseta_ConvertToDecimal	PORTED	window.c put_number	meseta and experience as digits
+LoadDynWindowsInRam	REPLACED	window.c build_entry, win_load_assets	every window's art copied into RAM; the port builds each window from its asset when it opens
+# The objects and townspeople (ps2.asm 2032-8136): the inits and dispatchers in front of cited mains.
+ObjIWBC_Init	PORTED	window.c name_input	the name board's blinking cursor placed
+ObjQMBC_Init	PORTED	window.c name_input, win_render	the blinking tile over the name's next letter
+Obj_RedRectCursorBattle	PORTED	window.c run_handler, load_cursor_at	the battle's red cursor (object 4): its routine switch
+ObjRRCB_Init	PORTED	window.c load_cursor_at, run_rect	the battle's red cursor placed on FIGHT/STGY or ORDR/RUN
+ObjTCCSel_Main	PORTED	window.c run_triangle, triangle_move, triangle_place	the triangle over a party member
+ObjTCCS_Main	PORTED	window.c run_triangle, triangle_place	the triangle over a battle command
+Obj_Null1	DEAD	nothing writes object 9's id; levels place $14 and up	rts
+ObjFlwngChar_Return	PORTED	game.c ending_place_cast	a follower standing still (the six on Noah's bridge)
+Obj_MotaYoungMan	PORTED	npc.c run_objects	a young Motavian man: still while talked to, else wandering
+loc_3BD8	PORTED	npc.c npc_spawn (tools/extract_npcs.py reads the init)	the young Motavian man's init
+Obj_MotaYoungWoman	PORTED	npc.c run_objects	a young Motavian woman: still while talked to, else wandering
+loc_3D9C	PORTED	npc.c npc_spawn	the young Motavian woman's init
+Obj_MotaOldMan	PORTED	npc.c run_objects	an old Motavian man: still while talked to, else wandering
+loc_3F60	PORTED	npc.c npc_spawn	the old Motavian man's init
+Obj_MotaChild	PORTED	npc.c run_objects	a Motavian child: still while talked to, else wandering
+loc_3FAC	PORTED	npc.c npc_spawn	the Motavian child's init
+loc_3FF8	PORTED	npc.c npc_spawn	a Dezolian's init
+loc_456C	PORTED	npc.c npc_spawn	a musk cat's init
+Obj_MotaYoungMan2	PORTED	npc.c run_objects	the second set's young man (palette line 0)
+loc_47E8	PORTED	npc.c npc_spawn	its init
+Obj_MotaYoungWoman2	PORTED	npc.c run_objects	the second set's young woman
+loc_4834	PORTED	npc.c npc_spawn	its init
+Obj_MotaOldMan2	PORTED	npc.c run_objects	the second set's old man
+loc_4880	PORTED	npc.c npc_spawn	its init
+Obj_MotaChild2	PORTED	npc.c run_objects	the second set's child
+loc_48CC	PORTED	npc.c npc_spawn	its init
+loc_4BAE	PORTED	npc.c mansion_slide_tick	an Esper mansion B1 sliding piece, done
+loc_4C36	PORTED	npc.c mansion_slide_tick	an Esper mansion B1 sliding piece, done
+loc_4CBE	PORTED	npc.c mansion_slide_tick	an Esper mansion B1 sliding piece, done
+loc_4CCC	PORTED	npc.c mansion_box_tick	the B1 box piece's hit box
+loc_4D18	PORTED	npc.c mansion_lutz_tick	Lutz's figure: the wait for $C743
+loc_4D4A	PORTED	npc.c mansion_lutz_tick	Lutz's figure: the walk
+loc_5060	PORTED	npc.c burst_tick	the burst's init and its sound
+loc_508E	PORTED	npc.c burst_tick	the burst's five frames
+loc_5280	PORTED	npc.c esper_tick	a standing Esper's init
+loc_52C0	PORTED	npc.c esper_tick	a standing Esper, idle
+loc_5304	PORTED	npc.c dead_body_tick	Shure's bodies, idle
+loc_5388	PORTED	npc.c moving_esper_tick	the door Espers' wait for $C742
+loc_5396	PORTED	npc.c moving_esper_tick	the door Espers' turn
+loc_53C0	PORTED	npc.c moving_esper_tick	the door Espers' step aside
+loc_5406	PORTED	npc.c moving_esper_tick	the door Espers, done
+loc_5422	PORTED	npc.c mansion_door_tick	the mansion's F1 door
+loc_544A	PORTED	npc.c mansion_door_tick	the F1 door, idle
+loc_54B4	PORTED	npc.c mansion_door_tick	the F1 way in to Lutz
+loc_54F8	PORTED	npc.c mansion_door_tick	the way in, idle
+loc_54FA	DEAD	no level places object $34, no code spawns it	object $34's init
+loc_550E	DEAD	as loc_54FA	object $34's main
+loc_5530	DEAD	as loc_54FA	object $34, idle
+loc_5532	DEAD	no level places object $35; its mappings point into compressed art	object $35's init
+loc_5546	DEAD	as loc_5532	object $35's main
+loc_5568	DEAD	as loc_5532	object $35, idle
+loc_556A	DEAD	no level places object $36; its mappings point into compressed art	object $36's init
+loc_557E	DEAD	as loc_556A	object $36's main
+loc_55A0	DEAD	as loc_556A	object $36, idle
+loc_5630	PORTED	npc.c spawn_chest	a Dezolis chest's init
+loc_5690	PORTED	npc.c spawn_chest	a Motavia chest's init (the second mappings on level type 1)
+loc_572E	PORTED	npc.c door_tick	a key or card door, waiting
+loc_57C4	PORTED	npc.c door_tick	a dynamite door, waiting
+ObjPSB_Init	PORTED	game.c tick_push_start, draw_push_start	PUSH START BUTTON's init
+ObjPSB_Main	PORTED	game.c tick_push_start, push_start_visible	PUSH START BUTTON's blink
+ObjCT_Init	PORTED	game.c draw_copyright	the title's copyright line
+ObjCT_Main	PORTED	game.c draw_copyright	the copyright line, idle
+# Items reached through `bne ++` (AS's second `+` on), read after the nameless-label fix.
+ItemAction_Letter	PORTED	menu.c item_use, use_describe	the Letter's words
+ItemAction_Recorder	PORTED	menu.c item_use	the Recorder's two lines
+ItemAction_MruraLeaf	PORTED	menu.c item_use, use_describe	the Maruera leaf's words
+ItemAction_PlsmRing	PORTED	menu.c item_use, use_describe	the Plasma Ring: "can't let go"
+ItemAction_Prism	PORTED	menu.c item_use, use_describe	the Prism's words
+ItemAction_Antidote	PORTED	menu.c use_antidote	the Antidote on the map
+ItemAction_StarMist	PORTED	menu.c use_star_mist	the Star Mist on the map
+# The sound driver (ps2.asm 90964-92535): smps.c, mostly by the labels' snake_case names.
+loc_B98B4	PORTED	smps.c driver_frame, smps_tick	the driver's frame: the queue, the tempo, the fade, the tracks
+UpdateTracks	PORTED	smps.c update_tracks	the six music and four effect tracks in turn
+loc_B9C26	PORTED	smps.c finish_trk_update	the vibrato reset at each new note, across a chord's parts
+loc_B9C6A	PORTED	smps.c start_pan_anim	the cycling pan's step at a note (type 2)
+loc_B9CBC	PORTED	smps.c pan_start_left_only	the left-first pan's start (type 3)
+loc_B9CCC	PORTED	smps.c pan_start_right_only	the right-first pan's start (type 4)
+loc_B9CDC	PORTED	smps.c start_pan_anim	the sweeping pan's start (types 1, 5, 6)
+loc_B9D18	PORTED	smps.c exec_pan_anim	the cycling pan's tick: nothing
+loc_B9D1A	PORTED	smps.c pan_settle_both	the pan settling back to both speakers
+loc_B9D84	PORTED	smps.c start_pan_anim, exec_pan_anim	the pan code's shared return
+ExecModEnv	PORTED	smps.c exec_mod_env	the vibrato's gate
+GetTrkPointer	PORTED	smps.c track_ptr	a track's offset into the driver's image
+cfHandler	PORTED	smps.c cf_handler, read_flags	the coordination flags' dispatcher
+JmpTo_SetFMIns	PORTED	smps.c set_fm_ins	bra SetFMIns
+loc_BA8DC	PORTED	smps.c refresh_volume	the volume to operator 1 (algorithm 7)
+loc_BA8EA	PORTED	smps.c refresh_volume	the volume to operator 3 (algorithms 5, 6)
+loc_BA8F8	PORTED	smps.c refresh_volume	the volume to operator 2 (algorithm 4)
+loc_BA906	PORTED	smps.c refresh_volume	the volume to operator 4
+DoNoteOn	PORTED	smps.c do_note_on	the note-on write
+loc_BA98C	PORTED	smps.c write_fm_channel	an instrument's register to port I or II (the busy wait replaced)
+WriteFMII	PORTED	smps.c write_fm_ii	a port II write (the Z80 bus and busy wait replaced)
+StopZ80	REPLACED	fm.c fm_write (the queue), fm_dac_play	the Z80's bus requested around a chip write; the port has no Z80

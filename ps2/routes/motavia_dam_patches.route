@@ -1,0 +1,48 @@
+# (build 97c) Motavia's map by flag (loc_9258, loc_9302; the port's
+# level_map_patches). The same place three times, each by a warp that
+# reloads the level: as the game starts; with Climatrol destroyed
+# ($C735) alone -- every block $8B (dry orange ground) becomes $89
+# (water), and four more cells with it, none of them here; and with all
+# four dams' panels opened ($C72F blue, $C733 red, $C731 yellow, $C72D
+# green) -- each panel's table lays water ($87) in runs, across or down,
+# and its edge and grass-corner blocks ($92-$95, $A6-$A9) one at a time:
+# the empty canals fill. Blocks 55,47 to 64,53 are where the dams'
+# tables change the most (27 of their 413 blocks); the party stands at
+# 120,101.
+#
+# For checking against the emulator: the three shots, and a save there
+# with $C735 and the panels set shows the third.
+
+start slot 1 routes/saves/jet_scooter.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 0 89 116
+warp 0 120 101
+wait screen level
+wait idle
+shot 01_before
+flag $C735 1
+warp 0 120 101
+wait screen level
+wait idle
+shot 02_climatrol_destroyed
+flag $C72F 1
+flag $C733 1
+flag $C731 1
+flag $C72D 1
+warp 0 120 101
+wait screen level
+wait idle
+shot 03_dams_opened

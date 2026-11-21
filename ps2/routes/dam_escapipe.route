@@ -1,0 +1,324 @@
+# An Escapipe inside a dam the jet scooter went into. The scooter's push
+# reaches the door list as a step does (JetScooter_ChkCanMove -> loc_6E4E),
+# and loc_6F1C (ps2.asm:10277), for a record from a level under $10 to one
+# at $10 or more, sets $C64C to the level and $C64E/$C650 to the leader's
+# $E40E/$E40A -- the scooter's own place while riding (loc_4AE2).
+# ItemAction_Escapipe (14544) loads those three, $12, and leaves
+# jet_scooter_flag alone: the party is back on the scooter at the dam's
+# mouth, 65,43 for the Green Dam (record 47,65). The ride is what
+# tools/play.py sends from story_cards.json (board_scooter, ride_into),
+# replayed. Build 83: the ROM's, and the port's; a coverage route.
+
+start slot 1 routes/saves/story_cards.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+walk right 3
+wait idle
+walk up 1
+wait idle
+walk right 6
+wait idle
+walk up 1
+wait idle
+walk left 2
+wait idle
+walk up 10
+wait idle
+walk right 6
+wait idle
+walk down 1
+wait idle
+walk right 5
+wait idle
+walk down 2
+wait idle
+walk right 2
+wait idle
+walk down 1
+wait idle
+walk right 4
+wait idle
+press down
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+walk right 2
+wait idle
+walk down 1
+wait idle
+walk right 5
+wait idle
+walk down 3
+wait idle
+walk left 5
+wait idle
+walk down 4
+wait idle
+walk left 1
+wait idle
+walk down 16
+wait idle
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+walk down 10
+wait idle
+walk right 17
+wait idle
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+walk right 12
+wait idle
+walk down 3
+wait idle
+walk right 8
+wait idle
+walk down 3
+wait idle
+walk right 9
+wait idle
+press right
+wait idle
+press a
+wait idle
+press c
+wait idle
+wait idle
+wait ticks 4
+walk down 30
+wait idle
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+walk down 23
+wait idle
+walk left 55
+wait idle
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+walk left 22
+wait idle
+walk down 1
+wait idle
+walk left 1
+wait idle
+walk down 3
+wait idle
+walk left 15
+wait idle
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+walk left 10
+wait idle
+walk down 1
+wait idle
+walk left 1
+wait idle
+walk down 1
+wait idle
+walk left 4
+wait idle
+walk down 29
+wait idle
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+press c
+wait ticks 240
+walk down 5
+wait idle
+walk down 1
+wait idle
+wait idle
+expect level $30 93 17     # GreenDamGroundF, where the push lands
+expect riding no
+give Escapipe 1
+press c
+wait idle
+press c
+wait idle
+press down
+press c
+wait idle
+press up
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+wait idle
+wait idle
+expect script $0012        # "Character's body feels very light."
+expect level $00 65 43
+expect riding yes
+expect object $22 visible  # Obj_JetScooter, under the party
+shot 01_dam_mouth
+expect no-stderr not ported

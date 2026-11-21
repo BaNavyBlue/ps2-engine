@@ -1,0 +1,107 @@
+# Script_Miscellaneous, bank 0x19; script_id = 0x19NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+This is bad! This artificial satellite is
+headed straight for Palma!!
+There's no time left!!!
+What should I do? What should I do{47}{47}{47}?{end:C5}
+
+[2]
+Ah, I'm having the same dream again{47}{47}{47}{end:C5}
+
+[3]
+{cont}"Help me!!!"{end:C7}
+
+[4]
+{cont}{47}{47}{47}{47}{47}?!{end:C7}
+
+[5]
+{cont}You're awake, huh?
+I'm Tyler. A space pirate. I got tired of
+living underneath Mother Brain's absolute
+control, so I fled Palma.{pause}
+
+[6]
+You were locked up on Gaira, right?
+Lucky I happened to be passing by.
+Your companions are in the regeneration
+units, too. They should wake up soon.{end:C4}
+
+[7]
+Still, you've been through a tough ordeal,
+haven't you? Look. That's the end of Palma.{end:C4}
+
+[8]
+A whole planet has died.
+What's going to become of Algol now?!
+Right now I don't even know what
+to say to you.{pause}
+
+[9]
+The news said you were the criminals who
+drove Mother Brain crazy, but there's no
+way you could have done a thing like that,
+am I right?{pause}For now, I'll take you as far as Paseo.
+I've retrieved your belongings for you.{pause}
+
+[10]
+Oh, right! Have you been to Dezolis?
+Rumor has it there's someone there
+with the very power Mother Brain fears most.{pause}Maybe that's your culprit!
+Let's meet again sometime!{end:C4}
+
+[11]
+Welcome, {char}. I am Lutz, the last
+esper of Algol. You seem to be wondering
+how I know your name.{pause}You may not recall, but this is the second
+time we have met. When you were ten, on a
+journey into space with your parents, you
+were involved in an accident.{pause}At that time I awakened, and with the
+power of light, I summoned you and
+brought you back to life.
+
+
+[12]
+What woke me was Alisa's scream.{pause}Yes, you are the last descendant of
+Alisa, who once fought to protect
+Algol. And you have seen it too:{pause}the nightmare in which Alisa, the symbol of
+beautiful Algol, fights the power of
+darkness known as Dark Falz.{pause}
+
+[13]
+Dark Falz is the one who once sought
+to bring Algol to ruin. However, Dark Falz
+was defeated.{end:C4}
+
+[14]
+But that doesn't mean there is no one
+left who plots to destroy Algol.{pause}{char}, gather the weapons needed to
+defeat these evil ones. Among them is the
+Aeroprism, a prism to reveal that which
+heretofore could not be seen.{pause}
+
+[15]
+Once you have gathered every weapon
+bearing the name Nei, which means "that
+which is not"{47}{47}{47} I shall tell you of the
+schemes of something malevolent.{end:C4}
+
+[16]
+Ha ha ha ha ha!!
+Welcome to the trap of evil, Pandora's Box!
+Sealed within is the entirety of the calamity
+you call Dark Falz!{pause}This is a gift from our world to yours.
+Accept it.{end:C7}
+
+[17]
+{char}. Have you the courage to go
+and defeat the evil ones?{end:C5}
+
+[18]
+I see{47}{47}{47} Then I shall pray for you.{pause}O god of Algol! Grant these ones
+courage and strength!{end:C4}
+
+[19]
+Now, take the Nei Sword
+from that box.{end:C4}

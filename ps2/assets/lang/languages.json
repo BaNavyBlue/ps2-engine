@@ -1,0 +1,8 @@
+{
+  "note": "(build 163) The Escape menu's LANGUAGE, in its order (docs/languages.md). The first is the cartridge's, the game's own files under assets/; each other one is the folder assets/lang/<key>/, whose files stand in for the game's own of the same path. `name` is what the menu shows, twelve letters at most; `key` what settings.json keeps.",
+  "languages": [
+    { "key": "us", "name": "ENGLISH 1989" },
+    { "key": "retranslation", "name": "RETRANSLATED" },
+    { "key": "ja", "name": "JAPANESE" }
+  ]
+}

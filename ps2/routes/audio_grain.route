@@ -1,0 +1,45 @@
+# (build 116) The AUDIO page's GRAIN: ON puts the chip's output grain on Q's
+# channels -- each carrier cut to the 9-bit sum's step, and the YM2612 DAC's
+# jump at zero: what Step Up's chord instrument's tail is made of on the
+# chip (docs/audio.md, "Build 116"). It is Q's: route_probe is built without
+# Q and the chip plays, so Q ONLY stands beside it and the title's theme
+# plays on through every change. Two values: left, right and C each flip it.
+# The page's rows are two apart since 116, so all nine fit. The route reads
+# its own settings.json, never the player's.
+start new
+sound render on
+wait screen title
+wait ticks 420
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press c
+press down
+press down
+press down
+press down
+press down
+press down
+press down
+press down
+expect audio grain OFF / Q ONLY
+press right
+expect audio grain ON / Q ONLY
+wait ticks 10
+shot page_grain_on
+expect sound playing
+press left
+expect audio grain OFF / Q ONLY
+press c
+expect audio grain ON / Q ONLY
+press c
+expect audio grain OFF / Q ONLY
+wait ticks 12
+expect sound playing
+press b
+press b
+expect escape-menu closed

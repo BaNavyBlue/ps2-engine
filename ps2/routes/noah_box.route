@@ -1,0 +1,33 @@
+# Pandora's box on NoahGroundF ($63): the $39 object LoadSpritesInLevel
+# puts at $210,$D8 while $C745 is clear, with $2E = $035 -- ObjType_Events
+# $35 (loc_E0BE). A on it is $171A; the next idle visit sets $C745,
+# event_flags = $B00 and screen_changed_flag, and the level loads again
+# where the party stood. loc_7E02 case $B (loc_7FF2) then clears $E400 --
+# no party on screen -- and runs ObjType_Events $36 (loc_E0F8) through
+# the $DE70 path with no button: $1910 in the big box, then Dark Force
+# ($102). Before build 63, A on the box was the plain \"nothing unusual\"
+# line and "level: A on object type 0 index $35 is not ported".
+
+start level $63 33 14
+wait idle
+press up                     # the box stops the step; he turns to it
+wait idle
+shot 01_facing_the_box
+press a
+wait idle                    # stopped at the {pause}
+expect script $171A
+shot 02_dark_power
+press c
+wait idle                    # the {end:C4}
+press c
+wait idle                    # the reload, fade and all, and $1910 to its {pause}
+expect screen level
+expect level $63 33 14
+expect script $1910
+shot 03_no_party_big_box
+press c
+wait screen battle
+expect screen battle
+wait idle                    # FIGHT/STGY: Dark Force in, no enemy boxes
+shot 04_dark_force
+expect no-stderr not ported

@@ -1,0 +1,64 @@
+# The confrontation's YES and NO, and Mother Brain's battle (build 92).
+# YES to "Will they have to fight ...?" is $1814 into $1815 ("... disable
+# me! If not, return now!") and a second YES/NO; NO to that is $1818 ("I
+# will show no mercy. Die!"), the mother_brain_fought flag ($C747) set on
+# the next idle visit, and her battle, formation $103: no ambush roll, her
+# picture across the top of the backdrop (loc_AE8A0, plane B rows 0-13),
+# no enemy boxes, and -- since her battle data's colours are all black --
+# everything of her drawn by her lights (loc_67B8's second effect): the
+# chase along her picture's line-3 entries 8-15, then once it has lapped
+# the glow (line 2, 8-15) and after its fade-in the rainbow (line 2, 1-6).
+# Before build 92 the corridor did nothing ("walk: loc_70D6 ... is not
+# ported"); before its lights she was drawn black on black.
+
+start level $64 33 37
+party 4 40
+wait idle
+walk up 4
+wait idle
+wait ticks 2
+wait idle                    # the arrival scene, $1813 to its first {pause}
+expect script $1813
+press c
+wait idle
+press c
+wait idle                    # the first YES/NO
+expect menu $1F
+press c                      # YES
+wait idle
+expect script $1814
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle                    # $1815's end, then the second YES/NO
+expect menu $1F
+shot 01_second_question
+press down
+press c                      # NO: "Die!"
+wait idle
+expect script $1818
+press c
+wait screen battle
+expect flag $C747 1
+wait idle                    # FIGHT/STGY: the chase has started
+shot 02_mother_brain_dark
+expect pixel 160 60 $000     # her body, still dark
+wait ticks 120               # the chase lapped: glow and rainbow fading in
+shot 03_lights_coming_up
+wait ticks 240               # the rainbow sliding
+shot 04_rainbow
+expect pixel 160 60 $048     # the same pixel: one of the rainbow's oranges.
+                             # (build 129a) Which one depends on the ticks
+                             # before the battle: the lights wait on the
+                             # level's palette-cycle counter ($FFFFF634,
+                             # loc_67FE), which no screen resets. The
+                             # confrontation's quotes are one glyph each
+                             # since 129a, its text ends sooner, and the
+                             # slide is a step on from 129's $06A.
+wait ticks 16
+shot 05_rainbow_later
+expect no-stderr not ported

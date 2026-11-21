@@ -1,0 +1,58 @@
+# Build 95a: SHU raises the defense of the member chosen, not the
+# first member's.
+#
+# TechAction_Shu (ps2.asm:3288) sets d4 to 0 and joins TechAction_Sashu's
+# loop at loc_22FA with a5 still on the command's target word -- the
+# member the cursor picked -- where Sashu, Saner and Deban point a5 at
+# party_member_id first. Ner (loc_235C) is the same. Up to build 95 the
+# port's Shu and Ner took party_member_id[0] whoever was chosen, so
+# Rolf's defense rose from 133 to 153 here and Nei's stayed at 64.
+#
+# Party 4 30 is Rolf, Nei, Rudo, Amy; Amy knows SHU (her second battle
+# technique). The party triangle's stops run in the screen's order
+# (Battle_CharacterIdIndex): stop 2 is Nei, party position 1.
+
+start battle 213
+party 4 30
+wait idle
+expect stat 0 defense 133
+expect stat 1 defense 64
+press down                   # STGY
+press c
+wait idle
+press c                      # ORDR
+wait idle
+press right
+wait ticks 3
+press right
+wait ticks 3
+press right                  # Amy
+wait ticks 3
+press c
+wait idle
+press right                  # TECH
+wait ticks 3
+press c
+wait idle
+expect menu $66 1            # RES SHU DEBAN FOI, the lamp on RES
+press down                   # SHU
+wait ticks 3
+expect menu $66 2
+press c
+wait idle
+expect menu $00 0            # the party triangle
+press right
+wait ticks 3
+press right
+wait ticks 3
+expect menu $00 2            # on Nei
+press c
+wait idle
+expect menu $60              # back to FIGHT / STGY
+press c                      # FIGHT
+wait script $120D            # "Defense ability increases!"
+wait ticks 60
+shot 01_defense_up
+expect command tech
+expect stat 1 defense 84     # Nei's, up by 20
+expect stat 0 defense 133    # Rolf's as it was

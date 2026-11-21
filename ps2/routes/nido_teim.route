@@ -1,0 +1,47 @@
+# Teim on Nido F2 (object $2A at 47,31): Obj_Teim's init sets $2C to 4,
+# an A-button event, and her index byte is $17, so A on her is
+# ObjType_Events $17 (loc_DC36, ps2.asm:20180). Without the Letter:
+# "I'm Teim, daughter of Darum ..." ($1807) in the big box. With it:
+# "{char} hands over {item}; Teim's hands are shaking ..." ($1808), then
+# loc_DC64 sets event_flags[$17] -- Obj_Teim's init takes her off the
+# level once $C727 is set -- trades the Letter for Teim in the same bag
+# and plays SXFID_ItemReceived. Before build 68 A on her was the plain
+# "There seems to be nothing unusual here." ($1708) and "level: event
+# $17 is not ported" on stderr.
+
+start level 29 47 33         # Nido F2, below Teim's room, a new game
+wait screen level
+wait idle
+walk up 1                    # 47,32: she stands on 47,31
+wait step
+expect level 29 47 32
+shot 01_teim
+press a
+wait idle
+expect script $1807          # no Letter yet
+shot 02_no_letter
+press c                      # the second page
+wait idle
+press c                      # the box closes ($DE72 was set)
+wait idle
+expect level 29 47 32
+give Letter
+press a
+wait idle
+expect script $1808          # the Letter handed over
+shot 03_letter
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect level 29 47 32
+bags                         # Rolf: ... Teim, the Letter gone
+shot 04_gone                 # $C727 set: Obj_Teim's init deletes her
+walk up 1                    # where she stood
+wait step
+expect level 29 47 31
+expect no-stderr not ported

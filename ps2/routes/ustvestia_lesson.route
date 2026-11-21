@@ -1,0 +1,75 @@
+# Ustvestia's lesson: NO to hearing him play, "Oh, I get it, you want to
+# learn to play the piano!" ($A03), YES, $A05, YES, $A07 and the store's
+# character list; Rolf (even: a man) is $A08 at 2000 meseta
+# (loc_C73C), with the money window and YES / NO. YES pays, "Ok, I'll
+# start the lessons." ($A0B); once it is out, loc_C7AC: PaletteFadeFrom,
+# SXFID_Musik, $78 frames, PaletteFadeTo. Then "Now you are also a
+# musical artist!" ($A0C): bit 7 of Rolf's map technique count set and
+# the count one up, so "... learned Musik" ($A0D) follows the first
+# time. Nei (odd: a woman) would be 5000 (the second visit shows it).
+
+start level 6 7 9            # Oputa, two below the door
+meseta 9000
+wait screen level
+wait idle
+walk up 2
+wait screen building
+wait idle
+expect script $0A01
+press c
+wait idle
+press down                   # NO
+press c
+wait idle
+expect script $0A03          # "... you want to learn to play the piano!"
+press c
+wait idle
+press c                      # YES
+wait idle
+expect script $0A05
+press c
+wait idle
+press c                      # YES
+wait idle
+expect script $0A07
+press c
+wait idle                    # the character list
+shot 01_price           # Rolf picked: $A08, the money and YES / NO
+press c                      # Rolf
+wait idle
+expect script $0A08          # 2000 for a man
+press c
+wait idle                    # the money and YES / NO
+shot 02_paid
+press c                      # YES
+wait idle
+expect script $0A0B          # "Ok, I'll start the lessons."
+state
+wait ticks 20
+shot 03_fading               # PaletteFadeFrom under way
+wait ticks 80
+shot 04_dark                 # the $78 frames, SXFID_Musik playing
+wait ticks 150               # PaletteFadeTo, and the line typed
+expect script $0A0C          # "Now you are also a musical artist!"
+state                        # meseta 7000
+shot 05_artist
+press c                      # {pause}: "Come again!"
+wait idle
+press c
+wait idle
+expect script $0A0D          # "ROLF has learned the MUSIK technique."
+shot 06_learned
+press c                      # sub 3: CloseAllWindows, and the street
+wait screen level
+wait idle
+expect screen level
+press c                      # the menu: TECH, Rolf -- Musik, his first
+wait idle                    # map technique at L1
+press down
+press down
+press c
+wait idle
+press c                      # Rolf
+wait idle
+shot 07_rolf_techs
+expect no-stderr not ported

@@ -1,0 +1,36 @@
+# (build 138e) The emulator's damage-floor scene (docs/emulator_saves.md,
+# slot 3): CONTINUE biolab_recorder.json -- the Biosystems Lab B1 at 79,20
+# -- and step two cells left onto a damage floor (77,20). The white field
+# (loc_7108: all 64 live entries $EEE for one field), then loc_7140 copies
+# the fade target back -- the level as loaded -- so line 2 entry 15, which
+# the lab's pulse (loc_65D8's pairs, every eighth frame) had at $04A, shows
+# its loaded $08E (level_biosystems_lab.png, line 2 entry 15: 255,144,0)
+# until the pulse's next step writes $006 (its pair $044E/$0006). Pins
+# that the save the emulator gets reaches the scene in the port; the rule
+# itself is damage_floor_restore's (build 138d, on Gaira's floor). Passes
+# on 138d as well: nothing under src/ changed.
+
+start slot 1 routes/saves/biolab_recorder.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $32 79 20
+wait ticks 30                # the cycles step away from the loaded colours
+walk left 2                  # returns as the second step begins
+wait ticks 16
+expect pixel 200 16 $EEE     # the white field
+wait ticks 1
+expect pixel 200 16 $08E     # loc_7140: the loaded colour (the pulse had $04A)
+wait ticks 9
+expect pixel 200 16 $006     # loc_65D8's next pair writes it again

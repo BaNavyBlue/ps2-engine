@@ -1,0 +1,35 @@
+# Script_Hospital, bank 0x05; script_id = 0x05NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+How may I help you?{end:C5}
+
+[2]
+{char} doesn't seem
+to be poisoned{47}{47}{47}{end:C4}
+
+[3]
+The treatment will cost {meseta}
+meseta. Is that all right?{end:C5}
+
+[4]
+If you can't pay for the treatment,
+then, I'm afraid{47}{47}{47}{end:C4}
+
+[5]
+I see. Take care of yourself{47}{47}{47}{end:C4}
+
+[6]
+Take care, and stay safe.{end:C4}
+
+[7]
+Who needs treatment?{end:C5}
+
+[8]
+I'm afraid {char} has passed away{47}{47}{47}{end:C4}
+
+[9]
+No one seems to be hurt, though.{end:C4}
+
+[10]
+Shall I treat anyone else?{end:C5}

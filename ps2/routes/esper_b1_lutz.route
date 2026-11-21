@@ -1,0 +1,71 @@
+# Build 87. B1's Espers (dialogue $8F, loc_E07A): with $C743 = 1 the word
+# is $1698 and the next idle visit sets event_flags $D00 and $C743 = 2,
+# which starts objects $23-$27 (loc_4B28-loc_4DBE) and holds the party
+# still (loc_3786). $27's end opens Building_EsperMansion: $190B, $190E,
+# $C78E = 0, then $C743 = 3 and F1 at 16,16, where the chest is now $0E,
+# the Prism. On build 85 the Esper answered $1708 and nothing moved.
+start level $11 15 14
+flag $C743 1
+wait idle
+walk up 2
+wait idle
+expect level $10 16 14
+walk left 3
+wait idle
+walk up 5
+wait idle
+expect level $10 13 9
+press left
+press a
+wait idle
+expect script $1698
+press c
+wait idle
+press c
+wait ticks 4
+expect flag $C743 2
+shot 01_scene_starts
+limit 2000
+press down
+wait ticks 20
+expect level $10 13 9
+wait ticks 700
+shot 02_scene_mid
+wait screen building
+wait idle
+expect script $190B
+expect pixel 160 60 $68E        # (build 127) his face: line 3, $3B -- black when it went on line 1
+shot 03_lutz
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $190E
+expect level $11 16 16
+expect flag $C743 3
+expect flag $C78E 0
+walk left 3
+wait idle
+press up
+press a
+wait idle
+expect item Prism
+press c
+wait idle
+expect no-stderr level:

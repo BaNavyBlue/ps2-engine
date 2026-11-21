@@ -1,0 +1,22 @@
+# Build 97d: the one-shot case $D at a level load. loc_8022 is `rts`, so
+# the event word stays $D00 across the load: the hold goes on -- the
+# leader stands still, and A and the C menu stay shut. In play only B1's
+# Esper sets $D00 (esper_b1_hold), and nothing can reload the level while
+# it lasts; here the probe puts $D in the word before a warp onto Noah F1.
+# Before 97d the port's load reported "one-shot event $0D is not ported",
+# dropped it, and the party walked.
+start level $64 33 10
+party 4 50
+wait idle
+oneshot $D
+warp $64 33 10
+wait level $64
+wait ticks 30
+expect no-stderr not ported
+press up                     # held: still on 33,10
+wait ticks 30
+expect level $64 33 10
+press c                      # the C menu shut
+wait ticks 30
+expect menu none
+shot 01_held

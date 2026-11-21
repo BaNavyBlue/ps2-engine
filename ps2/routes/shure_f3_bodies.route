@@ -1,0 +1,31 @@
+# Shure's top floor, the other two bodies (event $03, loc_DA8C): each is
+# $170B and nothing more, and neither goes away. The walk between them is
+# the shortest one over this floor's collision.
+
+start level $1A 57 34        # under the body at $398,$218
+wait screen level
+wait idle
+press up                     # blocked by the body: a turn, no step
+press a
+wait idle
+expect script $170B
+shot 01_second
+press c
+wait idle
+press c
+wait idle
+walk right 16
+walk down 6
+walk right 9
+walk up 2
+wait step
+press a
+wait idle
+expect script $170B
+shot 02_third
+press c
+wait idle
+press c
+wait idle
+expect screen level
+expect no-stderr not ported

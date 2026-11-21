@@ -1,0 +1,36 @@
+# The inventor with no leaf (loc_C8E2's other branch): $B01, $B02 ("Do you
+# know what MARUERA LEAVES are?"), WinID_YesNo2; NO (loc_C90E) is $B04,
+# the tree on an island in the sea, then $B03, "I need some of those
+# leaves"; then CloseAllWindows. Before build 76 the door stayed shut.
+
+start level $08 15 40
+wait idle
+walk up 1
+wait screen building
+wait idle
+expect script $0B01
+press c                      # past the {pause}
+wait idle
+press c
+wait idle
+expect script $0B02          # its end code opens YES / NO at once
+press down                   # NO
+press c
+wait idle
+expect script $0B04
+shot 01_an_island_in_the_sea
+press c                      # three {pause}s, then its end
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $0B03
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect no-stderr not ported

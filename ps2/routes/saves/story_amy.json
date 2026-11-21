@@ -1,0 +1,218 @@
+{
+  "format": 1,
+  "slot_label": { "name": "    ", "level": 11 },
+  "money": 399,
+  "location": { "planet": "Motavia", "map": 6, "x": 624, "y": 320, "on_jet_scooter": false,
+                "jet_scooter_parked": { "x": 0, "y": 0 } },
+  "party": {
+    "members": ["Rolf", "Nei", "Rudo", "Amy"],
+    "recruits_joined": 3,
+    "next_recruit_event": 3
+  },
+  "characters": [
+    {
+      "id": "Rolf",
+      "name": "ROLF",
+      "level": 11,
+      "experience": 5139,
+      "hp": 77, "max_hp": 77,
+      "tp": 46, "max_tp": 46,
+      "strength": 86, "mental": 82, "agility": 54,
+      "luck": 61, "dexterity": 77,
+      "attack_base": 67, "attack": 107, "defense": 82,
+      "techniques_a": 7, "techniques_b": 3,
+      "status": 0,
+      "equipment": { "head": "Fibergear", "right_hand": "CeramKnife", "left_hand": "CeramKnife", "body": "FiberCoat", "legs": "Shoes" },
+      "inventory": [
+        { "item": "Shoes", "equipped": true },
+        { "item": "Monomate", "equipped": false },
+        { "item": "FiberCoat", "equipped": true },
+        { "item": "CeramKnife", "equipped": true },
+        { "item": "CeramKnife", "equipped": true },
+        { "item": "SmallKey", "equipped": false },
+        { "item": "Dimate", "equipped": false },
+        { "item": "Monomate", "equipped": false },
+        { "item": "Dynamite", "equipped": false },
+        { "item": "Dimate", "equipped": false },
+        { "item": "Fibergear", "equipped": true }
+      ]
+    },
+    {
+      "id": "Nei",
+      "name": "NEI",
+      "level": 21,
+      "experience": 5139,
+      "hp": 89, "max_hp": 89,
+      "tp": 47, "max_tp": 47,
+      "strength": 54, "mental": 39, "agility": 63,
+      "luck": 38, "dexterity": 33,
+      "attack_base": 45, "attack": 99, "defense": 65,
+      "techniques_a": 2, "techniques_b": 3,
+      "status": 0,
+      "equipment": { "head": "SilRibbon", "right_hand": "CeramBar", "left_hand": "CeramBar", "body": "FiberVest", "legs": "Sandals" },
+      "inventory": [
+        { "item": "Sandals", "equipped": true },
+        { "item": "Monomate", "equipped": false },
+        { "item": "Monomate", "equipped": false },
+        { "item": "Monomate", "equipped": false },
+        { "item": "SilRibbon", "equipped": true },
+        { "item": "CeramBar", "equipped": true },
+        { "item": "CeramBar", "equipped": true },
+        { "item": "FiberVest", "equipped": true }
+      ]
+    },
+    {
+      "id": "Rudo",
+      "name": "RUDO",
+      "level": 10,
+      "experience": 4312,
+      "hp": 109, "max_hp": 109,
+      "tp": 0, "max_tp": 0,
+      "strength": 114, "mental": 68, "agility": 51,
+      "luck": 45, "dexterity": 44,
+      "attack_base": 41, "attack": 81, "defense": 86,
+      "techniques_a": 0, "techniques_b": 0,
+      "status": 0,
+      "equipment": { "head": "Fibergear", "right_hand": "CeramKnife", "left_hand": "CeramKnife", "body": "FiberCoat", "legs": "Boots" },
+      "inventory": [
+        { "item": "FiberCoat", "equipped": true },
+        { "item": "Boots", "equipped": true },
+        { "item": "CeramKnife", "equipped": true },
+        { "item": "CeramKnife", "equipped": true },
+        { "item": "Fibergear", "equipped": true }
+      ]
+    },
+    {
+      "id": "Amy",
+      "name": "AMY",
+      "level": 6,
+      "experience": 868,
+      "hp": 38, "max_hp": 38,
+      "tp": 35, "max_tp": 35,
+      "strength": 33, "mental": 41, "agility": 19,
+      "luck": 33, "dexterity": 40,
+      "attack_base": 17, "attack": 57, "defense": 41,
+      "techniques_a": 5, "techniques_b": 3,
+      "status": 256,
+      "equipment": { "head": "Fibergear", "right_hand": "CeramKnife", "left_hand": "CeramKnife", "body": "FiberCape", "legs": "Shoes" },
+      "inventory": [
+        { "item": "Shoes", "equipped": true },
+        { "item": "Fibergear", "equipped": true },
+        { "item": "FiberCape", "equipped": true },
+        { "item": "CeramKnife", "equipped": true },
+        { "item": "CeramKnife", "equipped": true }
+      ]
+    },
+    {
+      "id": "Hugh",
+      "name": "HUGH",
+      "level": 1,
+      "experience": 0,
+      "hp": 16, "max_hp": 16,
+      "tp": 19, "max_tp": 19,
+      "strength": 14, "mental": 26, "agility": 10,
+      "luck": 6, "dexterity": 10,
+      "attack_base": 7, "attack": 14, "defense": 13,
+      "techniques_a": 0, "techniques_b": 0,
+      "status": 0,
+      "equipment": { "head": "None", "right_hand": "None", "left_hand": "Scalpel", "body": "CarbonSuit", "legs": "Shoes" },
+      "inventory": [
+        { "item": "Scalpel", "equipped": true },
+        { "item": "CarbonSuit", "equipped": true },
+        { "item": "Shoes", "equipped": true }
+      ]
+    },
+    {
+      "id": "Anna",
+      "name": "ANNA",
+      "level": 1,
+      "experience": 0,
+      "hp": 18, "max_hp": 18,
+      "tp": 12, "max_tp": 12,
+      "strength": 20, "mental": 27, "agility": 23,
+      "luck": 9, "dexterity": 15,
+      "attack_base": 12, "attack": 24, "defense": 29,
+      "techniques_a": 1, "techniques_b": 0,
+      "status": 0,
+      "equipment": { "head": "Headgear", "right_hand": "Boomerang", "left_hand": "None", "body": "FiberCape", "legs": "Boots" },
+      "inventory": [
+        { "item": "Headgear", "equipped": true },
+        { "item": "Boomerang", "equipped": true },
+        { "item": "FiberCape", "equipped": true },
+        { "item": "Boots", "equipped": true }
+      ]
+    },
+    {
+      "id": "Kain",
+      "name": "KAIN",
+      "level": 1,
+      "experience": 0,
+      "hp": 16, "max_hp": 16,
+      "tp": 8, "max_tp": 8,
+      "strength": 15, "mental": 10, "agility": 16,
+      "luck": 11, "dexterity": 8,
+      "attack_base": 8, "attack": 16, "defense": 20,
+      "techniques_a": 2, "techniques_b": 0,
+      "status": 0,
+      "equipment": { "head": "None", "right_hand": "Dagger", "left_hand": "None", "body": "FiberCoat", "legs": "Shoes" },
+      "inventory": [
+        { "item": "Dagger", "equipped": true },
+        { "item": "FiberCoat", "equipped": true },
+        { "item": "Shoes", "equipped": true }
+      ]
+    },
+    {
+      "id": "Shir",
+      "name": "SHIR",
+      "level": 1,
+      "experience": 0,
+      "hp": 13, "max_hp": 13,
+      "tp": 6, "max_tp": 6,
+      "strength": 18, "mental": 10, "agility": 17,
+      "luck": 12, "dexterity": 18,
+      "attack_base": 9, "attack": 17, "defense": 17,
+      "techniques_a": 1, "techniques_b": 0,
+      "status": 0,
+      "equipment": { "head": "None", "right_hand": "Dagger", "left_hand": "None", "body": "CarbonSuit", "legs": "Shoes" },
+      "inventory": [
+        { "item": "Dagger", "equipped": true },
+        { "item": "CarbonSuit", "equipped": true },
+        { "item": "Shoes", "equipped": true }
+      ]
+    }
+  ],
+  "flags_c700": [
+    "00000000040506000000000000000000"
+  ],
+  "event_flags": [
+    "00000000000100000000000000000000",
+    "00020000000000010100000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000"
+  ],
+  "treasure_chest_flags": [
+    "00000000000000000000000000000101",
+    "01010101010101010101010100000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000"
+  ],
+  "raw_c600": [
+    "00030004000300030000000100020003",
+    "00000000000000000000000000000000",
+    "0000018F000000000000000000000000",
+    "00000000000000000000000000000000",
+    "000601400270000601400270000003B0",
+    "07A00000000000000000000000000000",
+    "1C191610180F13C41C1F0E190B1723C4",
+    "121F11120B18180B150B13181D12131C",
+    "00000000000B00000000000000000000",
+    "000000000000000000000000FFFF"
+  ]
+}

@@ -1,0 +1,224 @@
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+struct type_Sharp
+{
+    float4 dst;
+    int4 _step;
+    float4 to2020_0;
+    float4 to2020_1;
+    float4 to2020_2;
+    float4 enc;
+    int4 mode;
+};
+
+struct main0_out
+{
+    float4 out_var_SV_Target0 [[color(0)]];
+};
+
+fragment main0_out main0(constant type_Sharp& Sharp [[buffer(0)]], texture2d<float> Frame [[texture(0)]], float4 gl_FragCoord [[position]])
+{
+    main0_out out = {};
+    float4 _317;
+    do
+    {
+        int _58 = int(gl_FragCoord.x);
+        int _61 = int(gl_FragCoord.y);
+        int _64 = int(Sharp.dst.x);
+        int _67 = int(Sharp.dst.y);
+        int _70 = int(Sharp.dst.z);
+        int _73 = int(Sharp.dst.w);
+        bool _78;
+        if (_58 >= _64)
+        {
+            _78 = _61 < _67;
+        }
+        else
+        {
+            _78 = true;
+        }
+        bool _84;
+        if (!_78)
+        {
+            _84 = _58 >= (_64 + _70);
+        }
+        else
+        {
+            _84 = true;
+        }
+        bool _90;
+        if (!_84)
+        {
+            _90 = _61 >= (_67 + _73);
+        }
+        else
+        {
+            _90 = true;
+        }
+        if (_90)
+        {
+            _317 = float4(0.0, 0.0, 0.0, 1.0);
+            break;
+        }
+        int _99 = (((2 * (_58 - _64)) + 1) * Sharp._step.x) - _70;
+        int _106 = (((2 * (_61 - _67)) + 1) * Sharp._step.y) - _73;
+        int _107 = 2 * _70;
+        int _108 = _99 / _107;
+        int _109 = 2 * _73;
+        int _110 = _106 / _109;
+        float _116 = float(_99 - ((_108 * 2) * _70)) / float(_107);
+        int _123 = Sharp._step.x - 1;
+        int _127 = Sharp._step.y - 1;
+        int _134 = (min(_108, _123) * Sharp._step.z) / Sharp._step.x;
+        int _138 = (min(_110, _127) * Sharp._step.w) / Sharp._step.y;
+        float3 _143 = Frame.read(uint2(int3(_134, _138, 0).xy), 0).xyz;
+        int _145 = (min((_108 + 1), _123) * Sharp._step.z) / Sharp._step.x;
+        int _152 = (min((_110 + 1), _127) * Sharp._step.w) / Sharp._step.y;
+        float3 _157 = Frame.read(uint2(int3(_134, _152, 0).xy), 0).xyz;
+        float3 _165 = _143 + ((Frame.read(uint2(int3(_145, _138, 0).xy), 0).xyz - _143) * _116);
+        float3 _171 = _165 + (((_157 + ((Frame.read(uint2(int3(_145, _152, 0).xy), 0).xyz - _157) * _116)) - _165) * (float(_106 - ((_110 * 2) * _73)) / float(_109)));
+        float4 _316;
+        do
+        {
+            if (Sharp.mode.x == 0)
+            {
+                _316 = float4(_171, 1.0);
+                break;
+            }
+            float _183 = _171.x;
+            float _201;
+            do
+            {
+                if (_183 <= 0.0)
+                {
+                    _201 = 0.0;
+                    break;
+                }
+                if (_183 >= 1.0)
+                {
+                    _201 = 1.0;
+                    break;
+                }
+                float _200;
+                if (_183 <= 0.040449999272823333740234375)
+                {
+                    _200 = _183 * 0.077399380505084991455078125;
+                }
+                else
+                {
+                    _200 = powr((_183 + 0.054999999701976776123046875) * 0.947867333889007568359375, 2.400000095367431640625);
+                }
+                _201 = _200;
+                break;
+            } while(false);
+            float _202 = _171.y;
+            float _220;
+            do
+            {
+                if (_202 <= 0.0)
+                {
+                    _220 = 0.0;
+                    break;
+                }
+                if (_202 >= 1.0)
+                {
+                    _220 = 1.0;
+                    break;
+                }
+                float _219;
+                if (_202 <= 0.040449999272823333740234375)
+                {
+                    _219 = _202 * 0.077399380505084991455078125;
+                }
+                else
+                {
+                    _219 = powr((_202 + 0.054999999701976776123046875) * 0.947867333889007568359375, 2.400000095367431640625);
+                }
+                _220 = _219;
+                break;
+            } while(false);
+            float _221 = _171.z;
+            float _239;
+            do
+            {
+                if (_221 <= 0.0)
+                {
+                    _239 = 0.0;
+                    break;
+                }
+                if (_221 >= 1.0)
+                {
+                    _239 = 1.0;
+                    break;
+                }
+                float _238;
+                if (_221 <= 0.040449999272823333740234375)
+                {
+                    _238 = _221 * 0.077399380505084991455078125;
+                }
+                else
+                {
+                    _238 = powr((_221 + 0.054999999701976776123046875) * 0.947867333889007568359375, 2.400000095367431640625);
+                }
+                _239 = _238;
+                break;
+            } while(false);
+            float3 _243 = float3(_201, _220, _239) * Sharp.enc.y;
+            if (Sharp.mode.x == 1)
+            {
+                float3 _262 = float3(dot(Sharp.to2020_0.xyz, _243), dot(Sharp.to2020_1.xyz, _243), dot(Sharp.to2020_2.xyz, _243)) * Sharp.enc.x;
+                float _263 = _262.x;
+                float _277;
+                do
+                {
+                    if (_263 <= 0.0)
+                    {
+                        _277 = 0.0;
+                        break;
+                    }
+                    float _270 = powr(precise::min(_263, 1.0), 0.1593017578125);
+                    _277 = powr((0.8359375 + (18.8515625 * _270)) / (1.0 + (18.6875 * _270)), 78.84375);
+                    break;
+                } while(false);
+                float _278 = _262.y;
+                float _292;
+                do
+                {
+                    if (_278 <= 0.0)
+                    {
+                        _292 = 0.0;
+                        break;
+                    }
+                    float _285 = powr(precise::min(_278, 1.0), 0.1593017578125);
+                    _292 = powr((0.8359375 + (18.8515625 * _285)) / (1.0 + (18.6875 * _285)), 78.84375);
+                    break;
+                } while(false);
+                float _293 = _262.z;
+                float _307;
+                do
+                {
+                    if (_293 <= 0.0)
+                    {
+                        _307 = 0.0;
+                        break;
+                    }
+                    float _300 = powr(precise::min(_293, 1.0), 0.1593017578125);
+                    _307 = powr((0.8359375 + (18.8515625 * _300)) / (1.0 + (18.6875 * _300)), 78.84375);
+                    break;
+                } while(false);
+                _316 = float4(_277, _292, _307, 1.0);
+                break;
+            }
+            _316 = float4(_243 * Sharp.enc.x, 1.0);
+            break;
+        } while(false);
+        _317 = _316;
+        break;
+    } while(false);
+    out.out_var_SV_Target0 = _317;
+    return out;
+}
+

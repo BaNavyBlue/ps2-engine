@@ -1,0 +1,19 @@
+# Piata's tower before the Governor's debrief. Its door record has
+# building 1 and $3E, which loc_6EA6 (ps2.asm:10231) never treats as a
+# building: with $C712 clear the push is simply refused (moveq #-1, d4).
+# Found by the door sweep: the port used to enter Rolf's house here,
+# asking for window $3B+$3E = $79, which the ROM does not have.
+
+start level 9 9 25           # a new game: $C712 clear
+wait screen level
+wait idle
+walk up 1
+wait step
+shot 01_at_the_door
+press up                     # into the door
+wait ticks 60
+wait idle
+expect screen level
+expect level 9 9 24
+shot 02_still_shut
+expect no-stderr not ported

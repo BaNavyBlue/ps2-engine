@@ -1,0 +1,39 @@
+# (build 138e) The emulator's Mother Brain scene (docs/emulator_saves.md,
+# slot 4): CONTINUE emu_mother_brain.json -- Noah's first floor at the foot
+# of Mother Brain's corridor, 33,40, made by tools/emulator_scenes.py from
+# walk_mother_brain.json as story.py walks it -- and up the corridor to row
+# 33, where the approach (loc_70D6) sets event_flags $E00 and LevelScreen
+# leaves through white (loc_634E: red up first, then green, then blue) and
+# comes back from white (loc_62CC: blue down first). The same fade as
+# mother_brain_white (build 138d), from a real save instead of a new game
+# on the level. Passes on 138d as well: nothing under src/ changed.
+
+start slot 1 routes/saves/emu_mother_brain.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $64 33 40
+walk up 7                    # returns as the seventh step begins
+wait idle                    # at rest on cell 33
+wait ticks 2                 # the floor is looked at: the approach
+wait ticks 3
+expect pixel 4 4 $008        # black into white, red first
+wait ticks 17
+expect pixel 4 4 $EEE        # the 21st frame: white
+wait ticks 1
+expect pixel 160 112 $CEE    # the reload, from white: blue down first
+wait ticks 1
+expect pixel 160 112 $AEE    # blue still going down
+wait idle
+expect script $1813          # the confrontation

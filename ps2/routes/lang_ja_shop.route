@@ -1,0 +1,19 @@
+# (build 165) The Japanese cartridge's text in a message window and a
+# list: lang_shop's store in JAPANESE (docs/languages.md). Its face is the
+# cartridge's own font, a code's letter and above it its dakuten, eight
+# pixels a glyph; the store's list and the party's names -- ユーシス, ネイ,
+# the defaults the language changed to -- in it too. 0602's {item} is the
+# fourth item's Japanese name.
+start building 5 13 5 18
+language ja
+wait idle
+press down
+press down
+press down
+press c
+wait idle
+expect script $0602
+expect text "ラコニアスライサーだね。 だれが もつんだ?"
+expect pixel 100 190 $EEE      # the dakuten over だ, in the line's upper
+                               # row (paper in a stock line)
+shot 01_shop

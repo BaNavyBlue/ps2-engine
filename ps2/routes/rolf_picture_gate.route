@@ -1,0 +1,27 @@
+# (build 142) Rolf's picture only where his art is loaded. His two windows
+# draw tiles $4A0 on, where BuildingScreen puts RolfPortraitArt with his
+# palette on line 1 -- in every building but the library (the graph, with
+# its own palette, is at those tiles: LibrGraphPortArt), the roof, Tyler's
+# spaceship and the Esper mansion. A binding by window or by tile range
+# alone would draw Rolf's picture over whatever those tiles hold there.
+#
+# The game never opens Rolf's window in the library; this route does, by
+# naming portrait 0 at the library's door, so the window draws the graph's
+# tiles through Rolf's map -- as the ROM would -- and the pixel is the
+# tiles', not his picture's. With the picture bound regardless of what is
+# loaded, `expect picture` says rolf and colour_check finds about a
+# thousand pixels a frame in Rolf's grey where the graph's blue is (build
+# 142 checked it so).
+# Fails on b141d: the probe has no `expect picture`.
+#
+# (build 146a) No portrait art goes to VRAM now, the graph's at $4A0 no
+# more than Rolf's: the window's inside is empty -- black -- where it drew
+# the graph's tiles through Rolf's map. The gate still holds (no Rolf
+# picture where his art would not be); the frames are the one route whose
+# colours 146a changed.
+
+start building 10 0 0 0 32 16       # the library, portrait 0: Rolf's window
+wait idle
+expect picture 40 40 none           # inside Rolf's window: no picture
+expect picture 258 70 none
+shot 01_rolf_window_in_library

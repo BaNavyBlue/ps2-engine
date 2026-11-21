@@ -1,0 +1,646 @@
+# Script_People, bank 0x16; script_id = 0x16NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+This is Paseo, the largest city
+on Motavia{47}{47}{47}{end:C4}
+
+[2]
+When you reach a new town, it's a good
+idea to return home once.{pause}Someone who's heard of you might come
+looking for you.{end:C4}
+
+[3]
+Well, well. Quite the brave getup.
+But gear's no use unless you equip it!{end:C4}
+
+[4]
+If there's something you want to know
+about Motavia, go to the Library{pause}in the Central Tower!{end:C4}
+
+[5]
+I used to work at the Biosystem,
+west of the lake{47}{47}{47}{end:C4}
+
+[6]
+Don't go near the bridge over the northern
+river. Lots of people have been killed{pause}there by a man called Darum.{end:C4}
+
+[7]
+As long as you have money, the Clone
+Lab can restore your body. Convenient, huh?{end:C4}
+
+[8]
+From now on, women should take up arms
+and fight too! I'm going to buy some as well!{end:C4}
+
+[9]
+When it comes to men, hunters are the
+coolest! They're strong, and so reliable!{end:C4}
+
+[10]
+This town is so peaceful. I'm really
+glad I moved here from Arimaya{47}{47}{47}{end:C4}
+
+[11]
+Motavia prospered thanks to the Biosystem.
+Yet now the monsters that same Biosystem{pause}made are ravaging Motavia. Fate can be
+cruelly ironic, eh{47}{47}{47}{end:C4}
+
+[12]
+It hasn't rained at all lately.
+The lake has dried up, too.{end:C4}
+
+[13]
+My dad just lazes around every day.
+He says he can get by without working.{end:C4}
+
+[14]
+Is working hard a dumb thing to do?
+That's what all the grown-ups say.{end:C4}
+
+[15]
+When I grow up, I'm going to be a thief!
+It's a trendy job right now.{end:C4}
+
+[16]
+They say if you go to the north bridge,
+some guy called Darum will rob you.{end:C4}
+
+[17]
+Why in the world did you come to Arimaya?
+This is a terrible place, you know.{end:C4}
+
+[18]
+If those thugs had never come to town,
+Darum and his daughter Tiem could have{pause}lived happily together{47}{47}{47}{end:C4}
+
+[19]
+People are more terrifying than monsters.{end:C4}
+
+[20]
+Thugs attacked this town, and
+now there's nothing left{47}{47}{47}{end:C4}
+
+[21]
+Those thugs blew up people's houses
+with dynamite{47}{47}{47}{end:C4}
+
+[22]
+The thugs should have two more sticks
+of dynamite left.{pause}If we don't get them back, they'll
+destroy a town again{47}{47}{47}{end:C4}
+
+[23]
+Those thugs always come from the east.
+How terrifying their silhouettes look{pause}against the morning glow{47}{47}{47}{end:C4}
+
+[24]
+The thugs slaughtered the men, carried
+off the women, and stole all our food.{end:C4}
+
+[25]
+The only ones left here are the weak.
+We're just waiting to starve to death.{end:C4}
+
+[26]
+I know! The thugs' hideout is inside
+the building in Shuren.{end:C4}
+
+[27]
+They say those crooks are cautious, and
+keep their loot in locked containers.{end:C4}
+
+[28]
+Mr. Darum isn't a bad man! He only turned
+violent because little Tiem was kidnapped!{end:C4}
+
+[29]
+This is Optano. The Biosystem is
+south of this town.{end:C4}
+
+[30]
+The Biosystem made the monsters?
+That's got to be a lie.{end:C4}
+
+[31]
+The Biosystem has been making plants
+that grow well even with little rain.{end:C4}
+
+[32]
+Mother Brain controls the Biosystem.
+There's no way mistakes could happen!{end:C4}
+
+[33]
+"The scent of stars heals wounds;
+the scent of the moon revives the soul."{pause}So the nobles of old used to say
+as they used their atomizers.{end:C4}
+
+[34]
+O great Mother Brain!
+Please save us!{end:C4}
+
+[35]
+Even with the monsters gone, Motavia's
+already in shambles. Nothing can be done.{end:C4}
+
+[36]
+Say, do you know about atomizers?
+They smell so lovely.{pause}But atomizers are a real luxury.
+You hardly ever get your hands on one.{end:C4}
+
+[37]
+I want to be a musician. I heard there's
+a piano teacher in this town{47}{47}{47}{end:C4}
+
+[38]
+The hole in the middle of the Biosystem
+building leads to that terrifying basement.{end:C4}
+
+[39]
+The basement of the Biosystem{47}{47}{47}
+Something of the utmost importance{pause}seems to be down there{47}{47}{47}{end:C4}
+
+[40]
+I'm hungry{47}{47}{47}{end:C4}
+
+[41]
+I wonder when Motavia will finally know
+peace?{end:C4}
+
+[42]
+The people from Palma are picky eaters,
+so they go hungry.{end:C4}
+
+[43]
+When we're hungry, we'll eat anything.{end:C4}
+
+[44]
+Hey, what's Mother Brain?
+Does it taste good?{end:C4}
+
+[45]
+This is Zema, the resort town
+by the lake.{end:C4}
+
+[46]
+I've seen Motavians riding around
+on a vehicle. It looked like fun!{end:C4}
+
+[47]
+Have you been to the southern peninsula?
+The smell of garbage drifts over from{pause}Roron. It stinks!{end:C4}
+
+[48]
+Motavians can make anything out of junk.{end:C4}
+
+[49]
+The Motavians love the Roron garbage
+dump. They're always playing there.{end:C4}
+
+[50]
+In the middle of the lake there's a tower no
+one has ever been to. I wonder what it is?{end:C4}
+
+[51]
+When we were young, we used to play
+on the sea with jet scooters, too.{end:C4}
+
+[52]
+Once the Teleport Service came along,
+nobody used vehicles anymore.{end:C4}
+
+[53]
+What's that?{end:C4}
+
+[54]
+Huh?!{end:C4}
+
+[55]
+The ancestors of the people in this
+town worked out at sea, you know.{end:C4}
+
+[56]
+All sorts of legends and stories about the
+sea are still told in this town.{end:C4}
+
+[57]
+They say the sea and the lake connect
+underground. I wonder if that's true.{end:C4}
+
+[58]
+Welcome to Kueris.{end:C4}
+
+[59]
+They say people long ago would eat
+something before diving to catch fish.{end:C4}
+
+[60]
+My boyfriend lives on the edge of town,
+so nobody gets in the way of his research.{end:C4}
+
+[61]
+Where the seawater's a different color,
+they say lake water is welling up.{end:C4}
+
+[62]
+There should be a rocky island called
+Uzo out in the Motavian sea.{end:C4}
+
+[63]
+It was fifty years ago that Mother Brain
+decreed no one may go out to sea.{end:C4}
+
+[64]
+Hey, have you met our friends
+in Roron yet?{end:C4}
+
+[65]
+Aah, a human! Scary!{end:C4}
+
+[66]
+Did you know? Traveling through space
+just isn't possible anymore.{end:C4}
+
+[67]
+There was an accident ten years ago, and
+spaceships have been banned ever since.{end:C4}
+
+[68]
+Back when the spaceport was functional,
+ships flew to Palma and Dezolis constantly.{end:C4}
+
+[69]
+I wanted to be a pilot, but with no
+spaceships, I guess that won't happen.{end:C4}
+
+[70]
+This town is Piata. Long ago there
+was a spaceport near here, you know.{end:C4}
+
+[71]
+The accident ten years ago was when two
+spaceships collided above Dezolis.{end:C4}
+
+[72]
+They say a huge number of people
+died in the accident ten years ago.{end:C4}
+
+[73]
+Everyone believed that space travel
+wasn't dangerous at all.{end:C4}
+
+[74]
+The last spaceship was headed
+beyond Algol.{end:C4}
+
+[75]
+Going beyond Algol was a dream for so
+long, but it can never come true now{47}{47}{47}{end:C4}
+
+[76]
+I hear no one survived the accident
+ten years ago.{end:C4}
+
+[77]
+{char}{47}{47}{47} Hmm, I think that name was on
+the passenger list of the last ship{47}{47}{47}{end:C4}
+
+[78]
+Hey, what's outside Algol?
+Why can't we go there?{end:C4}
+
+[79]
+Mother Brain watches over us, right?
+So why do accidents happen?{end:C4}
+
+[80]
+They say the dams contain all kinds of
+weapons. People long ago left them{pause}there as protective charms.{end:C4}
+
+[81]
+Ga? Dotenyara? Panaputonyahohoi!{end:C4}
+
+[82]
+Nyaa! Unyanyaan!{end:C4}
+
+[83]
+Us folks are Dezolians.
+Handsomest fellas in all of Algol!{end:C4}
+
+[84]
+Us folks never tell a lie, no sir!{end:C4}
+
+[85]
+Ain't nobody but us on this planet.{end:C4}
+
+[86]
+Stay on this planet too long, and your
+body goes rotten, tell ya what.{end:C4}
+
+[87]
+The granny at the clone shop's really
+a man, y'know.{end:C4}
+
+[88]
+Nyah, you big dummy!{end:C4}
+
+[89]
+I hate you! Go away!{end:C4}
+
+[90]
+I'm gonna bite you!{end:C4}
+
+[91]
+This town's called Zosa.{end:C4}
+
+[92]
+Living easy and hunting like this
+is the best life there is.{end:C4}
+
+[93]
+Us folks live in a town the Palma
+people abandoned. Ya got a problem?{end:C4}
+
+[94]
+Well now, you're a rare one.
+Where'd you come from?{end:C4}
+
+[95]
+That accident on the day of the eclipse
+happened 'cause Palma folks didn't pray.{end:C4}
+
+[96]
+They didn't treat the Eclipse Torch right,
+so the gods punished the Palma folks.{end:C4}
+
+[97]
+Palma folks were scared of the poison
+gas, but it don't bother us none.{end:C4}
+
+[98]
+Us folks are so tough, it amazes
+even us.{end:C4}
+
+[99]
+Another human, besides the granny at
+the clone shop? Now that's a surprise!{pause}Everybody else left three years back.{end:C4}
+
+[100]
+When I went past the crevasse, I saw
+a real handsome fellow over there.{end:C4}
+
+[101]
+This town's called Aukbal.{end:C4}
+
+[102]
+Way, way back, somebody ran off from
+Palma to this planet, I hear.{end:C4}
+
+[103]
+Folks say the ones hiding on this planet
+have strange powers.{end:C4}
+
+[104]
+Oh, did you come through that crevasse?
+Aw, wrong fella. My mistake.{end:C4}
+
+[105]
+The planet Dezolis belongs to us. Good
+riddance to the Palma folks, I say.{end:C4}
+
+[106]
+That fellow hiding on this planet never
+gets any older. Mighty strange.{end:C4}
+
+[107]
+Us folks ain't ever leaving this
+planet, no matter what!{end:C4}
+
+[108]
+Us folks hate computers!{end:C4}
+
+[109]
+This town's called Ryuon.{end:C4}
+
+[110]
+Palma folks came to Dezolis
+to dig for Laconia.{end:C4}
+
+[111]
+The granny at the clone shop stayed
+here 'cause she likes us folks.{end:C4}
+
+[112]
+The poison gas came up when they dug
+the holes, they say. Dezolis's farts, y'know!{end:C4}
+
+[113]
+I saw it. Ten years back, two ships crashed.
+The sky went bright red.{end:C4}
+
+[114]
+Do Palma and Motavia folks still
+believe in Mother Brain?{end:C4}
+
+[115]
+Lean on Mother Brain, and sooner or
+later you'll get burned, I reckon.{end:C4}
+
+[116]
+Us folks don't count on Mother Brain.{end:C4}
+
+[117]
+It's right there, but you can't see
+or touch it. Can such a building exist?{end:C4}
+
+[118]
+I don't like Palma folks. Digging a great
+big hole in my planet. Just awful!{end:C4}
+
+[119]
+{47}{47}{47} Whoops, fell asleep walking.{end:C4}
+
+[120]
+Sure is hot today, tell ya what.{end:C4}
+
+[121]
+Long ago, we were kept by humans.{end:C4}
+
+[122]
+Lots of the people working on Dezolis
+had left their families back home.{end:C4}
+
+[123]
+The pets left behind on this planet
+were changed by the poison gas.{end:C4}
+
+[124]
+When the humans left this planet,
+they left us behind.{end:C4}
+
+[125]
+Give me food! I'm starving.{end:C4}
+
+[126]
+Mmm, garbage smells so good.{end:C4}
+
+[127]
+La la la. Collecting garbage is fun.{end:C4}
+
+[128]
+What kind of garbage will I find today?{end:C4}
+
+[129]
+Hey! I found a yummy cake!
+Want to try some?{end:C5}
+
+[130]
+{char} and the others ate the cake.
+It tasted weird! Their stomachs rumbled!{end:C4}
+
+[131]
+{char} and the others politely
+declined.{end:C4}
+
+[132]
+Look, look! I built this jet scooter.
+Not bad, huh?{end:C4}
+
+[133]
+I'm going to the sea to try it out.
+Come and watch, if you like.{end:C4}
+
+[134]
+Huh? Where did the Motavians go?
+Oh, there's a note posted here.{pause}"We like messing with garbage, that's all.
+So we don't need this. Someone can have it."{pause}Yes! How lucky is that!!{end:C4}
+
+[135]
+You must be {char}.
+We've been expecting you.{end:C4}
+
+[136]
+You're not {char}, are you?
+Please leave.{end:C4}
+
+[137]
+Here sleeps the noble soul who once
+fought to save Algol.{end:C4}
+
+[138]
+This person was put into cold sleep to watch
+over the future of Algol.{end:C4}
+
+[139]
+When Mother Brain appeared, this one chose
+to hide away on Dezolis.{end:C4}
+
+[140]
+For generations, our family has
+served this person.{end:C4}
+
+[141]
+This one foretold a true awakening
+upon your arrival.{end:C4}
+
+[142]
+This one awakens once every ten years.{end:C4}
+
+[143]
+Before the power of darkness dominates
+Algol, gather the legendary weapons
+without delay.{end:C4}
+
+[144]
+Well done. You have truly proven Alisa's
+blood runs within you. I acknowledge that
+you are fit to inherit the power of light and
+the memory of darkness.{pause}
+
+[145]
+A thousand years ago, after the battle
+of Alisa and her friends, Algol enjoyed
+a brief peace.{pause}People were content with what their loved
+ones gave them, and wished for nothing
+more; instead, they found joy in giving
+their loved ones more than they asked for.{pause}
+
+[146]
+But with the arrival of Mother Brain,
+Algol changed{47}{47}{47}{pause}Mother Brain made so many things that
+we lost sight of what we truly needed.{pause}
+
+[147]
+People started to fight and clutch at
+whatever Mother Brain made, and forgot
+about the look in gentle Alisa's eyes.{pause}Already, people have even begun to think
+that they cannot live without
+Mother Brain.{pause}
+
+[148]
+Behind Mother Brain, which has made the
+people's hearts so weak, I sense the
+trap of a devil.{pause}A trap that will lead Algol to ruin!
+Who set this trap, and for what purpose,
+even I do not know.{pause}In that box lies the Nei Sword. Once
+you take that weapon in hand, I shall
+send you to where the evil ones lurk.{end:C4}
+
+[149]
+I entrust the future of Algol to you.
+I pray with all my heart for your safety.{pause}And should you feel your strength fail you,
+use the Nei Sword. It will summon you
+back here instantly.{pause}Now, go! To the place where those who
+watch us so intently from the stars
+beyond Algol await!!{end:C4}
+
+[150]
+Good grief, now we have to worry
+about the lake overflowing{47}{47}{47}{end:C4}
+
+[151]
+Welcome. The one we serve awaits you.{end:C4}
+
+[152]
+For my part, I'd prefer to let the one
+we serve sleep peacefully{47}{47}{47}{end:C4}
+
+[153]
+I hear the government's robots are
+hunting down the villains who refuse to{pause}obey Mother Brain.{end:C4}
+
+[154]
+The biomonsters are gone, so we can
+go back to living a lazy life.{end:C4}
+
+[155]
+You look just like the people on
+the wanted posters{47}{47}{47}{end:C4}
+
+[156]
+Whatever happens, we believe in all of
+you who are fighting for our sake.{end:C4}
+
+[157]
+The biomonsters are gone. But the dark
+air over this planet somehow won't lift{47}{47}{47}{end:C4}
+
+[158]
+I've seen that face somewhere{47}{47}{47}{end:C4}
+
+[159]
+Hey, isn't the pretty lady who was
+always with you here today?{end:C4}
+
+[160]
+Mama said not to talk to {char}
+and the others. Why?{end:C4}
+
+[161]
+The future of Algol rests on your shoulders.
+I imagine it will be a hard journey, but{pause}please don't give up.{end:C4}
+
+[162]
+Hey, have you ever met the Dezolians?
+You can't understand a word they say,{pause}they lie, they're contrarian. Horrible people!{end:C4}

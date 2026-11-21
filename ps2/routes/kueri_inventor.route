@@ -1,0 +1,42 @@
+# Kueri's gum inventor: Building_InventorHouse (ps2.asm:18378), building 13
+# behind Kueri's door at 15,39 (portrait $0C). GumInvHouseEventIndex:
+# $B01 (the $B08 written before it is overwritten at once and never
+# shows), then CheckItemExistInventory for ItemID_MruraLeaf. With the leaf
+# it is $B05, WinID_YesNo2, and YES (loc_C948) takes the leaf out of the
+# holder's bag and puts ItemID_MruraGum after that bag's last item,
+# SXFID_ItemReceived and $B06; then CloseAllWindows. No flag is set.
+# Before build 76: "level: door to building 13 (portrait $0C) is not
+# ported" and the door stayed shut.
+
+start level $08 15 41
+wait idle
+give MruraLeaf
+walk up 1
+wait idle
+expect level $08 15 40
+walk up 1                    # the push into the door
+wait screen building
+wait idle
+expect script $0B01          # "Hi! I'm working on inventing a new kind of gum!"
+press c                      # past the {pause}
+wait idle
+shot 01_inventor
+press c
+wait idle
+expect script $0B05          # "That's it; a MARUERA LEAF! Please give it to me!"
+press c                      # past the {pause}
+wait idle                    # YES / NO, YES first
+shot 02_give_it
+press c
+wait idle
+expect script $0B06          # "Thanks! ... Done! There's plenty, so take some!"
+press c
+wait idle
+press c
+wait idle
+shot 03_the_gum
+press c
+wait screen level
+wait idle
+expect item MruraGum
+expect no-stderr not ported

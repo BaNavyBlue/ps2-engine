@@ -1,0 +1,132 @@
+{
+  "Script_ItemAction": {
+    "bank": 0,
+    "count": 40,
+    "file": "Script_ItemAction.txt"
+  },
+  "Script_TechAction": {
+    "bank": 1,
+    "count": 12,
+    "file": "Script_TechAction.txt"
+  },
+  "Script_EquipAction": {
+    "bank": 2,
+    "count": 5,
+    "file": "Script_EquipAction.txt"
+  },
+  "Script_DataMemory": {
+    "bank": 3,
+    "count": 13,
+    "file": "Script_DataMemory.txt"
+  },
+  "Script_CloneLabs": {
+    "bank": 4,
+    "count": 11,
+    "file": "Script_CloneLabs.txt"
+  },
+  "Script_Hospital": {
+    "bank": 5,
+    "count": 10,
+    "file": "Script_Hospital.txt"
+  },
+  "Script_WeaponStore": {
+    "bank": 6,
+    "count": 9,
+    "file": "Script_WeaponStore.txt"
+  },
+  "Script_ArmorStore": {
+    "bank": 7,
+    "count": 9,
+    "file": "Script_ArmorStore.txt"
+  },
+  "Script_ItemStore": {
+    "bank": 8,
+    "count": 16,
+    "file": "Script_ItemStore.txt"
+  },
+  "Script_RolfHouse": {
+    "bank": 9,
+    "count": 47,
+    "file": "Script_RolfHouse.txt"
+  },
+  "Script_UstvestiaHouse": {
+    "bank": 10,
+    "count": 13,
+    "file": "Script_UstvestiaHouse.txt"
+  },
+  "Script_InventorHouse": {
+    "bank": 11,
+    "count": 8,
+    "file": "Script_InventorHouse.txt"
+  },
+  "Script_TeleportStation": {
+    "bank": 12,
+    "count": 8,
+    "file": "Script_TeleportStation.txt"
+  },
+  "Script_CentralTower": {
+    "bank": 13,
+    "count": 5,
+    "file": "Script_CentralTower.txt"
+  },
+  "Script_Room": {
+    "bank": 14,
+    "count": 14,
+    "file": "Script_Room.txt"
+  },
+  "Script_Roof": {
+    "bank": 15,
+    "count": 3,
+    "file": "Script_Roof.txt"
+  },
+  "Script_Library": {
+    "bank": 16,
+    "count": 25,
+    "file": "Script_Library.txt"
+  },
+  "Script_Governor": {
+    "bank": 17,
+    "count": 17,
+    "file": "Script_Governor.txt"
+  },
+  "Script_Battle": {
+    "bank": 18,
+    "count": 42,
+    "file": "Script_Battle.txt"
+  },
+  "Script_Introduction": {
+    "bank": 19,
+    "count": 16,
+    "file": "Script_Introduction.txt"
+  },
+  "Script_Opening": {
+    "bank": 20,
+    "count": 6,
+    "file": "Script_Opening.txt"
+  },
+  "Script_GameStart": {
+    "bank": 21,
+    "count": 4,
+    "file": "Script_GameStart.txt"
+  },
+  "Script_People": {
+    "bank": 22,
+    "count": 162,
+    "file": "Script_People.txt"
+  },
+  "Script_LevelActions": {
+    "bank": 23,
+    "count": 34,
+    "file": "Script_LevelActions.txt"
+  },
+  "Script_LevelEvents": {
+    "bank": 24,
+    "count": 63,
+    "file": "Script_LevelEvents.txt"
+  },
+  "Script_Miscellaneous": {
+    "bank": 25,
+    "count": 19,
+    "file": "Script_Miscellaneous.txt"
+  }
+}

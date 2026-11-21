@@ -1,0 +1,55 @@
+# Rever from the C menu on a dead member (TechEffect_Rever, ps2.asm:15564).
+# Its first step takes the TP and shows $10A ("... comes back to life!");
+# its later steps are Res's from the window close on (loc_A6BE), one step
+# earlier than Res's own count, since Rever subtracts once before joining
+# and Res twice: the close, 30 frames, then 30 HP (the Rever case of
+# loc_A6D4) and SXFID_Revived. Up to build 96b the port handed Rever's
+# step n to Res as step n, so the step after the message was Res's close
+# and the member stayed dead with the TP gone.
+#
+# The save is story_dark_force.json with Rudo's HP at 0 (Aukba). Rolf
+# L41 knows Rever (map list stop 4, 30 TP).
+
+start slot 1 routes/saves/rever_rudo_dead.json
+wait idle
+press c                      # the save's six lines in the building
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $0A
+expect stat 1 hp 0 0
+press c                      # the C menu
+wait idle
+press down
+press down
+press c                      # TECH
+wait idle
+press c                      # Rolf
+wait idle
+press down
+press down
+press down
+press down
+press c                      # Rever
+wait idle
+press down
+press c                      # on Rudo
+wait idle
+expect script $010A
+shot 01_rever
+press c
+wait idle
+press c
+wait idle
+expect stat 0 tp 116 116
+expect stat 1 hp 30 30
+shot 02_rudo_back

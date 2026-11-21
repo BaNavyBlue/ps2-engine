@@ -1,0 +1,38 @@
+# (build 160) The rumble in a fight: formation 1 (three Fire Ants) against
+# a new game's Rolf and Nei, FIGHT. A blow on a member is reckoned first
+# -- loc_2AA8 takes the HP as the enemy's attack begins -- and lands some
+# ticks later, when its animation reaches $FD: loc_3308 (hit_target) blinks
+# the target and plays SXFID_Sword, the hurt sound. The rumble is felt as
+# it lands, not as it is reckoned: Rolf's 19 HP are 17 at tick 249 with
+# the motors still, and the shake comes at 269 (src/game/rumble.c).
+# (build 161) The kick at 269, then the sword's sound followed as the
+# driver plays it (270-282) and its tail; the red flash's sound from 286,
+# its last ending at 333, and its tail: still at 340.
+
+start battle 1
+rumble-log motors.txt 3      # the motors at HIGH, change by change
+wait idle                    # FIGHT / STGY
+press c                      # FIGHT
+wait ticks 139               # tick 248
+expect stat 0 hp 19
+expect rumble still
+wait ticks 1                 # 249: the first blow reckoned
+expect stat 0 hp 17
+expect rumble still
+expect rumble hurt 0
+wait ticks 19                # 268: not landed yet
+expect rumble still
+wait ticks 1                 # 269: SXFID_Sword, Rolf blinks
+expect rumble going
+expect rumble hurt 1
+wait ticks 14                # 283: the sword's 13 ticks followed, its
+expect rumble going          # tail down over 6
+wait ticks 3                 # 286: the red flash's sound followed
+expect rumble going
+wait ticks 54                # 340: its sound and its tail done
+expect rumble still
+wait idle
+expect script $1211          # "{char} and party are victorious!"
+expect rumble hurt 7         # the fight's other blows on Rolf and Nei
+expect rumble fell 0
+expect rumble lost 0

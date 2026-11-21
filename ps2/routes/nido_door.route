@@ -1,0 +1,26 @@
+# Nido's ground-floor door: object $3C (Obj_DestroyableDoor, ps2.asm:7961)
+# stands in the gap at cell 53,45 with hit-box row 6 in its $2C, so the
+# party is stopped on 53,46; A on it is ObjType_Events $18 (loc_DC84):
+# $170D, "Maybe dynamite can open this door." Before build 67 npc.c did
+# not spawn $3B/$3C and the party walked straight through (this route
+# lived in routes/gaps/ with its expect the other way round).
+
+start level 27 53 48         # south of the door, a new game
+wait screen level
+wait idle
+shot 01_south_of_the_door
+walk up 2                    # 47, 46
+wait step
+expect level 27 53 46
+press up                     # the door does not give
+wait ticks 20
+expect level 27 53 46
+shot 02_stopped_by_it
+press a
+wait idle
+expect script $170D
+shot 03_shut_tight
+press c
+wait idle
+expect level 27 53 46
+expect no-stderr not ported

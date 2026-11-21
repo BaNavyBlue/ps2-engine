@@ -1,0 +1,27 @@
+# (build 110) The synth backend switched while the title's theme plays. With
+# `sound render on` the probe renders each tick's audio through the mixer
+# (the backend playing), where it otherwise throws the queue away. `synth`
+# switches as the AUDIO page does: the audio thread resets the backend asked
+# for and replays the register shadow into it -- every register as last
+# written, then a key-on for each channel whose keys were down -- so a note
+# held across the switch keeps sounding. Twelve ticks after each switch (the
+# cut clicks through the DC blocker for a few), the last four ticks still
+# peak above -40 dBFS. Tick 420 of the title is a held chord: with the
+# key-ons left out of the replay the route fails here at -48.6 dBFS; with
+# them, -16.8. route_probe has no Q, so `synth q` falls back to the chip,
+# reset and replayed again. Then the sequencer's writes since start-up,
+# counted and hashed: the same as this route with its two `synth` lines
+# taken out -- the switch never reaches the sequencer. docs/audio.md.
+start new
+sound render on
+wait screen title
+wait ticks 420
+expect sound playing
+synth chip
+wait ticks 12
+expect sound playing
+synth q
+wait ticks 12
+expect sound playing
+wait ticks 300
+expect sound-writes 2143 $15673FE1

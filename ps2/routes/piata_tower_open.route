@@ -1,0 +1,30 @@
+# Piata's tower after the Governor's debrief (loc_CA58 sets $C712). The
+# same record now goes through loc_6F1C and loc_6FA6, its last three
+# bytes a level and a cell: ControlTowerGroundF, 46,41.
+#
+# The save is slot 1 with the location moved to under the door and $C712
+# (event_flags row 0, byte 2) set.
+
+start slot 1 routes/saves/piata_tower_open.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 9 9 24
+shot 01_at_the_door
+walk up 1                    # the door takes the pad
+wait screen level
+wait idle
+expect level $3E 46 41
+shot 02_inside_the_tower
+expect no-stderr not ported

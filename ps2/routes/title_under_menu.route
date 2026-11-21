@@ -1,0 +1,23 @@
+# (build 112b) The Escape menu over the attract sequence: the title and the
+# crawl across Motavia play on under it, in time with their music, which the
+# menu never stopped (The owner: the music came out of step with the title's
+# crawl). The pad is withheld from the game while the menu is open, so the
+# title runs out its wait ($6CC frames after the two dissolves) and moves on
+# to the crawl exactly as if nobody touched it. Before 112b the menu froze the
+# title where it was opened, and it was still there when the menu closed.
+start new
+sound render on
+wait screen title
+wait ticks 60
+press esc
+expect escape-menu open
+wait ticks 400
+shot title_dissolving_under_menu
+expect screen title
+wait ticks 2400
+expect screen level
+shot crawl_under_menu
+expect sound playing
+press b
+expect escape-menu closed
+expect screen level

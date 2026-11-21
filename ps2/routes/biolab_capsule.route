@@ -1,0 +1,19 @@
+# A facing one of the Biosystems Lab's big capsules (F1, the left wing).
+# ProcessAButAction (ps2.asm:19806) only asks Level_ChkTargetInteract for
+# an object in front; the capsules are map blocks with nothing placed on
+# them (SpriteData_BiosystemsLabF1 is three chests), so it is loc_D9AA:
+# $1708, "There seems to be nothing unusual here." -- the ROM has no
+# capsule message of its own. Not a fix; it answers the question.
+
+start level $34 5 30
+wait idle
+press right                  # the capsule at 6-7, 28-31 stops the step
+wait idle
+expect level $34 5 30
+press a
+wait idle
+expect script $1708
+shot 01_nothing_unusual
+press c
+wait idle
+expect no-stderr not ported

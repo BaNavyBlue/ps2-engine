@@ -1,0 +1,185 @@
+# (build 160) The GAMEPAD page's BUTTONS row, last, and the BUTTONS page:
+# every gamepad's inputs, a row an action, 1ST and 2ND, then DEFAULTS. C on
+# a slot listens: the next gamepad input on any gamepad binds there -- a
+# button, the d-pad, a stick or trigger past half its travel, a mapless
+# joystick's button -- and leaves every other slot; Back or Escape keeps
+# the slot, Backspace empties it, other keys are not heard. The slots are
+# drawn as PAD 1 labels them: positional names with no gamepad, a
+# DualShock's, an Xbox One pad's, a Switch pad's (pad-style, as main.c
+# hands PAD 1's over).
+
+start new
+wait screen title
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press down
+press down
+press down                   # GAMEPAD
+press c
+press down
+press down
+press down                   # BUTTONS, under RUMBLE
+shot 01_gamepad_page
+press c
+shot 02_none
+expect buttons up DPAD UP / LS UP
+expect buttons down DPAD DOWN / LS DOWN
+expect buttons left DPAD LEFT / LS LEFT
+expect buttons right DPAD RIGHT / LS RIGHT
+expect buttons a WEST / -
+expect buttons b SOUTH / -
+expect buttons c EAST / -
+expect buttons start START / -
+
+# The labels as each pad wears them.
+pad-style ps3
+shot 03_ps3
+expect buttons a SQUARE / -
+expect buttons b CROSS / -
+expect buttons c CIRCLE / -
+expect buttons start START / -
+expect buttons up DPAD UP / LS UP
+pad-style xboxone
+shot 04_xboxone
+expect buttons a X / -
+expect buttons b A / -
+expect buttons c B / -
+expect buttons start MENU / -
+pad-style switch
+shot 05_switch
+expect buttons a Y / -
+expect buttons b B / -
+expect buttons c A / -
+expect buttons start PLUS / -
+pad-style none
+
+# A's 2ND to a face button, B's to a stick's direction, C's to a trigger,
+# START's to a mapless joystick's button.
+press down
+press down
+press down
+press down                   # A
+press right
+press c
+shot 06_listening
+pad NORTH
+expect buttons a WEST / NORTH
+press down
+press c
+pad RSLEFT
+expect buttons b SOUTH / RS LEFT
+press down
+press c
+pad L2
+expect buttons c EAST / L2
+press down
+press c
+pad JOY3
+expect buttons start START / JOY 3
+shot 07_bound
+
+# A bind takes the input off every other slot: SOUTH, B's, to A's 1ST.
+press up
+press up
+press up                     # A
+press left
+press c
+pad SOUTH
+expect buttons a SOUTH / NORTH
+expect buttons b - / RS LEFT
+
+# Back keeps the slot, the page staying up (R1 after it is no bind);
+# Escape too.
+press c
+pad BACK
+pad R1
+expect buttons a SOUTH / NORTH
+expect escape-menu open
+press c
+key ESCAPE
+expect buttons a SOUTH / NORTH
+expect escape-menu open
+
+# Backspace empties it; other keys are not heard while it listens.
+press c
+key Q
+key Z
+expect buttons a SOUTH / NORTH
+key BACKSPC
+expect buttons a - / NORTH
+
+# The d-pad needs no binding to move the cursor: UP's 1ST to RSUP, then
+# the d-pad up, bound to nothing, still climbs the page, and held it
+# repeats (a step, then one 32 ticks on: LEFT to UP in 40 ticks, where C
+# listens and the d-pad up binds again).
+press up
+press up
+press up
+press up                     # UP
+press c
+pad RSUP
+expect buttons up RS UP / LS UP
+press down
+press down
+pad DUP 40
+press c
+pad DUP
+expect buttons up DPAD UP / LS UP
+expect buttons down DPAD DOWN / LS DOWN
+
+# DEFAULTS, last: the gamepad's inputs as they were, the keys left alone
+# (UP's KEY 2, set on the CONTROLS page now, stays).
+press b
+expect escape-menu open
+press b                      # the menu, on GAMEPAD
+expect escape-menu open
+press up
+press up
+press up
+press up
+press up
+press up
+press up                     # CONTROLS
+press c
+press right
+press c
+key Q
+expect keys up UP / Q
+press b
+press down
+press down
+press down
+press down
+press down
+press down
+press down                   # GAMEPAD
+press c                      # the page, on BUTTONS
+press c
+press down
+press down
+press down
+press down
+press down
+press down
+press down
+press down                   # DEFAULTS, from UP
+press c
+expect buttons up DPAD UP / LS UP
+expect buttons a WEST / -
+expect buttons b SOUTH / -
+expect buttons c EAST / -
+expect buttons start START / -
+expect keys up UP / Q
+shot 08_defaults
+
+# Back from BUTTONS is the GAMEPAD page: the menu after it, then closed.
+press b
+press b
+expect escape-menu open
+press b
+expect escape-menu closed

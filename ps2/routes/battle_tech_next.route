@@ -1,0 +1,82 @@
+# Win_BattleTechList's NEXT (ps2.asm:24937, loc_10C6C): with five or more
+# battle techniques NEXT sits at stop 0, and C on it writes $0600 | the
+# list's id to window_index -- redraw, instant -- and moves $DEEC on four,
+# wrapping to 0 when the count is not above it. ProcessWindows' first pass
+# over that word only sets it up; CheckPrepareWindows sees it the next
+# frame and runs the list from phase 0 (page drawn, then the cursor), and
+# the list polls the pad again.
+#
+# Before build 76 the port drew the redraw in the same pass as the handler
+# wrote it and shifted it away before CheckPrepareWindows could see it:
+# window_index_saved stayed 0, nothing polled the list, the command went on
+# with no technique and the windows closed back to FIGHT / STGY.
+#
+# Amy at L30 has thirteen battle techniques: four pages, the last one
+# NASAR alone.
+
+start battle 213
+party 4 30
+wait idle
+press down                   # STGY
+press c
+wait idle
+press c                      # ORDR
+wait idle
+press right
+wait ticks 3
+press right
+wait ticks 3
+press right                  # Amy
+wait ticks 3
+press c
+wait idle
+press right                  # TECH
+wait ticks 3
+press c
+wait idle
+expect menu $66 1            # RES SHU DEBAN FOI, the lamp on RES
+shot 01_page_1
+press up                     # NEXT
+wait ticks 3
+expect menu $66 0
+press c
+wait idle
+expect menu $66 1            # GIRES SAR SAK NASAK
+shot 02_page_2
+press up
+wait ticks 3
+press c
+wait idle
+expect menu $66 1            # SASHU NARES SANER GISAR
+press up
+wait ticks 3
+press c
+wait idle
+expect menu $66 1            # NASAR
+shot 03_page_4
+press up
+wait ticks 3
+press c
+wait idle
+expect menu $66 1            # 13 is not above 16: page 1 again
+shot 04_page_1_again
+press up
+wait ticks 3
+press c
+wait idle
+press up
+wait ticks 3
+press c
+wait idle
+press up
+wait ticks 3
+press c
+wait idle
+expect menu $66 1            # page 4
+press c                      # NASAR: $C810 + Amy's + 0 + 12, the party
+wait idle                    # healed, no one to pick
+expect menu $60              # back to FIGHT / STGY
+press c                      # FIGHT
+wait ticks 900
+expect command tech
+expect no-stderr not ported

@@ -1,0 +1,48 @@
+# Build 87b. The door Espers with Rolf dead: loc_E05A gives $1688 "You are
+# not {char}, are you? Please leave." and leaves $C742 clear, so
+# Obj_MovingEsper never leaves routine 1 and the two keep the doorway
+# shut -- pushes up from under either of them get nowhere. (No change to
+# the code: this is what build 87 already does, checked.)
+start slot 1 routes/saves/paseo_rolf_dead.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+warp $11 15 28
+wait idle
+expect level $11 15 28
+press up
+wait ticks 30
+press up
+wait ticks 30
+expect level $11 15 28
+press a
+wait idle
+expect script $1688
+expect flag $C742 0
+press c
+wait idle
+wait ticks 60
+press up
+wait ticks 30
+expect level $11 15 28
+press right
+wait ticks 30
+expect level $11 16 28
+press up
+wait ticks 30
+press up
+wait ticks 30
+expect level $11 16 28
+shot 01_still_shut
+expect no-stderr level:

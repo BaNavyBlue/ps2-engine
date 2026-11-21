@@ -1,0 +1,45 @@
+# Script_DataMemory, bank 0x03; script_id = 0x03NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Welcome to Data Memory.{end:C4}
+
+[2]
+{char} needs {meseta} more points
+of experience to reach the next level.{end:C4}
+
+[3]
+Shall I save your memories and
+experiences into storage?{end:C5}
+
+[4]
+I see{47}{47}{47} Then, please take care.{end:C4}
+
+[5]
+Which number shall I save them under?{end:C5}
+
+[6]
+Something is already saved there.
+Is it all right to erase the old data?{end:C5}
+
+[7]
+Then, please give the file a name.{end:C5}
+
+[8]
+The saving process is complete.{end:C4}
+
+[9]
+Are you setting out for battle again?{end:C5}
+
+[10]
+I see. Well then, until we meet again.
+Goodbye.{end:C4}
+
+[11]
+We meet again, {char}.{end:C4}
+
+[12]
+Take care out there.{end:C4}
+
+[13]
+{char} can't go up any more levels.{end:C4}

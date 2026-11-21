@@ -1,0 +1,33 @@
+# Rolf's own door with Rolf at 0 HP. The record is building 1 and $37;
+# loc_6EA6 checks character_data_buffer+2 and, at 0, does not open it:
+# $DE70 = 1, $DE72 = 0, $DE6E = $303, and ObjType_TeimDarum 3 shows
+# message 6, "{char} is dead." (loc_EAC2).
+#
+# The save is slot 1 on Paseo under the door, Rolf's hp at 0.
+
+start slot 1 routes/saves/paseo_rolf_dead.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 4 45 18
+press up                     # into the door
+wait idle
+expect script $0006
+shot 01_rolf_is_dead
+press c
+wait idle
+expect screen level
+expect level 4 45 18
+shot 02_still_outside
+expect no-stderr not ported

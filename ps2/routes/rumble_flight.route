@@ -1,0 +1,42 @@
+# (build 161) The rumble through the spaceship's flight, roof_yes's way to
+# Skure: still on the roof; the ship's departure followed as the driver
+# starts its sound (the ship fading in) and the throb while it flies; the
+# pause in SpaceShipLoop stilling it (the Pause sound cuts the departure's,
+# the throb waits), Start again bringing the throb back; the landing felt
+# once as the level's screen is asked for, both motors full, then the
+# landing's sound followed till the level's music cuts it; still on Skure
+# (src/game/rumble.c).
+start building 8 21 0 0 32 16   # the tower desk; the street is 32,16
+flag $C73F 1                    # Gaira's $2F: ROOF on the desk
+rumble-log motors.txt 3         # the motors at HIGH, change by change
+wait idle
+press down
+press down
+press c                         # ROOF: building 11, portrait $18
+wait screen building
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c                         # YES: $F02, DezolisSkure $4F0,$3C0
+wait idle
+expect rumble still
+press c                         # loc_C572: 21 ticks of PaletteFadeFrom
+wait ticks 25                   # the ship fading in, its sound begun
+expect rumble going
+expect rumble landed 0
+wait ticks 40                   # SpaceShipLoop
+expect rumble going
+press start                     # the pause
+wait ticks 45
+expect rumble still             # the throb waits, the sound cut
+press start                     # on again
+wait ticks 3
+expect rumble going
+wait ticks 95                   # SpaceShipLoop's 120 ticks over at 580
+expect rumble landed 1
+expect rumble going             # both full, the landing's sound after
+wait screen level
+expect rumble still             # the level's music has cut that sound
+expect level $03 60 79

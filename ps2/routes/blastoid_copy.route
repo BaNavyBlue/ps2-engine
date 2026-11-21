@@ -1,0 +1,24 @@
+# Blastoids (formation 45) copy themselves: EnemyData's technique 12 is
+# EnemyTechniqueTable's loc_2F6C. Once one of the three is dead, a
+# Blastoid whose turn rolls under its rate (153) copies itself -- object
+# and stats -- into the dead slot before it, or failing that the one
+# after, and ObjEnmBattle_Dead brings the copy in when the script's hit
+# lands. Before build 68 the port treated it as an attack, so a dead
+# Blastoid stayed dead.
+
+start battle 45
+party 3 35
+wait idle                    # FIGHT / STGY
+shot 01_three_blastoids
+press c                      # FIGHT, and the rounds run on
+wait ticks 12400                # tick 12509: the left one dead and gone
+shot 02_one_down
+state
+wait ticks 470                  # 12980: the copy in its slot, 43 HP like its source
+shot 03_the_copy
+state
+limit 20000
+wait idle
+expect enemy-joined
+expect script $1211          # "{char} and party are victorious!"
+expect no-stderr not ported

@@ -1,0 +1,35 @@
+# (build 132c) The lost music part the owner hears on the Mega Drive, most
+# often after pausing and unpausing -- the ROM's own, kept. The pause jingle
+# turns the music down (cfE8_MusPause, the walk: $FF - volume onto each part
+# in use); the only thing that turns it back up is the unpause jingle's FM5
+# track, which ends its phrase, about 30 ticks long, with the unpause
+# command (E8 00). An effect on FM5 started inside that window -- 51 of the
+# 56 effects, the selection sound A plays among them -- takes the track over
+# and the walk never runs: each part stays down until its next instrument or
+# volume change, in a looping song often never. Motavia: pause, unpause,
+# A three ticks later; music tracks 1-3 left turned down (`expect stuck`,
+# the high byte). From about 27 ticks on the walk has run (stuck_hunt.py).
+
+start slot 1 routes/saves/jet_scooter.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+wait ticks 30
+press start
+wait ticks 40
+press start
+wait ticks 3
+press a
+wait ticks 150
+expect stuck $0E00          # music tracks 1-3 down, none lent

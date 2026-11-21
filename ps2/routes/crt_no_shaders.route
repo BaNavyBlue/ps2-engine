@@ -1,0 +1,25 @@
+# (build 141c) With no GPU chain -- shaders/ without the CRT chain's
+# compiled shaders (build 141a renamed two of them, so a tree that had not
+# run `make shaders` lost the chain) -- the SDL_Renderer placeholder draws
+# the flat picture and no CRT setting can show. The Escape menu says so on
+# every CRT row instead of taking scanlines and masks as on. Until 141c the
+# rows read as on a display that could show them (a 3840x2400 fullscreen
+# panel: SCANLINES, APERTURE GRILLE with no reason) and turning them on
+# changed nothing.
+start new
+display 3840x2400 fullscreen no-chain
+wait screen title
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+expect crt summary OFF
+press c
+press c
+expect crt scanlines ON / NO CRT SHADERS
+press down
+press c
+expect crt mask APERTURE GRILLE / NO CRT SHADERS
+expect crt summary OFF

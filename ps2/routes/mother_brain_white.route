@@ -1,0 +1,24 @@
+# (build 138d) The approach to Mother Brain goes through white. LevelScreen
+# (ps2.asm:11338) tests event_flags for $E00 -- what the approach (loc_70D6)
+# sets -- and leaves through loc_634E (into white: red up first, then
+# green, then blue) instead of PaletteFadeFrom, and comes back through
+# loc_62CC (every entry white, then down to the loaded palette: blue
+# first, then green, then red) instead of PaletteFadeTo. Until 138d the
+# port changed level through black both ways. The start is
+# mother_brain_no's. Fails on 138c.
+
+start level $64 33 37
+wait idle
+walk up 4                    # returns as the fourth step begins
+wait idle                    # at rest on cell 33
+wait ticks 2                 # the floor is looked at: the approach
+wait ticks 3
+expect pixel 4 4 $008        # black into white, red first (before 138d $000)
+wait ticks 17
+expect pixel 4 4 $EEE        # the 21st frame: white
+wait ticks 1
+expect pixel 160 112 $CEE    # the reload, from white: blue down first (before 138d $222)
+wait ticks 3
+expect pixel 160 112 $CAC    # there: blue, green, then red
+wait idle
+expect script $1813          # the confrontation follows as before

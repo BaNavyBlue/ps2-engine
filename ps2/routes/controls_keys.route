@@ -1,0 +1,143 @@
+# (build 160) The Escape menu's CONTROLS page, the keys: a page now (the
+# row, second, shows no value; until 160 it stepped between the ARROWS and
+# WASD key sets, which are both the defaults). A row an action, KEY 1 and
+# KEY 2, then DEFAULTS. C on a slot listens: a key binds there and leaves
+# every other slot, Escape keeps the slot, Backspace empties it, anything
+# else is not heard. The arrows and Enter work the page whatever is bound.
+
+start new
+wait screen title
+press esc
+expect escape-menu open
+press down                   # CONTROLS
+shot 01_menu
+press c
+shot 02_page
+expect keys up UP / W
+expect keys down DOWN / S
+expect keys left LEFT / A
+expect keys right RIGHT / D
+expect keys a Z / L
+expect keys b X / ;
+expect keys c C / QUOTE
+expect keys start RETURN / -
+
+# UP's KEY 2 to Z: Z leaves A's KEY 1.
+press right
+press c
+shot 03_listening
+wait ticks 16                # the slot blinks: 16 ticks on, 16 off
+shot 03_listening_blink
+key Z
+expect keys up UP / Z
+expect keys a - / L
+shot 04_bound
+
+# Escape keeps the slot, and the menu stays open on the page.
+press c
+key ESCAPE
+expect escape-menu open
+expect keys up UP / Z
+
+# Backspace empties it.
+press c
+key BACKSPC
+expect keys up UP / -
+
+# Listening hears no gamepad input but Back: the next key binds.
+press c
+pad SOUTH
+pad L2
+expect keys up UP / -
+key Y
+expect keys up UP / Y
+
+# A gamepad's Back keeps the slot as Escape does: T after it is no bind.
+press c
+pad BACK
+key T
+expect keys up UP / Y
+expect escape-menu open
+
+# UP's KEY 1 to I: the up arrow is bound to nothing now, and still moves
+# the cursor (from DOWN up to UP, where Enter listens and J binds).
+press left
+press c
+key I
+expect keys up I / Y
+key DOWN
+key UP
+key RETURN
+key J
+expect keys up J / Y
+
+# The gamepad's d-pad moves the cursor too, whatever is bound: down to A.
+pad DDOWN
+pad DDOWN
+pad DDOWN
+pad DDOWN
+key RETURN
+key K
+expect keys a K / L
+shot 05_changed
+
+# Held, the up arrow (bound to nothing now) repeats as a bound key does:
+# from A, a step and then one every 32 ticks, three rows in 70 ticks, to
+# DOWN, where Enter listens and M binds. Then back down to A.
+key UP 70
+key RETURN
+key M
+expect keys down M / S
+press down
+press down
+press down                   # A
+
+# DEFAULTS, last: the keys as they were, the gamepad's left alone (B's
+# second input, set on the BUTTONS page first, stays).
+press b
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press down
+press down                   # GAMEPAD
+press c
+press down
+press down
+press down                   # BUTTONS
+press c
+press down
+press down
+press down
+press down
+press down                   # B
+press right
+press c
+pad NORTH
+expect buttons b SOUTH / NORTH
+press b                      # the GAMEPAD page
+press b                      # the menu
+press up
+press up
+press up
+press up
+press up
+press up
+press up                     # CONTROLS
+press c
+press down                   # DEFAULTS, from A
+press down
+press down
+press down
+press c
+expect keys up UP / W
+expect keys a Z / L
+expect keys start RETURN / -
+expect buttons b SOUTH / NORTH
+shot 06_defaults
+press b
+expect escape-menu open
+press b
+expect escape-menu closed

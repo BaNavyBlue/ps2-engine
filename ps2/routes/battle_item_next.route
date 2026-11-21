@@ -1,0 +1,72 @@
+# Win_BattleItemList's NEXT (ps2.asm:25049): the same $0600 redraw as the
+# technique list's (battle_tech_next), with $DEEE the page. Before build 76
+# C on NEXT closed the list and the windows fell back to FIGHT / STGY.
+#
+# Amy's bag is her Scalpel, CarbonSuit and Shoes (worn, still in the bag)
+# and then four Monomates and a Dimate: eight, two pages. Page 2 is three
+# Monomates and the Dimate; NEXT on it wraps (8 is not above 8), and the
+# Dimate is used on Rudo (the party triangle's first stop).
+
+start battle 213
+party 4 30
+give Monomate 3
+give Monomate 3
+give Monomate 3
+give Monomate 3
+give Dimate 3
+wait idle
+press down                   # STGY
+press c
+wait idle
+press c                      # ORDR
+wait idle
+press right
+wait ticks 3
+press right
+wait ticks 3
+press right                  # Amy
+wait ticks 3
+press c
+wait idle
+press right
+wait ticks 3
+press right                  # ITEM
+wait ticks 3
+press c
+wait idle
+expect menu $67 1            # Scalpel CarbonSuit Shoes Monomate
+shot 01_page_1
+press up                     # NEXT
+wait ticks 3
+expect menu $67 0
+press c
+wait idle
+expect menu $67 1            # Monomate Monomate Monomate Dimate
+shot 02_page_2
+press up
+wait ticks 3
+press c
+wait idle
+expect menu $67 1            # 8 is not above 8: page 1 again
+shot 03_page_1_again
+press up
+wait ticks 3
+press c
+wait idle
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down
+wait ticks 3
+expect menu $67 4
+press c                      # the Dimate
+wait idle
+expect menu $00              # on whom
+press c
+wait idle
+expect menu $60              # back to FIGHT / STGY
+press c                      # FIGHT
+wait ticks 900
+expect command item
+expect no-stderr not ported

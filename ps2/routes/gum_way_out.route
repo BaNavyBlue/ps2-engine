@@ -1,0 +1,99 @@
+# ItemAction_MruraGum's loc_9CD6 (ps2.asm:14391) records the way out of
+# the Underwater Passage: $C64C = Motavia, and $C64E / $C650 = object slot
+# 0's y and x ($FFFFE80E, $FFFFE80A) & $FFF0 -- the jet scooter the gum is
+# eaten on, beside the ocean floor's event $F block (158-159, 12-13). An
+# Escapipe from the passage (ItemAction_Escapipe, $C64C-$C650) comes back
+# there, still riding.
+#
+# Before build 77 the port wrote $C64C only: the pipe went to whatever
+# $C64E / $C650 held from the last way into a dungeon.
+#
+# routes/saves/gum_spot.json is jet_scooter.json saved riding at 157,12.
+
+start slot 1 routes/saves/gum_spot.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $00 157 12
+give MruraGum 2
+give Escapipe 2
+press right                  # the block only turns the scooter
+wait idle
+expect level $00 157 12
+shot 01_over_the_spot
+press c                      # the gum: ITEM, Rudo, slot 5, USE
+wait idle
+press c
+wait idle
+press down
+wait ticks 3
+press down
+wait ticks 3
+press c
+wait idle
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down
+wait ticks 3
+press c
+wait idle
+press c
+wait idle
+expect script $0019          # "... Could help underwater"
+press c                      # its two pauses, then its end
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect level $13 112 23      # loc_9CD6's $170, $700
+shot 02_underwater
+expect item MruraGum          # the gum is not used up
+press c                      # the Escapipe (the gum still in the bag): ITEM, Rudo, slot 6, USE
+wait idle
+press c
+wait idle
+press down
+wait ticks 3
+press down
+wait ticks 3
+press c
+wait idle
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down
+wait ticks 3
+press down
+wait ticks 3
+press c
+wait idle
+press c
+wait idle
+wait screen level
+wait idle
+expect level $00 157 12      # on the scooter where the gum was eaten
+shot 03_back_on_the_scooter
+expect no-stderr not ported

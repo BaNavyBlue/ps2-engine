@@ -1,0 +1,484 @@
+{
+  "format": 1,
+  "slot_label": {
+    "name": "ROLF",
+    "level": 8
+  },
+  "money": 999989389,
+  "location": {
+    "planet": "Motavia",
+    "map": 4,
+    "x": 720,
+    "y": 288,
+    "on_jet_scooter": false
+  },
+  "party": {
+    "members": [
+      "Rolf",
+      "Rudo",
+      "Amy"
+    ],
+    "last_recruit_joined": "Shir",
+    "last_recruit_sent": "Shir away"
+  },
+  "characters": [
+    {
+      "id": "Rolf",
+      "name": "Rolf",
+      "level": 8,
+      "experience": 1329,
+      "hp": 1048,
+      "max_hp": 1048,
+      "tp": 1008,
+      "max_tp": 1023,
+      "strength": 147,
+      "mental": 136,
+      "agility": 126,
+      "luck": 131,
+      "dexterity": 145,
+      "attack_base": 142,
+      "attack": 182,
+      "defense": 141,
+      "battle_techniques_known": 5,
+      "map_techniques_known": 3,
+      "knows_musik": true,
+      "status": 0,
+      "equipment": {
+        "head": "Fibergear",
+        "right_hand": "CeramKnife",
+        "left_hand": "CeramKnife",
+        "body": "FiberCoat",
+        "legs": "Shoes"
+      },
+      "inventory": [
+        {
+          "item": "Shoes",
+          "equipped": true
+        },
+        {
+          "item": "CeramKnife",
+          "equipped": true
+        },
+        {
+          "item": "CeramKnife",
+          "equipped": true
+        },
+        {
+          "item": "Sword",
+          "equipped": false
+        },
+        {
+          "item": "Dimate",
+          "equipped": false
+        },
+        {
+          "item": "Headgear",
+          "equipped": false
+        },
+        {
+          "item": "Fibergear",
+          "equipped": true
+        },
+        {
+          "item": "FiberCoat",
+          "equipped": true
+        },
+        {
+          "item": "SilRibbon",
+          "equipped": false
+        }
+      ]
+    },
+    {
+      "id": "Nei",
+      "name": "NEI",
+      "level": 15,
+      "experience": 1329,
+      "hp": 1045,
+      "max_hp": 1051,
+      "tp": 1021,
+      "max_tp": 1025,
+      "strength": 138,
+      "mental": 116,
+      "agility": 123,
+      "luck": 116,
+      "dexterity": 113,
+      "attack_base": 125,
+      "attack": 179,
+      "defense": 131,
+      "battle_techniques_known": 1,
+      "map_techniques_known": 1,
+      "knows_musik": false,
+      "status": 0,
+      "equipment": {
+        "head": "SilRibbon",
+        "right_hand": "CeramBar",
+        "left_hand": "CeramBar",
+        "body": "FiberVest",
+        "legs": "Sandals"
+      },
+      "inventory": [
+        {
+          "item": "Ribbon",
+          "equipped": false
+        },
+        {
+          "item": "CarbonVest",
+          "equipped": false
+        },
+        {
+          "item": "Sandals",
+          "equipped": true
+        },
+        {
+          "item": "SteelBar",
+          "equipped": false
+        },
+        {
+          "item": "SteelBar",
+          "equipped": false
+        },
+        {
+          "item": "CarbonVest",
+          "equipped": false
+        },
+        {
+          "item": "SilRibbon",
+          "equipped": true
+        },
+        {
+          "item": "FiberVest",
+          "equipped": true
+        },
+        {
+          "item": "CeramBar",
+          "equipped": true
+        },
+        {
+          "item": "CeramBar",
+          "equipped": true
+        }
+      ]
+    },
+    {
+      "id": "Rudo",
+      "name": "BOOG",
+      "level": 7,
+      "experience": 981,
+      "hp": 68,
+      "max_hp": 80,
+      "tp": 0,
+      "max_tp": 0,
+      "strength": 101,
+      "mental": 49,
+      "agility": 37,
+      "luck": 32,
+      "dexterity": 32,
+      "attack_base": 38,
+      "attack": 72,
+      "defense": 69,
+      "battle_techniques_known": 0,
+      "map_techniques_known": 0,
+      "knows_musik": false,
+      "status": 0,
+      "equipment": {
+        "head": "Fibergear",
+        "right_hand": "SonicGun",
+        "left_hand": "SonicGun",
+        "body": "FiberCoat",
+        "legs": "Boots"
+      },
+      "inventory": [
+        {
+          "item": "Boots",
+          "equipped": true
+        },
+        {
+          "item": "SonicGun",
+          "equipped": true
+        },
+        {
+          "item": "SonicGun",
+          "equipped": true
+        },
+        {
+          "item": "Fibergear",
+          "equipped": true
+        },
+        {
+          "item": "FiberCoat",
+          "equipped": true
+        }
+      ]
+    },
+    {
+      "id": "Amy",
+      "name": "STNK",
+      "level": 3,
+      "experience": 149,
+      "hp": 18,
+      "max_hp": 18,
+      "tp": 20,
+      "max_tp": 22,
+      "strength": 23,
+      "mental": 27,
+      "agility": 11,
+      "luck": 16,
+      "dexterity": 29,
+      "attack_base": 9,
+      "attack": 29,
+      "defense": 27,
+      "battle_techniques_known": 2,
+      "map_techniques_known": 1,
+      "knows_musik": false,
+      "status": 0,
+      "equipment": {
+        "head": "Fibergear",
+        "right_hand": "SilentShot",
+        "left_hand": "SilentShot",
+        "body": "FiberCape",
+        "legs": "Shoes"
+      },
+      "inventory": [
+        {
+          "item": "Scalpel",
+          "equipped": false
+        },
+        {
+          "item": "CarbonSuit",
+          "equipped": false
+        },
+        {
+          "item": "Shoes",
+          "equipped": true
+        },
+        {
+          "item": "FiberCape",
+          "equipped": true
+        },
+        {
+          "item": "Fibergear",
+          "equipped": true
+        },
+        {
+          "item": "SilentShot",
+          "equipped": true
+        },
+        {
+          "item": "SilentShot",
+          "equipped": false
+        }
+      ]
+    },
+    {
+      "id": "Hugh",
+      "name": "HUGH",
+      "level": 1,
+      "experience": 0,
+      "hp": 16,
+      "max_hp": 16,
+      "tp": 19,
+      "max_tp": 19,
+      "strength": 14,
+      "mental": 26,
+      "agility": 10,
+      "luck": 6,
+      "dexterity": 10,
+      "attack_base": 7,
+      "attack": 14,
+      "defense": 13,
+      "battle_techniques_known": 0,
+      "map_techniques_known": 0,
+      "knows_musik": false,
+      "status": 0,
+      "equipment": {
+        "head": "None",
+        "right_hand": "None",
+        "left_hand": "Scalpel",
+        "body": "CarbonSuit",
+        "legs": "Shoes"
+      },
+      "inventory": [
+        {
+          "item": "Scalpel",
+          "equipped": true
+        },
+        {
+          "item": "CarbonSuit",
+          "equipped": true
+        },
+        {
+          "item": "Shoes",
+          "equipped": true
+        }
+      ]
+    },
+    {
+      "id": "Anna",
+      "name": "ANNA",
+      "level": 1,
+      "experience": 0,
+      "hp": 18,
+      "max_hp": 18,
+      "tp": 12,
+      "max_tp": 12,
+      "strength": 20,
+      "mental": 27,
+      "agility": 23,
+      "luck": 9,
+      "dexterity": 15,
+      "attack_base": 12,
+      "attack": 24,
+      "defense": 29,
+      "battle_techniques_known": 1,
+      "map_techniques_known": 0,
+      "knows_musik": false,
+      "status": 0,
+      "equipment": {
+        "head": "Headgear",
+        "right_hand": "Boomerang",
+        "left_hand": "None",
+        "body": "FiberCape",
+        "legs": "Boots"
+      },
+      "inventory": [
+        {
+          "item": "Headgear",
+          "equipped": true
+        },
+        {
+          "item": "Boomerang",
+          "equipped": true
+        },
+        {
+          "item": "FiberCape",
+          "equipped": true
+        },
+        {
+          "item": "Boots",
+          "equipped": true
+        }
+      ]
+    },
+    {
+      "id": "Kain",
+      "name": "KAIN",
+      "level": 1,
+      "experience": 0,
+      "hp": 16,
+      "max_hp": 16,
+      "tp": 8,
+      "max_tp": 8,
+      "strength": 15,
+      "mental": 10,
+      "agility": 16,
+      "luck": 11,
+      "dexterity": 8,
+      "attack_base": 8,
+      "attack": 16,
+      "defense": 20,
+      "battle_techniques_known": 2,
+      "map_techniques_known": 0,
+      "knows_musik": false,
+      "status": 0,
+      "equipment": {
+        "head": "None",
+        "right_hand": "Dagger",
+        "left_hand": "None",
+        "body": "FiberCoat",
+        "legs": "Shoes"
+      },
+      "inventory": [
+        {
+          "item": "Dagger",
+          "equipped": true
+        },
+        {
+          "item": "FiberCoat",
+          "equipped": true
+        },
+        {
+          "item": "Shoes",
+          "equipped": true
+        }
+      ]
+    },
+    {
+      "id": "Shir",
+      "name": "SHIR",
+      "level": 1,
+      "experience": 0,
+      "hp": 13,
+      "max_hp": 13,
+      "tp": 6,
+      "max_tp": 6,
+      "strength": 18,
+      "mental": 10,
+      "agility": 17,
+      "luck": 12,
+      "dexterity": 18,
+      "attack_base": 9,
+      "attack": 17,
+      "defense": 17,
+      "battle_techniques_known": 1,
+      "map_techniques_known": 0,
+      "knows_musik": false,
+      "status": 0,
+      "equipment": {
+        "head": "None",
+        "right_hand": "Dagger",
+        "left_hand": "None",
+        "body": "CarbonSuit",
+        "legs": "Shoes"
+      },
+      "inventory": [
+        {
+          "item": "Dagger",
+          "equipped": true
+        },
+        {
+          "item": "CarbonSuit",
+          "equipped": true
+        },
+        {
+          "item": "Shoes",
+          "equipped": true
+        }
+      ]
+    }
+  ],
+  "flags_c700": [
+    "00000000040506000000000000000000"
+  ],
+  "event_flags": [
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000"
+  ],
+  "treasure_chest_flags": [
+    "00000000000000000000000000000101",
+    "80808080010101010100000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00000000000000000000000000000000"
+  ],
+  "raw_c600": [
+    "00030004000300030000000100020003",
+    "00000000000000000000000000000000",
+    "3B9AA08D000000000000000000000000",
+    "00000000000000000000000000000000",
+    "00040080011000040080011000000190",
+    "08100000000000000000000000000000",
+    "1A293738180F13C40C1919111D1E1815",
+    "121F11120B18180B150B13181D12131C",
+    "0B1D1DC4000800000000000000000000",
+    "000000000000000000000000FFFF"
+  ]
+}

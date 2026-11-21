@@ -1,0 +1,22 @@
+# loc_42A6: a $1B whose $2E is $186 or $187 deletes itself in its init
+# once $C716 is 2 (the scooter ridden). The flag is read at the level's
+# load, so this goes down RoronF5's stairs to F3 and back up.
+
+start level $1E 6 6
+wait screen level
+wait idle
+expect person $86 present
+expect person $87 present
+flag $C716 2
+walk up 2                    # 6,5 and on: the stairs down
+wait screen level
+wait idle
+expect level $20
+walk down 2                  # off F3's stairs up (6,20-7,21)...
+wait idle
+walk up 4                    # ... and back onto them
+wait screen level
+wait idle
+expect level $1E
+expect person $86 absent
+expect person $87 absent

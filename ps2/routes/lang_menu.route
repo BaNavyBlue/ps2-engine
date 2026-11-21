@@ -1,0 +1,42 @@
+# (build 163) The Escape menu's LANGUAGE (docs/languages.md), above QUIT
+# as GAMEPAD is, so the rows routes count to keep their places. On the
+# title: down nine is LANGUAGE, ENGLISH 1989 -- the route's settings.json
+# names none, so the cartridge's. C steps on to RETRANSLATED, (165)
+# JAPANESE, and round to ENGLISH 1989; left and right step back and on. The
+# value is drawn in the stock font, as the whole menu is in every
+# language. The waits put the cursor's lamp in its lit half.
+start new
+wait screen title
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press down
+press down
+press down
+press down
+press down                   # LANGUAGE
+expect setting language us
+wait ticks 7
+shot 01_language
+press c
+expect setting language retranslation
+wait ticks 14
+shot 02_retranslated
+press c
+expect setting language ja
+wait ticks 14
+shot 03_japanese
+press c                      # round to the first
+expect setting language us
+press left                   # round back to the last
+expect setting language ja
+press right
+expect setting language us
+press right
+expect setting language retranslation
+press b
+expect escape-menu closed
+expect screen title

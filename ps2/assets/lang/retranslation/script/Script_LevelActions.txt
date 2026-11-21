@@ -1,0 +1,119 @@
+# Script_LevelActions, bank 0x17; script_id = 0x17NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+{char} got {meseta} meseta!{end:C4}
+
+[2]
+{char} found the {item}!{end:C5}
+
+[3]
+{char} got the {item}!{end:C4}
+
+[4]
+But there's no room to carry it!{end:C4}
+
+[5]
+It's full of garbage.{end:C4}
+
+[6]
+There's nothing inside!{end:C4}
+
+[7]
+It's locked and won't open!{end:C4}
+
+[8]
+There seems to be nothing unusual here.{end:C4}
+
+[9]
+This is the Control Tower that links
+the city to Mother Brain's network{47}{47}{47}{end:C4}
+
+[10]
+The thugs seem to have blown the door
+open with dynamite and stolen the goods.{end:C4}
+
+[11]
+The body of one of the thugs. Did the
+biomonsters get him{47}{47}{47}?{end:C4}
+
+[12]
+Huh? There's something in the pocket!{end:C4}
+
+[13]
+It looks like dynamite could break this door.{end:C4}
+
+[14]
+A sturdy-looking shutter.{end:C4}
+
+[15]
+It looks like one, but this isn't
+a Maruera tree.{end:C4}
+
+[16]
+This is it! A Maruera tree!!{end:C4}
+
+[17]
+There's a keyboard. Oh? There's sheet
+music too. Shall we give it a try?{end:C5}
+
+[18]
+"To comfort a lonely life,
+nothing beats a pet!!"{end:C4}
+
+[19]
+"Why not talk with your pet, too?
+Magic Hats at Safe Department Store!!"{end:C4}
+
+[20]
+"Counterfeit Magic Hats have been going
+around lately. Please be careful."{end:C4}
+
+[21]
+"Gas leak in Skure, Block D.
+Everyone, please evacuate."{end:C4}
+
+[22]
+"Cause of gas leak determined to be
+simple mistake."{end:C4}
+
+[23]
+"The leaked gas is harmful to your
+health. Beware!!"{end:C4}
+
+[24]
+"The last rescue ship leaves August
+11. Don't miss it!"{end:C4}
+
+[25]
+I found an old newspaper!{end:C4}
+
+[26]
+What?! What is this?! I sense an immensely
+sinister force!{end:C4}
+
+[27]
+There's a slot for a card.{end:C4}
+
+[28]
+All right, let's board the jet scooter!{end:C4}
+
+[29]
+Okay, let's get off here.{end:C4}
+
+[30]
+We can't get off here!{end:C4}
+
+[31]
+Before {char} and the others towered
+a high, rocky mountain!{pause}This must be the mountain of Uzo!{end:C4}
+
+[32]
+Sure enough, the water is a different color
+only around here. It seems an underground{pause}spring is welling up.{end:C4}
+
+[33]
+{char} died!{end:C4}
+
+[34]
+Huh? Silka isn't here?{end:C4}

@@ -1,0 +1,78 @@
+# (build 127) The intro's dream pictures, as the game shows them -- the art
+# dump takes their palettes from these shots (tools/art_export.py). All three
+# draw on palette line 3, and the intro loads a different palette there for
+# each: the battle picture sepia, the waking one cyan. (The art dump's first
+# export painted all three with the waking one's.) new_game's way in.
+
+
+start new
+wait screen title
+wait idle                   # TITLE_WAIT: the finished title
+press start
+
+wait screen intro
+wait idle                   # NEW GAME / CONTINUE / ERASE GAME
+expect script $130B         # "Let me check the backup data."
+expect script $1310         # "Data check complete."
+press c                     # NEW GAME
+
+wait idle                   # the name board, the lamp on A
+expect script $1302         # "What is the name of your character?"
+press down                  # J
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press right
+press c                     # R
+press left
+press left
+press left
+press c                     # O
+press left
+press left
+press left
+press c                     # L
+press up                    # C
+press right
+press right
+press right
+press c                     # F
+press up                    # F wraps to the bottom row, onto RUB
+press right                 # END
+wait idle
+press c                     # END
+
+wait idle
+expect script $1304         # "Well, then, let's begin the game!"
+press c
+
+wait idle
+expect pixel 100 40 $AAC       # sepia
+shot 01_dream_battle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect pixel 240 70 $EC0       # cyan
+shot 02_dream_waking
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+expect script $1501
+expect script $1502
+expect script $1503
+expect script $1504

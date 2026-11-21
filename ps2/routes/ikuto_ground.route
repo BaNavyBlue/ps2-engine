@@ -1,0 +1,17 @@
+# $52 IkutoGroundF: the second 16 x 8 level whose backdrop plane the
+# level extractor put in the level's own .tmx (see esper_b1.route).
+#
+# Needs `make extract-levels` then `make manifest` with build 62's
+# tools/extract_levels.py.
+
+# IkutoB1's stairs up, 29,13.
+start level $51 29 14
+wait idle
+walk up 2
+wait idle
+expect level $52 29 6
+shot 01_ikuto_ground
+walk down 2
+wait idle
+shot 02_two_down
+expect no-stderr level:

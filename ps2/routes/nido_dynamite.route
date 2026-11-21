@@ -1,0 +1,48 @@
+# Dynamite on Nido's door. ItemAction_Dynamite (ps2.asm:14336): facing an
+# event object with index $18-$1A whose event_flags bit 0 is clear, the
+# bit is set, "{char} uses DYNAMITE...." ($0001), demo 4 is queued and the
+# stick leaves the bag. With the menu closed Demo_DynamiteUsed (5492)
+# plays: three idle reads, down three, right, up, idle, then $FD -- the
+# door SFX and routine 2 into slot 0, the door, which spawns the burst
+# ($2B) on itself and shows its blown frame; routine 3 clears its box.
+# The party ends on 54,48 and the gap is open.
+
+start level 27 53 48
+wait screen level
+wait idle
+give Dynamite                # Rolf's bag: Knife CarbonSuit Shoes Dynamite
+walk up 2
+wait step
+expect level 27 53 46
+press up                     # face the door
+wait ticks 20
+press c                      # the C menu: ITEM
+wait idle
+press c                      # ROLF
+wait idle
+press c                      # the bag
+wait idle
+press down
+press down
+press down                   # DYNAMITE, slot 3
+press c
+wait idle
+press c                      # USE
+wait idle
+expect script $0001
+shot 01_uses
+press c                      # the menu closes; the demo runs
+wait ticks 100
+shot 02_backing_away
+wait idle                    # control is back at $FD, the burst just spawned
+expect level 27 54 48
+shot 03_blast
+wait ticks 40
+shot 04_blown
+walk left 1
+wait step
+walk up 4                    # 47, 46, 45 (the door's cell), 44
+wait step
+expect level 27 53 44
+shot 05_through
+expect no-stderr not ported

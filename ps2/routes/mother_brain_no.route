@@ -1,0 +1,49 @@
+# The approach to Mother Brain and the confrontation's NO (build 92).
+# NoahF1's corridor floor (block $33, column 16) is the approach
+# (loc_70D6): at the leader's cell 33 (y $218) with mother_brain_fought
+# ($C747) clear, the level loads again with the party at x $210 on his
+# row, and the arrival scene (loc_7E02 case $E) puts him one cell down,
+# facing up, with Mother Brain's image forming between two energy arcs.
+# Once she stands, the confrontation: $1813 and a YES/NO. NO is $1816
+# (running on into $1817), then the windows close and her image goes.
+# Walking north again starts it all over. Before build 92 the corridor
+# printed "walk: loc_70D6 (level $64) is not ported" and nothing happened.
+
+start level $64 33 37
+wait idle
+walk up 4                    # returns as the fourth step begins
+wait idle                    # at rest on cell 33
+wait ticks 2                 # the floor is looked at: the approach
+wait idle                    # the reload, the image forming, $1813 to its first {pause}
+expect level $64 33 34
+expect object $2C visible
+expect script $1813
+shot 01_image_formed
+press c
+wait idle
+press c
+wait idle                    # the YES/NO
+shot 02_first_question
+press down
+press c                      # NO
+wait idle
+expect script $1816
+shot 03_no_answer
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+wait ticks 4
+expect object $2C absent     # deleted after the event's last step
+expect flag $C747 0
+shot 04_image_gone
+walk up 1                    # the arrival left him on 34: north to 33
+wait idle
+wait ticks 2
+wait idle                    # the approach again: the whole scene over
+expect script $1813
+expect no-stderr not ported

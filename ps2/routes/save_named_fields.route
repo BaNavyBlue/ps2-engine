@@ -1,0 +1,55 @@
+# (build 106) The save's recruits and technique counts by name, read back.
+#
+# routes/saves/save_named_fields.json is paseo_rolf_dead.json (Paseo,
+# under Rolf's door) with Rolf alive, the party Rolf, Rudo and Amy, and
+# only build 106's names: "last_recruit_joined": "Shir",
+# "last_recruit_sent": "Shir away" -- Shir has joined and gone off with a
+# theft (ProcessStealItem raises party_member_join_next to 8) -- and Rolf's
+# "battle_techniques_known": 5, "map_techniques_known": 3, "knows_musik":
+# true (bit 7 of the map count: Musik in the last known place, loc_112FC).
+#
+# Rolf's house (loc_B04E): the two counters differ and the sent one is 8,
+# so "Hey, Shir is coming back!" ($0927); loc_B282 then lowers it to 7 and
+# puts Shir last in the party ($0928). Build 105 read neither name: the
+# counters stayed at a fresh game's (0 and 1), so Nei's knock ($090C)
+# came instead, and Rolf knew no map techniques.
+
+start slot 1 routes/saves/save_named_fields.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c                      # one page fewer than paseo_rolf_dead: three members
+wait screen level
+wait idle
+expect level 4 45 18
+expect join-next 8
+press up                     # into Rolf's house
+wait idle
+expect script $0927
+shot 01_shir_coming_back
+press c
+wait idle
+shot 02_shir_back
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect join-next 7
+expect party Rolf Rudo Amy Shir
+press c                      # the C menu
+wait idle
+press down
+press down
+press c                      # TECH
+wait idle
+press c                      # Rolf: his three map techniques, Musik last
+wait idle
+shot 03_rolf_map_techniques
+expect no-stderr not ported

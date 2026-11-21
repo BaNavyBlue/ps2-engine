@@ -1,0 +1,37 @@
+# Game over's end, back to the SEGA screen (build 157a). GameOverScreen
+# returns on B or C, or after $708 frames, with game_screen already
+# ScreenID_Sega (the battle set it, loc_F266); MainGameLoop runs
+# SegaScreen, which sends $E0 -- the music fades -- and darkens the
+# message and its picture (PaletteFadeFrom, red first) before its setup.
+# Until 157a the port cut straight to the logo's setup. A level-1 Rolf
+# against Mother Brain loses in a round (gameover_message's way in).
+
+start battle $103
+party 1 1
+limit 4000
+wait idle
+press c
+wait idle
+press c
+wait screen gameover
+# (build 157c) GameOverScreen's erase takes the battle's windows with the
+# rest: plane A cells, their tiles among 0-$5BF. Until 157c the port
+# reset the window system as the screen began, and they went at once.
+wait ticks 16
+shot 00_erasing
+expect pixel 20 177 $800     # the party window's fill, half its places
+wait ticks 384
+shot 01_game_over
+expect pixel 80 89 $EEE
+press c
+wait ticks 2
+# Three steps in, the message's white has lost three of its red; four
+# more and the red is gone (PaletteDecreaseColor: red, then green, then
+# blue, one level an entry a step). On 157 the frame was black here.
+shot 02_fading
+expect pixel 80 89 $EE8
+wait ticks 4
+shot 03_fading
+expect pixel 80 89 $EE0
+wait screen sega
+shot 04_sega

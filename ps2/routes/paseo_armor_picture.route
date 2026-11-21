@@ -1,0 +1,20 @@
+# (build 145) The armour seller's portrait (portrait 14, armor_seller) in
+# Paseo's armour store (Building_ArmorStore), from its picture: one of the
+# twelve no route drew after build 142 (see paseo_hospital_picture). The
+# door's bytes (building 6, portrait 14, store row 5, stock 1), the stock
+# list beside the portrait, B, the goodbye, the fade out.
+
+start building 6 14 5 1 58 28       # the store; the street is 58,28
+wait idle
+expect script $0701                 # "Welcome to my shop!"
+expect picture 56 64 armor_seller
+shot 01_armor_seller
+press b
+wait idle
+expect script $0708
+press c
+wait screen level
+wait idle
+expect level 4 58 28
+expect picture 56 64 none
+expect no-stderr not ported

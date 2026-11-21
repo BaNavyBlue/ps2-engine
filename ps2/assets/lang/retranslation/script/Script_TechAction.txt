@@ -1,0 +1,46 @@
+# Script_TechAction, bank 0x01; script_id = 0x01NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+{char} knows no field Techniques.{end:C4}
+
+[2]
+{char2} is dead{47}{47}{47}{end:C4}
+
+[3]
+Not enough TP!{end:C4}
+
+[4]
+{char} held a hand over {char2}'s
+wounds. {char2}'s wounds healed.{end:C4}
+
+[5]
+{char} held a hand over {char2}.
+The poison left {char2}'s body.{end:C4}
+
+[6]
+Some of {char}'s life was shared
+with everyone{47}{47}{47}{end:C4}
+
+[7]
+{char} held {char2} close.
+Some of {char}'s life flowed to {char2}{47}{47}{47}{end:C4}
+
+[8]
+{char} spread both arms wide.
+Everyone's wounds healed.{end:C4}
+
+[9]
+{char} used {tech}!{end:C4}
+
+[10]
+{char} touched {char2}'s cheek.
+{char2} came back to life!{end:C4}
+
+[11]
+{char} held a hand over {char2}'s
+wounds.{pause}
+
+[12]
+But a body ravaged by poison
+cannot be healed.{end:C4}

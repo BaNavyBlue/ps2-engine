@@ -1,0 +1,35 @@
+# Script_Opening, bank 0x14; script_id = 0x14NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+This is Motavia, the second planet
+of the Algol star system{47}{47}{47}{end:C7}
+
+[2]
+About a thousand years have passed since
+LaShiec, who ruled Algol by the power
+of darkness, fell to the four heroes:
+Alisa, Tyron, Lutz, and Myau{47}{47}{47}{end:C7}
+
+[3]
+In that time Algol continued developing.
+Mother Brain, a gigantic computer, came
+to manage every planet, and provided
+a life of peace and prosperity.{end:C7}
+
+[4]
+Due to Mother Brain's plans, Motavia, too,
+went from a planet of desert to one
+of lush greenery, and the Dome Farms
+produced abundant crops.{end:C7}
+
+[5]
+Living in peace, people seemed to have
+forgotten how to fight{47}{47}{47} they even forgot
+the battles of Alisa and her companions,
+the heroes who saved Algol{47}{47}{47}{end:C7}
+
+[6]
+But darkness encroaches on Algol
+once again! Who, then, will unravel the
+mystery of destiny hidden within Algol?{end:C7}

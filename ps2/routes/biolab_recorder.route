@@ -1,0 +1,51 @@
+# The Recorder in the Biosystems Lab's basement: ObjType_Events $12,
+# loc_DBF8 (ps2.asm:20156), an Obj_InvisibleBlock ($37) at B1 80,20.
+# No d2 test: the first visit, with event_flags $12 ($C722) clear, is
+# loc_E84A with ItemID_Recorder -- $1702 "... has found ..." then $1703
+# "... has gotten hold of ..." -- and with party_member_join_next at 3 it
+# goes to 4: the next knock at Rolf's door. The flag set, $1708 and the
+# box closes. Before build 73 the port had no event $12: A gave $1708 and
+# "level: event $12 is not ported" on stderr, and the story stopped here.
+#
+# The save is story_amy_grind moved to B1 79,20. The block's $2C is 9,
+# loc_7278 row 9: 64 wide from x - 32, 64 high ending at y - 1. At
+# x 1280, y 320 that is cells 78-81, rows 16-19 -- the machine on the
+# map above the leader, not the cell its x,y names.
+
+start slot 1 routes/saves/biolab_recorder.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level $32 79 20
+expect join-next 3
+press up                     # blocked: turn to face the machine
+wait idle
+shot 01_facing_it
+press a
+wait idle
+expect script $1702
+shot 02_found
+press c                      # $1703 runs on; the next button closes it
+wait idle
+expect script $1703
+expect item Recorder
+expect join-next 4
+press a
+wait idle
+expect script $1708
+press c
+wait idle
+expect join-next 4
+shot 03_nothing_more
+expect no-stderr not ported

@@ -1,0 +1,35 @@
+# (build 105) Escape on the Escape menu's pages goes back a level, as B
+# does (The owner): from the HDR page to the CRT page, from the CRT page to the
+# menu (its cursor still on CRT), and from the menu itself it closes. Before
+# this, Escape closed the whole menu from any page. The route reads its own
+# settings.json.
+start new
+wait screen title
+display 3840x2400 fullscreen hdr=1.624/1.000 sdr=203
+press esc
+expect escape-menu open
+press down
+press down
+press down
+press down
+press c
+press up
+press c
+expect crt peak AUTO 330 NITS
+wait ticks 6
+shot escape_on_hdr_page
+press esc
+expect escape-menu open
+expect crt hdr OFF
+wait ticks 16
+shot back_on_crt_page
+press esc
+expect escape-menu open
+expect crt summary OFF
+wait ticks 16
+shot back_on_menu
+press c
+press esc
+press esc
+expect escape-menu closed
+expect screen title

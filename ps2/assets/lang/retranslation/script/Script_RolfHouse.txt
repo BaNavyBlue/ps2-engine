@@ -1,0 +1,238 @@
+# Script_RolfHouse, bank 0x09; script_id = 0x09NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Back home, as I prepared for the trip,
+Nei appeared, looking worried.{end:C4}
+
+[2]
+{cont}"Nei, we're going to be apart for a while.
+Be strong, even without me."{end:C4}
+
+[3]
+{cont}Nei just stared at me. That's right,
+when Nei and I first met, she looked at
+me just like this. That must have been
+around seven months ago, I think.{pause}Because she was born from fusing
+biomonster cells with human ones,
+Nei had been shunned and hated by people,
+and nearly killed by them.{end:C4}
+
+[4]
+{cont}"When I saved you, you were still
+little, but you should be fine on
+your own now, right? Besides, my
+journey could become very dangerous.{pause}I don't want to put you at risk.
+You understand, don't you? It may not have
+been for very long, but it was fun having a
+little sister like you."{end:C4}
+
+[5]
+{cont}But despite my reassurances,
+Nei stood in front of the door,
+determined not to let me leave.{end:C4}
+
+[6]
+{cont}"{char}, please! Take Nei with you.
+Nei will do anything for {char}!"{end:C4}
+
+[7]
+I picked up my bag and stood up, but
+Nei would not budge from the door,
+so I had no choice but to take her
+along.{end:C4}
+
+[8]
+Ah, home at last.
+But there's no time to rest.
+Before I set out again, I should
+check on my companions.{end:C4}
+
+[9]
+There should be no problems with this.
+Okay, time to head out again.{end:C4}
+
+[10]
+This is a hard journey, and lives are at
+stake. I must choose the party carefully.{end:C5}
+
+[11]
+Let's see who's here right now.{end:C5}
+
+[12]
+Oh, someone's knocking at the door.{end:C4}
+
+[13]
+Now that {char} has joined,
+let's confirm our companions.{end:C5}
+
+[14]
+Now that {char} has joined,
+let's confirm our companions.{end:C5}
+
+[15]
+Then let's disband the party for now
+and put together a new one.{end:C5}
+
+[16]
+Who should join the party?{end:C5}
+
+[17]
+{char} joined.
+Should I add more members?{end:C5}
+
+[18]
+{char} joined. That makes four.
+Now, let's head out again.{end:C4}
+
+[19]
+"That name suits you.
+I'm very glad to meet you."{end:C5}
+
+[20]
+{cont}"Understood. And what shall it be?"{end:C5}
+
+[21]
+{cont}"Understood. And what shall it be?"{end:C5}
+
+[22]
+{cont}"Understood. And what shall it be?"{end:C5}
+
+[23]
+{cont}"All right. And what name will
+you give me?"{end:C5}
+
+[24]
+{cont}"Can't be helped, I guess. Oh, well.
+Give me a cool one, will ya?"{end:C5}
+
+[25]
+{cont}"I am Silka of the Wind.
+Nothing more, and nothing less."{end:C4}
+
+[26]
+{cont}"Then, I'll call you {char}.
+Glad to have you."{end:C4}
+
+[27]
+{cont}"{47}{47}{47} I'm terribly sorry."{end:C4}
+
+[28]
+{cont}"Forgive my dropping by. I hear people called
+{char} and Nei are investigating the
+mystery of the biomonsters. I don't
+mean to brag, but I'm a professional{pause}hunter of biomonsters. I don't have much
+in the way of sword skills, and I have no
+special powers, either. But I can handle
+almost any kind of gun.{pause}
+
+[29]
+If possible, I'd like to join you on your
+journey. I should introduce myself.
+I'm Rudger{47}{47}{47} Rudger Steiner.{pause}But{47}{47}{47} if you'd rather change my name,
+so be it. Will you give me a new one?"{end:C5}
+
+[30]
+{cont}"Excuse me. You must be {char}.
+How do you do? My name is Anne Saga.
+I'm a doctor, just out of medical school.
+I heard you're investigating the mystery{pause}of the biomonsters, so my apologies for
+bothering you, but please let me join you.
+I'm not very good at fighting, but I can heal
+those who are hurt in battle.{pause}As a sign of our new friendship,
+would you give me a name?"{end:C5}
+
+[31]
+{cont}"How do you do, {char}?
+I'm Huey Lean. I'm a scholar, and
+I study living things. I heard about
+you, {char}, and wanted to meet you,{pause}so here I am. Biomonster or not,
+a life is a life.
+
+
+[32]
+I don't want to defeat them, but to protect
+the weak and the innocent, I must fight.{pause}My skills may be of use for that.
+If you'll have me, please let me join you.{pause}Oh, I know! If you gave me a nickname,
+wouldn't it feel like we've become friends?"{end:C5}
+
+[33]
+{cont}"I've been wanting to meet you, {char}.
+I'm Amia Amirski. People have taken to
+calling me a counterhunter.{pause}In this world there are good hunters,
+and there are bad ones{47}{47}{47} The bad
+ones, I quietly send on to the next world{47}{47}{47}{pause}
+
+[34]
+That is my line of work{47}{47}{47} And of course,
+hunters aren't my only targets{47}{47}{47}
+I don't care for guns, but with a bladed{pause}weapon, I am unmatched.
+You won't regret taking me along.{pause}Yes{47}{47}{47} perhaps a new name, to cast
+off my past, would be nice{47}{47}{47}"{end:C5}
+
+[35]
+{cont}"Phew{47}{47}{47} Finally caught you!
+You sure were out a lot! You're the
+ones going around with a cute little
+sister, beating up the bad guys, right?{pause}So why didn't you call me? I'd rather not
+deal with the slimy, gooey critters,
+but if it's machines or mechs that
+need wrecking, leave it to me!{pause}
+
+[36]
+I'm a gentleman, so the girls can
+travel with me without a worry!
+I'm Kainz Ji An, the scrap dealer!{pause}Hey! What's with that look?
+You got a problem with my name?"{end:C5}
+
+[37]
+{cont}"Hello, {char}. You're a cute
+boy, just like they say. Silka Levinia
+is my name, you know. I'm not too
+interested in things like justice or peace,{pause}me being a thief, and all. I steal all sorts
+of things just to pass the time. I hear
+{char} and the others are on
+a journey full of thrills.{pause}
+
+[38]
+It sounds fun, so maybe I'll come along.
+But I'm Silka of the Wind.
+Nothing will ever tie me down! If that's
+all right with you, I'll join!{pause}Oh?! What's this? You want to
+give me a name?"{end:C5}
+
+[39]
+"Huh? Silka's come back{47}{47}{47}"{end:C4}
+
+[40]
+{cont}"Hee hee. Sorry to make you worry.
+A breeze lured me out, and I went
+for a carefree little stroll.
+{char}, come on, let's head out again."{end:C4}
+
+[41]
+{47}{47}{47} or so I thought, but there aren't
+enough members to reorganize.{end:C5}
+
+[42]
+Right now I'm traveling alone.
+How lonely it is!{end:C5}
+
+[43]
+Right now I'm traveling with {char},
+just the two of us.{end:C5}
+
+[44]
+Traveling with me right now
+are {char} and {char}.{end:C5}
+
+[45]
+Traveling with me right now
+are {char}, {char}, and {char}.{end:C5}
+
+[46]
+Shall we continue our journey as is?{end:C5}
+
+[47]
+{char} joined. Much more reassuring
+than just two. Well, let's head out again.{end:C4}

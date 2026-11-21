@@ -1,0 +1,49 @@
+# The game's data: made on your own machine from your own cartridge image by
+# the setup (tools/setup.py). None of it is ever committed.
+# No disassembly: the extractors read the image itself. One put here for
+# the round-trip tools (ps2/'s `make roundtrip`) stays out.
+/PSII_Disasm/
+/ps2/assets/*
+!/ps2/assets/icon/
+!/ps2/assets/lang/
+/ps2/assets/lang/*
+!/ps2/assets/lang/languages.json
+!/ps2/assets/lang/retranslation/
+!/ps2/assets/music/
+/ps2/assets/music/*
+!/ps2/assets/music/q_patches.json
+
+# Cartridge and disc images, and archives that could hold one.
+*.bin
+*.smd
+*.gen
+*.32x
+*.sms
+*.gg
+*.iso
+*.cue
+*.chd
+*.zip
+*.7z
+*.rar
+
+# What the build, the routes and the game write.
+build/
+dist/
+*.o
+*.exe
+*.dll
+*.p
+*.lst
+*.log
+__pycache__/
+/ps2/route_out/
+/ps2/saves/
+/ps2/listen/
+/ps2/ps2
+/ps2/ps2_headless
+/ps2/route_probe
+
+# A sync that stopped halfway keeps the player's folders here.
+/.sync-kept/
+setup.log

@@ -1,0 +1,133 @@
+# The jet scooter (Obj_JetScooter, ps2.asm:6767) into a dam. The save is
+# slot 1 on Motavia at 89,116 with $C716 = 1 and the scooter parked where
+# loc_E690 leaves it, $590,$730: on the water just above, outside Roron.
+#
+# A on it is ObjType_Events 6 (loc_DAA4): $C716 goes 1 -> 2, so the note
+# the Mota people left ($1686) plays before $171C, "Let's get on the jet
+# scooter!". The next idle visit sets jet_scooter_flag; the party hides
+# and the scooter's init switches to loc_29E16 and its main routine.
+# It steps 16px in 8 frames and probes two cells ahead a direction; the
+# dam entrances are solid and special in its table only, so the push up
+# from $510,$520 reaches Motavia's record 81,81 through loc_6E4E: Red Dam
+# F1 at 47,25, walking (only level 0 hides the party), the flag still set.
+# Walking back out through loc_28546, LevelScreen parks the scooter on the
+# arrival cell and the party is riding again.
+#
+# (build 129a) The note's quotes are one glyph each since 129a, not two,
+# so its text finishes sooner and the ride's random numbers moved: the
+# first encounter comes on the second step left from 85,107 (the scooter
+# parked at 84,107, as before on the cell the step left), and a second one
+# on the way up at 81,84.
+#
+# Before build 64, slot 0 on Motavia was a free entry: A found nothing,
+# "There seems to be nothing unusual here." ($1708), and no scooter.
+
+start slot 1 routes/saves/jet_scooter.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 0 89 116
+shot 01_parked
+press up                     # the scooter's box stops the step; he turns
+wait idle
+press a
+wait idle
+expect script $1686          # the note, first boarding only
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $171C          # "Let's get on the jet scooter!"
+press c
+wait idle                    # riding: the party hidden, the engine on
+shot 02_riding
+walk up 6
+walk left 3
+walk up 1
+walk left 1
+walk up 1
+wait idle
+walk left 1
+wait idle
+walk left 1                  # the step begins, and at once:
+wait screen battle           # an encounter. On the scooter the roll comes
+                             # on the step's first frame, while the
+                             # leader's copy is still on the cell it
+                             # leaves (loc_11700); BattleScreen saves that
+                             # cell, so the step never happens
+wait idle                    # FIGHT / STGY
+press c                      # FIGHT
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level            # LevelScreen parks the scooter where the
+wait idle                    # fight began; the party is riding again
+expect level 0 84 107
+shot 03_back_on_the_scooter
+walk left 3
+walk up 24                   # and on the 24th step's first frame
+wait screen battle           # (build 129a) another encounter, at 81,84
+wait idle
+press c                      # FIGHT
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 0 81 84         # parked where that fight began, riding
+walk up 3                    # 2 steps, then the push into the entrance
+wait screen level
+wait idle
+expect level $29 47 25
+shot 04_red_dam_f1
+expect no-stderr not ported
+expect no-stderr jet scooter
+walk down 4                  # out the way we came: loc_28546, back to 81,82
+wait screen level
+wait idle
+expect level 0 81 82         # on the scooter, parked on the arrival cell
+shot 05_out_riding
+press a                      # nothing ahead: ObjType_Events 0 (loc_D9AA)
+wait idle
+expect script $171E          # "We can't get off here!": the scooter faces
+shot 06_cant_get_off         # left, as LoadSpritesInLevel puts it, over water
+press c
+wait idle
+wait ticks 2                 # the leader's copy held the offset while the
+expect level 0 81 82         # box was up (loc_4B18 copies nothing); the
+expect no-stderr not ported  # scooter's next frame at rest puts it back

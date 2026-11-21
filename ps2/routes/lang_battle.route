@@ -1,0 +1,24 @@
+# (build 163) The retranslation in battle: formation 1 (fight's), FIGHT,
+# victory. His battle box (battle_box): the dialogue window's width, 24
+# cells at columns 7-32 -- the stock box is 20 at 9-30 -- its left border
+# at x 60, where the stock box shows the floor. Each victory line fits one
+# line, so the box has one. {char} is Rolf's name, his default: Eusis.
+start battle 1
+language retranslation
+wait idle                    # FIGHT / STGY
+press c                      # FIGHT
+wait idle
+expect script $1211
+expect text "Eusis and the others won!"
+expect pixel 60 150 $EEE           # the box's left border
+expect pixel 64 152 $EEE           # the top of the E
+shot 01_victory
+press c
+wait idle
+expect text "Got 5 experience points!"
+press c
+wait idle
+expect text "Got 15 meseta!"
+shot 02_meseta
+press c
+wait screen level

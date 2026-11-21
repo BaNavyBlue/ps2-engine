@@ -1,0 +1,27 @@
+# (build 142) A portrait window whose picture is not the loaded portrait's
+# number. The Central Tower's desk (Building_CentralTowerOutside, ps2.asm:
+# 17657) with Nei gone and the Governor's errand not begun ($C736 0, $C737
+# 1): "Something's wrong..." ($0D02), then loc_C10A redraws the portrait
+# window in place, instantly, as the copy window ($51, portrait 22's:
+# WinArt_CentTowerOutsidePortraitCopy) over the outside portrait's art and
+# palette (21: CentTowOutPortArt, PalettePtrs 38 -- 22's table entry names
+# the same two), and "Omigosh! The lake is overflowing!" ($0D03). The copy
+# window's picture (central_tower_outside_copy) stands for the tiles because
+# the art and palette loaded are its own, under 21's number.
+#
+# Found by this route: the copy window, painted (drawn and not pushed), was
+# drawn under the whole stack -- under the outside portrait it was drawn
+# over -- so the port showed the empty plaza where the ROM shows the guard
+# running in, shouting. window.c draws painted entries in the order the
+# ROM wrote them now (WinEntry.over). `expect pixel 130 70 $4A0` is the
+# guard's green jacket; on b141d the plaza's ($888), and `expect picture`
+# unknown.
+
+start building 8 21 0 0 32 16       # the desk; the street is 32,16
+flag $C737 1
+wait idle
+expect script $0D02
+expect script $0D03
+expect pixel 130 70 $4A0            # the guard (b141d: the plaza)
+expect picture 125 60 central_tower_outside_copy
+shot 01_lake_overflowing

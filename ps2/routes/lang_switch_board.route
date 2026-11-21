@@ -1,0 +1,43 @@
+# (build 166) LANGUAGE changed with the name board open (new_game's way,
+# B typed on the US board): the Japanese board in its place, the cursor
+# at its first stop, the letter begun on the old board let go (its code is
+# the old language's); ア typed and オワル, the dream's 1504 with it. Until
+# 166 the US board stayed, its codes typed into a Japanese name.
+start new
+wait screen title
+wait idle                   # TITLE_WAIT: the finished title
+press start
+
+wait screen intro
+wait idle                   # NEW GAME / CONTINUE / ERASE GAME
+expect script $130B         # "Let me check the backup data."
+expect script $1310         # "Data check complete."
+press c                     # NEW GAME
+
+wait idle                   # the name board, the lamp on A
+expect script $1302         # "What is the name of your character?"
+press right                 # B (the US board)
+press c
+wait ticks 7
+shot 00_us_b
+language ja
+wait ticks 7
+shot 01_to_ja
+press c                     # ア: the cursor at the board's first stop
+press up                    # the last row, ハ
+press left                  # round to オワル
+wait ticks 7
+shot 02_typed
+press c                     # END
+wait idle
+expect script $1304
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+expect script $1504
+expect text "ぼくの なまえは ア。"

@@ -1,0 +1,40 @@
+# ItemAction_Hidapipe (ps2.asm:14573): on Motavia, "$13" and on the next
+# button SXFID_Hidapipe waited out in place, then $FFFFCB0E = $FFFF --
+# ProcessRandomBattle's counter then gains 2 a step on foot instead of 4
+# -- and the item is used up. loc_6F1C clears it on the next way into a
+# dungeon (a level under $10 into one of $10 up), and only then. Before
+# build 73 the port played the sound and took the item but never set the
+# flag, so it did nothing.
+#
+# A new game on Motavia near Shure, a Hidapipe given to Rolf (his fourth
+# item). "The tones cover the sound of {char}'s steps." ($13) runs on
+# with no button, the sound is waited out (some 470 ticks) and the menu
+# closes by itself. Then the step up into Shure's door at 131,25.
+
+start level 0 128 27
+wait idle
+give Hidapipe 0
+expect hidapipe off
+press c                      # ITEM, Rolf, the Hidapipe, USE
+wait idle
+press c
+wait idle
+press c
+wait idle
+press down
+press down
+press down
+press c
+wait idle
+press c                      # USE
+wait idle
+expect script $0013
+expect hidapipe on
+shot 01_used
+walk right 2
+walk up 2                    # 130,26, then into the door
+wait screen level
+wait idle
+expect level $17
+expect hidapipe off
+expect no-stderr not ported

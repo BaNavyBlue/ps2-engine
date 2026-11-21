@@ -1,0 +1,31 @@
+/* (build 123) The Windows game's resources: its icon, Rolf's portrait
+ * (assets/icon/ps2.ico, tools/make_icon.py) -- the first icon, which
+ * Explorer shows and SDL gives the game's window -- and its version
+ * information. Linked into ps2.exe and `make dist`'s by the Makefile
+ * (windres); run from the tree's top. */
+
+1 ICON "assets/icon/ps2.ico"
+
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+FILEOS          0x40004
+FILETYPE        0x1
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "FileDescription", "Phantasy Star II"
+            VALUE "ProductName", "Phantasy Star II, a port in C"
+            VALUE "FileVersion", "1.0"
+            VALUE "ProductVersion", "1.0"
+            VALUE "OriginalFilename", "ps2.exe"
+            VALUE "InternalName", "ps2"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

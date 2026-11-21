@@ -1,0 +1,31 @@
+# (build 166) LANGUAGE changed with the C menu open: every window on the
+# screen built again in the new language (win_language_changed), its
+# cursor kept -- the main menu, the party list, Rolf's items. Until 166
+# the open windows kept the old language until they were opened again,
+# and a run of his face left drawn in another language's was blank.
+start level $64 33 10
+party 4 50
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+shot 00_english
+language retranslation
+wait ticks 2
+expect pixel 32 16 $EEE        # the top of his I of Items
+shot 01_retranslated
+language ja
+wait ticks 2
+expect pixel 36 30 $EEE        # the dakuten over じ of じょうたい
+shot 02_japanese
+language us
+wait ticks 2
+expect pixel 32 16 $800        # paper again: the stock I of ITEM
+expect pixel 34 17 $EEE        # starts a row lower
+shot 03_english_again
+press b
+wait idle
+expect menu $02

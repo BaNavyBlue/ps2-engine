@@ -1,0 +1,20 @@
+# (build 163) The retranslation's text in a message window: Aukba's weapon
+# store (ac_slasher_name's), the fourth item. His 0602 types "The {item},
+# huh?" and a line break: the item's name is his names.json's, whole --
+# "Laconia Slicer", fourteen letters, past the stock ten -- and the line
+# is a run in his face (ink 1 on the window's paper), a glyph a frame.
+# The pixel is the top of the T: his capitals start on the cell's top
+# row, where the stock font's have paper.
+start building 5 13 5 18
+language retranslation
+wait idle
+press down
+press down
+press down
+press c
+wait idle
+expect script $0602
+expect text "The Laconia Slicer, huh?"
+expect text "Who'll carry it?"
+expect pixel 24 176 $EEE
+shot 01_laconia_slicer

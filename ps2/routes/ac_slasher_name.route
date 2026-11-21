@@ -1,0 +1,15 @@
+# (build 131a) AC SLASHR's name is ten codes in the ROM, the last a space
+# (`nametxt "AC SLASHR "`, ps2.asm:28392), and Script_ProcessItemEnemyNames
+# copies up to ten, stopping only at $C4: the weapon store's "{item}...ok."
+# prints "AC SLASHR ...ok.". The extractor stripped the space until 131a,
+# so the port printed "AC SLASHR...ok." (build 131's round-trip found the
+# item table a byte out). Aukba's weapon store (store 18), the fourth item.
+start building 5 13 5 18
+wait idle
+press down
+press down
+press down
+press c
+wait idle
+expect text "AC SLASHR {47}{47}{47}ok."
+shot 01_ac_slasher

@@ -1,0 +1,48 @@
+# (build 131c) Two things the battle tables lost, both found by the JSON
+# round-trip (docs/history.md, Build 131c):
+#
+# Dark Force's picture: his map is a nametable block 40 x 15, 1206
+# bytes, and extract_battle.py read at most $400 of a frame, so the last
+# 91 cells came out 0 -- the bottom of his jaw was missing (Mother
+# Brain's picture lost its last rows the same way). The first shot has
+# the jaw's tip at 169,109.
+#
+# Frames of more than sixteen pieces: battle.h kept 16 a frame and
+# seventeen frames have more, up to 36. Gra's strike (Map_TechGraAttack)
+# has 24 to 28; with 16 its lightning stopped short of the floor. Rolf
+# at L40 against Dark Force (formation $102), Gra from the second page
+# of his list: 60 ticks after FIGHT a bolt is at 245,131.
+
+start battle 258
+members Rolf
+member Rolf 40
+wait idle
+shot 01_dark_force
+expect pixel 169 109 $220    # the tip of his jaw (the backdrop's $200 before)
+press down                   # STGY
+press c
+wait idle
+press c                      # ORDR
+wait idle
+press c                      # Rolf
+wait idle
+press right                  # TECH
+wait ticks 3
+press c
+wait idle
+press up                     # NEXT
+wait ticks 3
+press c
+wait idle
+shot 02_tech_page_2          # RES GRA GITHU NAFOI
+press down                   # GRA
+wait ticks 3
+press c
+wait idle
+expect screen battle
+limit 3000
+press c                      # FIGHT
+wait ticks 60
+shot 03_gra_strike
+expect pixel 245 131 $C00    # a bolt (the backdrop's $200 before)
+expect no-stderr PIECES_MAX

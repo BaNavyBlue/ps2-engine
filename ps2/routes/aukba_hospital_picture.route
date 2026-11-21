@@ -1,0 +1,24 @@
+# (build 145) A Dezolian shopkeeper's portrait, the picture dezolian2
+# (portrait 17), in Aukba's hospital (Building_Hospital): one of the
+# twelve pictures no route drew after build 142 (see
+# paseo_hospital_picture). The four Dezolian portraits are one drawing
+# (dezolian_portrait.png through WinArt_DezolianPortrait) in four
+# palettes, so each is its own picture to hold to its tiles. A new game on
+# Aukba's street, in at the door; without the translator the keeper
+# speaks Dezolian ($0810), and C lets the party out.
+
+start level 10 13 19                # Aukba, two cells below the door
+wait screen level
+wait idle
+walk up 3                           # one step, then the door takes the pad
+wait screen building
+wait idle
+expect script $0810                 # "Danyaraha? bebekucha?"
+expect picture 56 64 dezolian2
+shot 01_dezolian2
+press c
+wait screen level
+wait idle
+expect level 10
+expect picture 56 64 none
+expect no-stderr not ported

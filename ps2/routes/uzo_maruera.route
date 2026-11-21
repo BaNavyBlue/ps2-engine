@@ -1,0 +1,37 @@
+# The Maruera tree on Uzo: ObjType_Events $10, loc_DB90 (ps2.asm:20113),
+# an Obj_InvisibleBlock2 ($38) at x 2256, y 272 -- $2C 7, loc_7278 row
+# 7: 32 wide from x - 16, 16 high from y, so cells 140-141 on row 17.
+# The first visit (d2 0) with event_flags $10 ($C720) clear is "This is
+# it! This is the Maruera-tree." ($1710) and nothing else; the next idle
+# one (d2 1, loc_DBAC) is loc_E84A with ItemID_MruraLeaf, $1702 then
+# $1703. With the flag set the first visit is $1708 and the box closes.
+# Before build 73: $1708 and "level: A on object type 0 index $10 is not
+# ported".
+
+start level $12 140 18
+wait idle
+press up
+wait idle
+expect level $12 140 18
+press a
+wait idle
+expect script $1710
+shot 01_the_tree
+# (build 141b) The mist: plane A's backdrop blocks on the cave tileset draw
+# loc_412F8's tiles in line 1 entry 7, $ECA (LoadLevelData, loc_9222).
+# Until 141b the port loaded neither and the sky here was bare.
+expect pixel 5 8 $ECA
+press c
+wait idle
+expect script $1702
+expect script $1703
+shot 02_a_leaf
+press c
+wait idle
+expect item MruraLeaf
+press a
+wait idle
+expect script $1708
+press c
+wait idle
+expect no-stderr not ported

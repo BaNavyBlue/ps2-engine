@@ -1,0 +1,80 @@
+# The party wiped out on the map (build 157c). A level-1 Rolf on Gaira's
+# damage floor: a point of HP each step off cells 3,6 and 3,7 (loc_7108),
+# eighteen steps up and down, then "ROLF is dead!" (ObjType_Events $30,
+# $1721). Once it has played out, loc_E01A sets ScreenID_Sega, and the
+# level loop's loc_7DEC -- the controls unlocked -- branches to
+# GameOverScreen: the game over music, tiles 0-$5BF erased over 32
+# frames (loc_6C54) under the level and the window as they stood
+# (VBlank $24 sends no party art), PaletteFadeFrom, then the message on
+# the title picture, and SegaScreen after it. Until 157c the port went
+# from the window straight to the SEGA screen: no game over.
+#
+# (build 182) Rolf is not there for any of it. RenderCharSprites runs
+# every pass of the level loop, and its per-slot step (loc_11868) hides a
+# slot whose member is at 0 HP; the loop's next RunObjects leaves the
+# hidden object out of the sprite table. So the frame after the floor
+# takes his last point he is gone, before "ROLF is dead!". Build 157c
+# pinned him at 54,89 through the erase: the port drew every member then,
+# whatever the HP. With nobody standing in a wipe-out, no party sprite is
+# left for VBlank $24's missing art to show.
+
+start level $41 3 5
+party 1 1
+wait idle
+walk down 2                  # onto 3,7: 18 HP
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+walk up 1
+wait idle
+walk down 1
+wait idle
+expect script $1721          # "ROLF is dead!"
+shot 01_dead
+expect pixel 54 89 $886      # the floor where he stood: hidden at 0 HP
+press c
+wait ticks 16
+expect screen gameover
+expect music $95             # MusicID_Over
+shot 02_erasing
+expect pixel 54 89 $886      # the floor, half the places still in
+expect pixel 100 177 $800     # the window's fill: it stays, its tiles going
+wait ticks 14
+shot 03_erased
+expect pixel 54 89 $000      # gone with the rest, not sent again
+wait script $1218            # "ROLF and the others failed ..."
+wait ticks 300               # typed
+shot 04_message
+expect pixel 80 89 $EEE
+press c
+wait screen sega

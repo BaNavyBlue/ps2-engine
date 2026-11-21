@@ -1,0 +1,38 @@
+# The jet scooter's maker on RoronF5: object $1B (loc_4288) with dialogue
+# $87. ObjType_People sends $87 to loc_E690 (ps2.asm:20630): $1685, "I
+# think I'm gonna try and ride this over the ocean ...", $C716 = 1 and
+# the scooter parked at x $590, y $730 on Motavia ($C656, $C654). Before
+# build 74 no $1B was spawned: he was not there and $C716 stayed 0.
+
+start level $1E 6 6
+wait screen level
+wait idle
+expect person $86 present
+expect person $87 present
+walk left 1
+wait idle
+walk down 38
+wait idle
+walk right 5
+wait idle
+walk down 11
+wait idle
+walk right 9
+wait idle
+walk left 2
+wait idle
+walk down 1
+wait idle
+press right                  # the maker, one cell east
+wait idle
+press a
+wait idle
+expect script $1685
+shot 01_over_the_ocean
+press c
+wait idle
+press c
+wait idle
+expect screen level
+expect flag $C716 1
+expect no-stderr not ported

@@ -1,0 +1,17 @@
+# (build 131) The Control Tower's ground floor has the longest interaction
+# list in the ROM: 70 entries, the last a row of stairs up to
+# ControlTowerF1 (y 43, x 37 to 89). The port kept 64 doors a level, so
+# the last six were dropped, and walking into the stair at x 69 fell
+# through to the exit table and out to Piata (build 131's round-trip
+# found it). Entry 64 (the 65th): cell 69,43 up, to ControlTowerF1 70,43.
+start level $3E 69 45
+wait idle
+walk up 2
+wait idle
+shot 01_under_the_stair
+walk up 1                    # into the stair: the interaction list
+wait screen level
+wait idle
+expect level $3F 70 43
+shot 02_first_floor
+expect no-stderr doors

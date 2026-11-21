@@ -1,0 +1,47 @@
+# (build 97c) The rocky mountain on Motavia: ObjType_Events $2B
+# (loc_DF24, ps2.asm:20444), an event block (object $38) at 2768,1544 --
+# cell 173,96. A on it opens the small message box (loc_D84A) and loads
+# $171F; $DE72 + 1, so the next button closes the box (ObjType_Events'
+# first test); loc_DDA2 names {char}. The script is cut short in the ROM:
+# its first page ends in $C4 ("; this should be $C3" in the disassembly),
+# and LoadScript ends a script at any code $C4 and up (loc_11268), so
+# only "There is a high rocky mountain in front of" is ever shown -- the
+# second page, "{char} and the others! Is this Uzo mountain?", is never
+# loaded. The port does the same. Before build 97c the port had no case
+# for the event: A there was "There seems to be nothing unusual here."
+# ($1708, people line 0).
+#
+# It is on Uzo's island: from the cell below the mountain (173,97, the
+# door record) a step up is Uzo's entrance, but one cell to the left the
+# mountain only turns the party (172,97 facing up), and A there hits the
+# event block.
+
+start slot 1 routes/saves/jet_scooter.json
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait idle
+press c
+wait screen level
+wait idle
+expect level 0 89 116
+warp 0 172 97
+wait screen level
+wait idle
+press up                     # the mountain: a turn, no step
+wait idle
+expect level 0 172 97
+press a
+wait idle
+expect script $171F
+shot 01_mountain
+press c                      # the box closes: there is no second page
+wait idle
+expect level 0 172 97

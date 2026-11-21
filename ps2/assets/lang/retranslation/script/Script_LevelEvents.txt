@@ -1,0 +1,377 @@
+# Script_LevelEvents, bank 0x18; script_id = 0x18NN, NN 1-based
+# The retranslation's (tools/import_retranslation.py; docs/languages.md)
+
+[1]
+Ah! I recognize that face!!
+It's the guy who tried to kill Nei
+seven months ago! This could be trouble.
+Let's turn back for now.{end:C4}
+
+[2]
+Tiem seems to have something in mind,
+but what in the world is she planning?{end:C4}
+
+[3]
+{cont}"I'm going to see my father now.
+You all stay right there."{end:C4}
+
+[4]
+{cont}"Hey, you, girl! Hand over your money!
+Or I'll cut you down!!"{pause}{cont}"I have nothing to give to the likes of you!"{pause}{cont}"What? How dare you speak to me that way!"{end:C4}
+
+[5]
+{cont}"Ah!!!"{pause}{cont}"Father{47}{47}{47} no more killing{47}{47}{47}"{pause}{cont}"Tiem!!! Oh, what have I done!
+Wait for me. Your father's coming
+right now{47}{47}{47}"{end:C5}
+
+[6]
+Oh, what a tragic end for the two of them!
+But at the root of it, this happened because
+the world has fallen into turmoil. We must
+restore a life of peace, and soon.{end:C4}
+
+[7]
+"I'm Tiem, Darum's daughter.
+Father promised me he'd come to save
+me, for sure! That's why I'm waiting for
+him here."{end:C4}
+
+[8]
+{char} handed over the {item}.
+Tiem's hands were trembling.{pause}"Father has been killing people
+for me? I have to stop him.
+Take me to Father!"{pause}
+
+[9]
+But many people hated Darum. Being
+seen would be dangerous. {char} and
+the others hid Tiem under a veil and
+took her along.{end:C4}
+
+[10]
+She looks exactly like Nei!
+How is this possible?!{pause}"I am Nei-First. I was born
+two years ago.{pause}During an experiment combining humans
+and animals, a massive surge of energy
+was sent into the Biosystem. I am the
+product of that event.{pause}The humans declared the experiment a
+failure, and they tried to kill me.{pause}
+
+[11]
+But I escaped, drew DNA data from
+the Biosystem, and created monsters{47}{47}{47}{pause}to exact revenge upon the humans who
+meddle with nature as they please and toy
+with life itself. But within me, there was
+another Nei who stood in my way."{end:C4}
+
+[12]
+{cont}"Wh-what? Could that be{47}{47}{47}!!"{pause}
+
+[13]
+{cont}"Yes, the girl you call Nei!{pause}You travel with that Nei, thinking
+she's your companion, but really she's
+no different from a hideous monster.
+She must hate humans."{end:C4}
+
+[14]
+Is that true? Does Nei really
+hate humans?
+But Nei is dead now. There's no way
+to be sure how she felt{47}{47}{47}{end:C4}
+
+[15]
+{cont}"No! That's not true!" Nei cried.
+"I split away because it hurt so much
+to be inside Nei-First!{pause}It's true that being born a monster
+is terribly painful and sad!{pause}But I can't accept you making
+monsters in order to take revenge
+on humans."{end:C4}
+
+[16]
+{cont}"How impudent! You say all that,
+but you aren't capable of fighting me.
+Go on, try it if you can."{end:C5}
+
+[17]
+{char} and the others heard a dull
+explosion and felt a jolt, as if Gaira were
+being swept away somewhere. They had to
+check the controls and fix Gaira's orbit!!{end:C4}
+
+[18]
+{char} and the others heard a dull
+explosion and felt a jolt, as if Gaira were
+being swept away somewhere. They had to
+check the controls and fix Gaira's orbit!!{end:C4}
+
+[19]
+So this is Mother Brain, who rules over
+Algol at will! {char} and the others
+were nearly crushed by the eerie
+aura exuded by Mother Brain.{pause}But the future of Algol rests on
+{char} and the others! To sever this hold
+on Algol, must they fight Mother Brain?!{end:C5}
+
+[20]
+Then Mother Brain smiled thinly
+and said:{pause}{cont}"Heh heh heh. What fools. If you destroy
+me, the entire star system will fall into
+panic. Without me, the people of Algol are
+incapable of doing anything at all.{pause}Once they have known a life of luxury,
+they can never go back.{pause}
+
+[21]
+If you destroy me, the people will tremble
+in misery, cursing their own fates as they
+die.{pause}If that's what you want, then destroy me!!
+Well then! If you're going to turn back, now
+is the time!"{end:C5}
+
+[22]
+Then Mother Brain laughed triumphantly
+and said:{pause}{cont}"Of course. You could never destroy me.{pause}For to you, I am like a mother, who
+has protected, cherished, and raised
+you.{pause}My darling child, Algol. From now on, I shall
+lead this child by the hand and walk
+the road to ruin."{pause}
+
+[23]
+"Ho ho ho ho. Now, be on your way home.
+There's nothing at all that you can do."{end:C4}
+
+[24]
+"Very well. Then I'll show no mercy
+either. Die and be done with it!"{end:C4}
+
+[25]
+"Welcome to the spaceship Noah,
+children."{pause}{cont}"Who in the world are you people?!"{pause}{cont}"'You people'? How rude. You don't think
+we're your enemies, now, do you?"{end:C5}
+
+[26]
+"I see. Then the feeling is mutual. You
+destroyed Mother Brain, and that makes
+you our hated enemy."{end:C4}
+
+[27]
+"Indeed. After all, Algol prospered as a
+result of Mother Brain, which we
+constructed."{end:C4}
+
+[28]
+{cont}"So! It was you all who made Mother Brain!
+Just what are you people?!"{end:C4}
+
+[29]
+Then {char} and the others heard Lutz's
+voice: "Let there be light for the warriors
+who saved Algol!" And by Lutz's mysterious
+power, they were revived.{end:C4}
+
+[30]
+Then {char} and the others heard Lutz's
+voice: "Let there be light for the warriors
+who saved Algol!" And by Lutz's mysterious
+power, they were revived.{end:C4}
+
+[31]
+Now, let's go back to Motavia.
+This is where it all begins!!{end:C4}
+
+[32]
+{cont}At that moment, Lutz's power brought the
+rest of their companions to them!!{pause}{cont}"Tch. Such petty tricks!! But
+the destruction of Algol is only a matter
+of time{47}{47}{47}"{pause}{cont}"Shut up!! Be quiet!!"{pause}{cont}And the next instant, {char} and
+the others charged at the Earthmen,
+hundreds strong{47}{47}{47}{end:C4}
+
+[33]
+{cont}At that moment, Lutz's power brought the
+rest of their companions to them!!{pause}{cont}"Tch. Such petty tricks!! But
+the destruction of Algol is only a matter
+of time{47}{47}{47}"{pause}{cont}"Shut up!! Be quiet!!"{pause}{cont}And the next instant, {char} and
+the others charged at the Earthmen,
+hundreds strong{47}{47}{47}{end:C4}
+
+[34]
+Nei hung her head and didn't move.
+Nei and Nei-First were once of the
+same body. If Nei-First were killed,
+Nei couldn't survive either.{end:C4}
+
+[35]
+"I don't want you to create any more
+monsters. Please understand!!
+Big sister!!"{end:C4}
+
+[36]
+What?! What is this? AMeDAS is shaking!
+I see! With Nei-First dead, the energy she
+no longer needs is suddenly pouring into
+the AMeDAS system!!{end:C4}
+
+[37]
+What?! What is this? AMeDAS is shaking!
+I see! With Nei-First dead, the energy she
+no longer needs is suddenly pouring into
+the AMeDAS system!!{end:C4}
+
+[38]
+"{char}, I'm finished{47}{47}{47} If
+Nei-First dies, I can't go on living
+either{47}{47}{47}" And with that, Nei
+quietly closed her eyes{47}{47}{47}{end:C4}
+
+[39]
+{char} called Nei's name once more.
+But the plaintive cry only echoed emptily
+through the surrounding area.{end:C4}
+
+[40]
+What in the world has happened?!
+{char} and the others hurried
+back to Paseo.{end:C4}
+
+[41]
+"We'll make you taste the grief
+of losing the ones you love!"{end:C5}
+
+[42]
+"We'll make you taste the grief
+of losing the ones you love!"{end:C5}
+
+[43]
+"I can see the confusion and
+pity in your eyes.
+But I will never forgive
+what you have done!"{end:C5}
+
+[44]
+"Damn you!! You wrecked our{47}{47}{47}
+our{47}{47}{47} Algol!!"{end:C5}
+
+[45]
+"I will never be a slave to fate!
+I'll carve out my future
+with my own hands!!"{end:C5}
+
+[46]
+"You showed us the ugliness of
+living. But we will never
+forget the beauty of life!!"{end:C5}
+
+[47]
+"If something must perish,
+then let it perish!
+Those are my only parting
+words for you!!"{end:C5}
+
+[48]
+                  At the end of a time
+                 that will never return,
+                          what will
+                        they see{47}{47}{47}?{end:C5}
+
+[49]
+"{char}!! Wait!!" Lutz's voice, tense in a
+way never heard before, leapt into the
+hearts of {char} and the others.{pause}"Something is still aboard that ship!
+You must not come back yet!!"
+"What?!"{end:C4}
+
+[50]
+What in the world is this?!
+Who the hell are these people?!{end:C4}
+
+[51]
+{cont}"We are not people of Algol. Our home is a
+planet called Earth. It shone a brilliant blue
+in the galaxy, and caused a highly
+advanced civilization to bloom.{pause}We are the last descendants
+of Earth."{pause}{cont}"The last{47}{47}{47}?"{pause}{cont}"Yes, our home is gone now.
+Would you like to know why it was lost?"{end:C5}
+
+[52]
+"Looking back now, we were truly
+a weak people.{pause}We knew that Dark Falz, the devil that
+dwells within the heart, lived within us,
+and yet we could not restrain it.{pause}And so, hatred begat hatred. And through
+the hubris nurtured by the power of
+our civilization, we came to delight in
+bending nature to our will.{pause}Only at the very last moment did we
+realize we were strangling ourselves.{pause}
+
+[53]
+Listening to the sound of the Earth
+breaking apart, we realized for the
+first time that we had been wrong.{pause}Those of us who barely survived boarded
+this ship and wandered through space.
+And then we found it. This{47}{47}{47} "Algol."{pause}The people here lived knowing nothing
+of calamity. We envied them for it,
+and we resented them for it.{pause}
+
+[54]
+We swore an oath back then. Whatever it
+took, we would take this planet for
+ourselves.{pause}Surely you're not foolish enough to defy
+us, the ones who had the power to destroy
+Palma? Just accept your deaths quietly!"{end:C4}
+
+[55]
+"Yes, and knowing that now makes no
+difference to you all, moments away from
+death. Isn't that right?"{end:C5}
+
+[56]
+"I see. If you want to know,
+I suppose we'll tell you."{end:C4}
+
+[57]
+"THIS IS THE SATELLITE GAIRA.
+OUTSIDE IS SPACE. NO ESCAPE.
+DISRUPTING MOTHER BRAIN IS A GRAVE CRIME.
+AWAIT YOUR DEATH SENTENCE HERE."{pause}{cont}
+
+[58]
+Ever since AMeDAS flooded, I've felt
+responsible and fought to open the
+dams, but in the end, we were captured!{pause}Who is using Mother Brain's system to bring
+ruin to Motavia? To think I would die here
+without ever finding out{47}{47}{47}{end:C4}
+
+[59]
+For a while, {char} and the others
+stood in disbelief where Mother Brain had
+been. Algol was free at last from
+Mother Brain's dominion.{pause}
+
+[60]
+AMeDAS, the Biosystem, everything
+Mother Brain controlled would be of no
+use now. Without them, Algol faced
+a harsh and difficult existence ahead.{pause}However, {char} and the others could
+feel a light of hope dwelling within
+this new Algol.{end:C4}
+
+[61]
+"Nei! Hang on, Nei!"{pause}{cont}"It's no use{47}{47}{47} {char}, please.
+Promise me you'll never make devils
+like us again.{pause}
+
+[62]
+May everyone find happiness in a peaceful
+Algol{47}{47}{47}"{pause}{cont}And with those words, Nei died{47}{47}{47}
+{char} and the others gently laid
+Nei's body down.
+"Nei! We'll avenge you, right now!"{end:C4}
+
+[63]
+"We will claim this planet in lieu of
+the home we lost. That's all there
+is to it. Mother Brain may be gone, but
+with our power,{pause}it's a simple matter to create a new
+ruler for Algol.{pause}You are the only ones trying to defy us.
+Without you, Algol will be ours to command
+as we please.
+Now, prepare to die."{end:C4}
