@@ -674,7 +674,13 @@ bool game_init(Game *g, Video *video)
      * named before anything reads a file it may carry. */
     lang_init();
     sysmenu_load_settings(&g->sysmenu);
-    lang_select(g->sysmenu.language);
+    /* (build 186) One whose files are not made yet: main.c's to offer. */
+    g->language_wanted = -1;
+    if (lang_missing(g->sysmenu.language)) {
+        g->language_wanted = g->sysmenu.language;
+    } else {
+        lang_select(g->sysmenu.language);
+    }
     g->sysmenu.language = lang_current();
 
     g_assets_ready = load_assets(video);
@@ -7483,6 +7489,18 @@ static bool runs_under_menu(const Game *g)
 static void take_language(Game *g)
 {
     if (g->sysmenu.language == lang_current()) {
+        return;
+    }
+    /* (build 186) A language whose files are not made yet: shown on the
+     * menu while it is up, and offered when it closes on it -- passing it
+     * on the way round offers nothing. main.c is told (language_wanted)
+     * and the game stays in the language it had. */
+    if (lang_missing(g->sysmenu.language)) {
+        if (g->sysmenu.open) {
+            return;
+        }
+        g->language_wanted  = g->sysmenu.language;
+        g->sysmenu.language = lang_current();
         return;
     }
     /* (build 165) The names as text in the old language's letters, made

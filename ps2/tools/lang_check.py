@@ -19,6 +19,12 @@ crawl's second message, at frame END.
    folder's rule), his own read, the menu run's frame.
 5. (build 165) "language": "ja": the Japanese crawl, neither the stock
    frame nor his.
+6. (build 186) Its files taken away (docs/first_start.md): named by
+   settings.json, and chosen on the menu (Enter twice: his, then it), it
+   is offered -- the headless platform says how to make it -- and the
+   game goes on in the language it had: the stock frame, then his. Passed
+   on the way round (Enter three times, back to the stock one): nothing
+   offered.
 
 Exit 1 on any failure."""
 
@@ -78,6 +84,34 @@ def main():
         check("a broken mod of his names: set aside, his own read",
               frame == menu_frame and "set aside" in err,
               "%s %s" % (frame, menu_frame))
+
+        # (build 186) The Japanese language's files not made yet (taken
+        # out of the scratch copy, hard links; a tree that never made them
+        # has none to take): asked for, it is offered (the headless
+        # platform says how to make it) and the game goes on in the
+        # language it had.
+        shutil.rmtree(h.base / "assets" / "lang" / "ja", ignore_errors=True)
+        offered = "JAPANESE's files are not here"
+        frame, _, err, _ = h.run(END, settings='{"language": "ja"}')
+        check("not made, named by settings.json: offered, the stock crawl",
+              frame == stock_frame and offered in err,
+              "%s %s" % (frame, stock_frame))
+        two = MENU[:-2] + ["raw:RETURN", "raw:RETURN", "raw:ESCAPE"]
+        _, raw, _ = presses(*two)
+        frame, written, err, _ = h.run(END, raw=raw)
+        check("not made, chosen on LANGUAGE: offered, his crawl stays",
+              frame == menu_frame and offered in err
+              and '"language": "retranslation"' in written,
+              "%s %s %s" % (frame, menu_frame,
+                            written.replace("\n", " ")[:80]))
+        round_ = MENU[:-2] + ["raw:RETURN"] * 3 + ["raw:ESCAPE"]
+        _, raw, _ = presses(*round_)
+        frame, written, err, _ = h.run(END, raw=raw)
+        check("not made, passed on the way round: nothing offered",
+              frame == stock_frame and offered not in err
+              and '"language": "us"' in written,
+              "%s %s %s" % (frame, stock_frame,
+                            written.replace("\n", " ")[:80]))
     finally:
         if not a.keep:
             shutil.rmtree(scratch, ignore_errors=True)

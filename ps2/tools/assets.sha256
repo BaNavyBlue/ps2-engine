@@ -1,5 +1,5 @@
-# The files tools/setup.py makes under ps2/, by SHA-256.
-# Written by tools/make_expected.py; checked by setup.py.
+# The files ps2/tools/make_assets.py makes under ps2/, by SHA-256.
+# Written by the engine's tools/make_expected.py; checked by make_assets.py.
 # section us
 052fae75f1c88168a1c4f594636cfe04db1394323ae23662713b856b7ba38682  assets/art/portraits/amy/amy.json
 png:995c4834a28a5a22c4c57d24a24e347d8167d4c033b897def3892230f2118409  assets/art/portraits/amy/amy.png

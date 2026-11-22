@@ -4,6 +4,7 @@
 #include "core/video.h"
 #include "game/game.h"
 #include "game/gamedata.h"
+#include "game/lang.h"
 #include "game/rumble.h"
 #include "game/ui.h"
 #include "harness/autoplay.h"
@@ -423,6 +424,28 @@ static void rumble_frame(Game *game, Platform *plat, bool still)
     }
 }
 
+/* (build 186) A language asked for whose files are not made yet
+ * (game.language_wanted): the platform's window offers to make them, and
+ * when it has, they are preloaded, the languages' names read again and the
+ * language chosen -- the game takes it up at its next tick. Left, the
+ * language the game went on in is the one settings.json keeps. `files`:
+ * the command line's, at the start. */
+static void offer_language(Game *game, int nfiles, char **files)
+{
+    int i = game->language_wanted;
+    game->language_wanted = -1;
+    if (!platform_add_language(lang_key(i), lang_name(i), nfiles, files)
+        || lang_missing(i)) {
+        game->sysmenu.language_changed = true;
+        return;
+    }
+    assetfs_preload("assets/manifest.txt");
+    lang_rescan();
+    game->sysmenu.language         = i;
+    game->sysmenu.language_changed = true;
+    fprintf(stderr, "lang: %s made; chosen\n", lang_name(i));
+}
+
 /* OR a frame's presses into the set waiting for the next tick. */
 static void pending_press(Buttons *pending, const Buttons *presses)
 {
@@ -462,9 +485,6 @@ static void take_pending(Input *input, Input *pending)
 
 int main(int argc, char **argv)
 {
-    (void)argc;
-    (void)argv;
-
     /* The game owns the tileset: it mirrors VRAM tile space and each
      * screen places its art at the index that screen's load address
      * implies, exactly as the original does. */
@@ -486,6 +506,17 @@ int main(int argc, char **argv)
     home_mods(mods, sizeof mods);
     assetfs_set_mods(mods);
 
+    /* (build 186) The first start (docs/first_start.md): no game files
+     * here and none packed in, so they are made now, from the player's own
+     * cartridge -- an image named on the command line (dropped onto the
+     * program), or one the platform's window asks for. */
+    if (!readable("assets/manifest.txt") && assetfs_pack_count() <= 0) {
+        if (!platform_make_assets(argc - 1, argv + 1)) {
+            return 1;
+        }
+        argc = 1;               /* what was named is used */
+    }
+
     /* Every asset file into RAM before anything asks for one. From here
      * on a screen change, a level change or a door decodes from memory. */
     assetfs_preload("assets/manifest.txt");
@@ -505,6 +536,10 @@ int main(int argc, char **argv)
     Game game;
     if (!game_init(&game, &video)) {
         return 1;
+    }
+    /* (build 186) settings.json's language, its files not made yet. */
+    if (game.language_wanted >= 0) {
+        offer_language(&game, argc - 1, argv + 1);
     }
 
     int    asset_files = 0;
@@ -807,6 +842,10 @@ int main(int argc, char **argv)
                 accum -= TICK_SECONDS;
                 ticks++;
             }
+        }
+        /* (build 186) LANGUAGE chose one whose files are not made yet. */
+        if (game.language_wanted >= 0) {
+            offer_language(&game, 0, NULL);
         }
 
         if (trace) {

@@ -36,6 +36,8 @@ __pycache__/
 /saves/
 # (build 138b) The mods folder the game makes beside itself
 /mods/
+# (build 186) tools/make_assets.py's whole output, beside the game
+/make_assets.log
 route_out/*/saves/
 
 # (build 114) The directories every route and harness session rewrites

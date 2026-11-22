@@ -137,7 +137,8 @@ build/ps2_res.o: src/platform/ps2.rc assets/icon/ps2.ico
 endif
 
 ps2: $(CORE) $(GAME) $(HARNESS) $(MAIN) src/platform/platform_sdl3.c \
-     src/platform/crt_gpu.c $(GAME_Q_OBJ) $(WIN_RES) | shaders-here
+     src/platform/crt_gpu.c src/platform/first_start_sdl3.c $(GAME_Q_OBJ) \
+     $(WIN_RES) | shaders-here
 	@test -n "$(SDL_LIBS)" || { \
 	    echo "SDL3 not found by pkg-config."; \
 	    echo "Install SDL3 development files, or build the"; \
@@ -194,7 +195,8 @@ build/pack.o: src/platform/pack.S build/pack.bin
 	$(CC) -c -o $@ src/platform/pack.S
 
 $(DIST_EXE): $(CORE) $(GAME) $(HARNESS) $(MAIN) src/platform/platform_sdl3.c \
-             src/platform/crt_gpu.c $(GAME_Q_OBJ) $(WIN_RES) build/pack.o
+             src/platform/crt_gpu.c src/platform/first_start_sdl3.c \
+             $(GAME_Q_OBJ) $(WIN_RES) build/pack.o
 	@test -n "$(SDL_LIBS)" || { echo "SDL3 not found by pkg-config."; exit 1; }
 	@mkdir -p build/dist
 	$(CC) $(CFLAGS) -DPS2_PACKED $(GAME_Q_DEFS) $(SDL_CFLAGS) -s -o $@ $^ \

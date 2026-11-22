@@ -91,6 +91,12 @@ typedef struct {
     /* The port's own Escape menu; see sysmenu.h. main.c reads
      * sysmenu.controls_changed to remap the keys. */
     SysMenu sysmenu;
+
+    /* (build 186) A language asked for -- on LANGUAGE, or by settings.json
+     * at the start -- whose files are not there yet (lang_missing): its
+     * place in the list, for main.c to offer to make (docs/first_start.md),
+     * -1 when none. The game goes on in the language it had. */
+    int language_wanted;
 } Game;
 
 bool game_init(Game *g, Video *video);

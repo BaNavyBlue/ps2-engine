@@ -36,6 +36,16 @@ const char *lang_name(int i);         /* the menu's: "ENGLISH 1989" */
 int         lang_find(const char *key);   /* -1 when no language has it */
 int         lang_current(void);
 
+/* (build 186) Whether language `i`'s files are not there yet: a language
+ * of a folder of its own with no lang.json in it -- the JAPANESE language
+ * until the player makes it from their own Japanese cartridge
+ * (docs/first_start.md). The cartridge's own never is. */
+bool        lang_missing(int i);
+
+/* (build 186) Every language's default names read again, for one whose
+ * files were made after lang_init. The language chosen stays chosen. */
+void        lang_rescan(void);
+
 /* Make language `i` the one the game reads, loading its names and face.
  * Its script and window files are read where the game asks for them
  * (lang_path), so a caller that keeps what it read -- the script banks,

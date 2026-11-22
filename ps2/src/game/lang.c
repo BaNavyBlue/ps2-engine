@@ -136,6 +136,26 @@ int lang_current(void)
     return g_current;
 }
 
+bool lang_missing(int i)
+{
+    if (i <= 0 || i >= g_lang_count || g_lang[i].dir[0] == '\0') {
+        return false;
+    }
+    char path[128];
+    snprintf(path, sizeof path, "%slang.json", g_lang[i].dir);
+    return !assetfs_exists(path);
+}
+
+void lang_rescan(void)
+{
+    for (int i = 1; i < g_lang_count; i++) {
+        memset(g_lang[i].chars, 0, sizeof g_lang[i].chars);
+        if (g_lang[i].dir[0] != '\0') {
+            read_default_names(&g_lang[i]);
+        }
+    }
+}
+
 static void unload(void)
 {
     json_free(g_names);

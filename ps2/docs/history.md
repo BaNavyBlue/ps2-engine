@@ -15130,3 +15130,105 @@ docs/game.md; CLAUDE.md (Machine); the Makefile's comments.
 
 **Next**: nothing is queued; NOTES_next_context.md's "Next" lists what
 waits for the owner.
+
+## Build 186: the first start makes the game's files (2026-11-21)
+
+Asked why the game itself could not take the cartridge on its first start
+-- and the Japanese one -- so that no one has to run a script,
+The owner: "yes, start step 1" (step 1: the window, with the extraction
+still the Python's; step 2, later, the extraction in C in the game).
+
+**Before.** A copy of the game without `assets/` failed at game_init with
+the loaders' messages. The files came only from `make extract ROM=...`
+(make and Python), and the JAPANESE language from `import_japanese.py`
+by hand; with assets/lang/ja/ missing, choosing it set the language aside
+("does not parse") and went back to the stock one.
+
+**The change** (docs/first_start.md is the whole of it):
+- tools/make_assets.py (new): `make extract ROM=` with no make -- the
+  Makefile's EXTRACTORS and their commands parsed, each run on a copy of
+  the image in a temporary folder, then the preload list. Its files are
+  told apart by what they are: the US image (rom_map.json's size and
+  SHA-1; .smd, copier headers and zips taken), the Japanese one (CRC32
+  BEC8EB5A in its first 768 KB), Excalibur_Z's retranslation (a folder or
+  GitHub's zip, by work/dialogue.json and work/script.json). The Japanese
+  pair makes assets/lang/ja/. Where tools/assets.sha256 is, every file is
+  checked against it (a PNG by its picture); this tree has none. For the
+  window: `[K/N] WHAT` lines, the steps' whole output in make_assets.log
+  (git-ignored), exit 0 done, 1 a step failed, 2 nothing to make the
+  files from, 3 made but differing, 4 no Pillow. Steps start with
+  CREATE_NO_WINDOW on Windows.
+- tools/import_japanese.py: `--commit SHA` for a retranslation that is not
+  a git checkout (GitHub's zip names its commit in its comment), so
+  lang.json's "source" is the same as a checkout's.
+- src/platform/first_start_sdl3.c (new; `ps2` and `make dist` link it):
+  `platform_make_assets` and `platform_add_language` (platform.h). A window
+  of its own -- SDL_Renderer, SDL's 8x8 debug face, 640x360 at whole
+  multiples -- asks for the files (dropped, chosen in the system's dialog
+  on Enter, Space or a click, or named on the command line), runs the
+  script through SDL_CreateProcessWithProperties (its output piped and
+  read each frame, never blocking), shows the steps on a bar, the script's
+  words when it refuses, and asks again. The Python: PS2_PYTHON, one
+  packaged beside the game, then the PATH's, each asked to import PIL; on
+  Windows the windowless one first (pythonw.exe beside python.exe; pythonw,
+  pyw -3), as a console Python started by a game with no console opened a
+  console window over it here. The command line's files read again as
+  UTF-8 from the wide command line on Windows.
+- src/platform/platform_headless.c: the two say how to make the files and
+  return false (`ps2_headless` exits 1 without them).
+- src/main.c: no assets/manifest.txt and no pack -> platform_make_assets
+  with the command line's files, before the preload; offer_language for
+  `game.language_wanted`, at the start and after the ticks: made, the new
+  files preloaded, the languages' names read again and the language
+  chosen; left, settings.json keeps the one the game went on in.
+- src/game/lang.c: `lang_missing` (a language's folder with no lang.json),
+  `lang_rescan`. src/game/game.c: game_init offers a missing language
+  settings.json names instead of loading it; take_language shows it on the
+  menu while the menu is up and offers it when the menu closes on it, so
+  passing it on the way round offers nothing. `Game.language_wanted` (-1
+  for none).
+
+**Checked.** In a scratch copy with assets/ emptied to the files no
+extractor makes (C:/msys64/tmp/b186):
+- make_assets.py on the image, 5.8 s: 1,075 files the same bytes as the
+  tree's; manifest.txt the same but for the Japanese lines (not made);
+  icon/rolf_portrait.png not made (no extractor's).
+- The window, pictures taken of each (b186_shot.ps1, the window's own
+  rectangle): asking (no files); a file that is not a cartridge (refused,
+  its SHA-1, both cartridges described, asked again); the image on the
+  command line (the bar at step 20 of 22, then the game: "assets: 1070
+  files", the SEGA screen); settings.json naming JAPANESE without its
+  files (the language's window at the start); a retranslation folder and
+  a wrong cartridge on the command line (put in their slots, refused).
+  MSYS2's python3.exe named, pythonw.exe found and used: no console
+  window. One run stopped by the test itself mid-step failed its step (the
+  game killed under it); left to finish, every run ended 0.
+- The retranslation's GitHub zip at 061e1f5 (fetched to scratch): told
+  apart, unpacked, the commit read from its comment; a folder holding it
+  as GitHub's unzips; the refusals (the retranslation alone, the image
+  twice, a file that is no cartridge, the Japanese before the game's
+  files): 10 of 10.
+- tools/lang_check.py PASS, with a sixth part: assets/lang/ja taken from
+  its scratch copy, JAPANESE named by settings.json (offered, the stock
+  crawl), chosen on the menu (offered, the retranslation's crawl stays,
+  settings.json keeps it) and passed on the way round (nothing offered).
+- r186 (PROOF_COLOUR=1, 32 jobs) against r185 (taken before the edit,
+  itself r184's): every file the same -- 172 PASS, 815 route files, the
+  attract WAV, the Dark Force trial, crt, patches, probe, mods, colour.
+  controls_check PASS; `make dist` builds (the packed game never asks).
+- glibc (the git server, GCC 13): `make -k Q=0 headless route_probe` with
+  -Werror=implicit-function-declaration builds with no warning, and
+  first_start_sdl3.c compiles against SDL3's headers with none.
+- Not run: drag and drop and the file dialog by a person; the JAPANESE
+  language made end to end (no Japanese cartridge on this machine); the
+  window on Linux or the Mac, GCC 16, a Linux link with SDL3;
+  computer_check (main.c's COMPUTER PLAYS path is not touched).
+
+**Docs.** docs/first_start.md (new); README (the docs and tools rows, the
+extract section); docs/languages.md (Japanese); CLAUDE.md (lang_check's
+sixth part).
+
+`make` (the game), `make headless`.
+
+**Next**: step 2, the extraction in C, when the owner asks;
+NOTES_next_context.md's "Next" lists what waits for him.

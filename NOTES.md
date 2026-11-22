@@ -2,8 +2,9 @@
 
 The public version of the phantasy-star-2 port: the same engine, with no
 assets and no ROM data in the tree. A player supplies a cartridge image they
-own. `tools/setup.py` runs the port's extractors on it into `ps2/assets/`
-and checks every file. The extractors read the image itself, finding what
+own: the game asks for it on its first start and runs the port's extractors
+on it into `ps2/assets/` (`ps2/tools/make_assets.py`; `tools/setup.py` does
+the same from a terminal), checking every file. The extractors read the image itself, finding what
 they need through `ps2/tools/rom_map.json`; no disassembly is needed or
 shipped. README.md is the front page; this file holds the decisions, what is
 proved and what is next.
@@ -51,6 +52,18 @@ proved and what is next.
   had been pushed once, while the repository was private; the owner chose
   to replace the history with one commit and force-push it, so the template
   was never public.
+* (2026-11-21) The game makes its files itself. Asked why the exe could not
+  see it was the first start and take the ROM (and the Japanese one)
+  itself, so no one runs a script, the owner said "yes, start step 1": the
+  private tree's build 186. A game with no files opens a window that takes
+  the image (dropped, chosen, or on the command line) and runs
+  `ps2/tools/make_assets.py` with the Python it finds -- in the Windows
+  package, `python\pythonw.exe` -- and JAPANESE on the LANGUAGE menu asks
+  for its two files the same way. `tools/setup.py` became a wrapper around
+  that script; the list of proved files moved from `tools/` to
+  `overlay/ps2/tools/`, which each sync lays down as `ps2/tools/`, where the
+  script looks. Step 2, the extraction in
+  C so that no Python is needed anywhere, waits for the owner.
 
 ## How the tree is made
 
@@ -66,7 +79,10 @@ python3 tools/rom_leak_check.py --rom ROM --assets PRIVATE/ps2/assets \
 
 `ps2/` is emptied and rewritten by each sync (`ps2/.synced-from-private`
 marks it), so the engine's own files live outside it, or in `overlay/ps2/`
-(laid over each sync: the icon). Left behind: assets/ (but for the
+(laid over each sync: the icon, and `tools/assets.sha256`, the list of
+proved files, which `make_expected.py` writes in both places). The made
+assets and the builds go with each sync too: run the setup again after
+one. Left behind: assets/ (but for the
 retranslation, the language list and the Q patches, which are the port's or
 free to pass on), route_out/ (frames and recordings of the game), every
 picture and sound (docs' screenshots too), CLAUDE.md,
@@ -109,6 +125,21 @@ Windows's does).
   patches_check` builds, and `make routes` passes 162 of 172. The 10 that
   fail all use the Japanese language (lang_ja_*, lang_menu, lang_switch_*),
   whose files only `setup.py --ja` makes.
+* (Build 186: the first start.) The Windows package (`make_release.py`,
+  the static `ps2.exe`, the same embeddable Python and Pillow) unzipped
+  fresh, its game started from its folder with the image on the command
+  line (as when it is dropped onto the exe), no `PS2_PYTHON` and no Python
+  on the PATH: it found `..\python\pythonw.exe`, showed the steps (no
+  console window), 1,076 of 1,076 files as proved, exit 0, then the game
+  with 1,070 files. Started again: no window, the game. Another fresh copy
+  through `setup.bat`, now the wrapper: 1,076 of 1,076. In the repository:
+  `setup.py` 1,076 of 1,076; `make_expected.py` writes the same hashes;
+  `make routes` 163 of 172 -- lang_menu passes now, the menu keeping
+  JAPANESE shown while it is up though its files are not made, as the
+  route expects; the 9 left need those files. `lang_check.py`: every part
+  but the Japanese crawl (no files here), its new part with the private
+  tree's frames. The leak check over the 23 files changed: the same three
+  files and counts as at the last commit, nothing new.
 * A clone of this commit checked out with git's CRLF conversion on (as on
   Windows): its text stays LF (`.gitattributes`), and its setup gives
   1,076 of 1,076. From that clone, the Windows package (`make_release.py`,
@@ -141,9 +172,13 @@ Windows's does).
   in) and the macOS job (a universal binary, SDL3 static, clang) are
   untested: macOS has never compiled the port.
 * The extractors on Linux or macOS: they have run only on Windows.
-* The JAPANESE language through `setup.py --ja` (no Japanese image here;
-  the expected hashes are the private tree's).
-* The packaged game played by a person: only its start-up log was read.
+* The JAPANESE language through `setup.py --ja` or the game's window (no
+  Japanese image here; the expected hashes are the private tree's).
+* The packaged game played by a person: only its start-up log and the
+  first-start window's pictures were read. Dropping the image on the
+  window and the file dialog need a person.
+* The first-start window on Linux and macOS (compiled on Linux against
+  SDL3's headers only; never linked or run there).
 
 ## Next
 
@@ -152,11 +187,11 @@ Windows's does).
    on the replaced commit, which GitHub keeps reachable by its ID for a
    while), and look over the repository's pages once more. Public when the
    owner says.
-3. With the Japanese image here: `setup.py --ja`, then the 10 language
-   routes.
-4. Later: a first-start "choose your ROM" in the game (SDL3's file dialog)
-   with the extraction in C; other revisions of the cartridge (the setup
-   refuses them by their SHA-1; supporting one means a map of its own).
+3. With the Japanese image here: JAPANESE through the game's window, then
+   the 9 language routes and lang_check's Japanese crawl.
+4. Later: the extraction in C (step 2; the owner's word first); other
+   revisions of the cartridge (refused by their SHA-1; supporting one
+   means a map of its own).
 
 ## Open
 

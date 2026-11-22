@@ -1,2 +1,2 @@
-ps2/ is the private port's, as of: Build 185: the extractors read the cartridge image
+ps2/ is the private port's, as of: Build 186: the first start makes the game's files
 Made by tools/sync_private.py; it empties this folder each time.

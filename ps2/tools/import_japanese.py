@@ -348,6 +348,12 @@ def main():
     ap.add_argument("repo", type=Path, help="a ps2-retranslation checkout")
     ap.add_argument("-o", "--out", type=Path,
                     default=ROOT / "assets" / "lang" / "ja")
+    # (build 186) For a copy that is not a git checkout -- GitHub's
+    # "Download ZIP", whose comment is the commit (tools/make_assets.py) --
+    # the commit lang.json names as its source.
+    ap.add_argument("--commit", default="",
+                    help="the retranslation's commit, when REPO is not a "
+                         "git checkout")
     args = ap.parse_args()
 
     rom = read_rom(args.rom)
@@ -368,7 +374,8 @@ def main():
                  "script and tables from Excalibur_Z's retranslation files' "
                  "`jp`, the font and character map from the cartridge "
                  "(docs/languages.md)",
-        "source": "ps2-retranslation " + commit_of(args.repo)
+        "source": "ps2-retranslation " + (commit_of(args.repo)
+                                          or args.commit)
                   + "; the Japanese cartridge, CRC32 BEC8EB5A",
         "proportional": True,
         "tall": True,

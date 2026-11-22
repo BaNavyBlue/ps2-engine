@@ -372,6 +372,12 @@ overdump; kept outside the tree, as the US ROM is). The port's play is the
 same in every language; in this one, every word the game draws is the
 cartridge's, in its font, with its dakuten and handakuten.
 
+(build 186) A copy of the game without `assets/lang/ja/` offers to make
+it when LANGUAGE closes on JAPANESE, or settings.json names it: a window
+takes the Japanese cartridge and the retranslation (a checkout, or
+GitHub's "Download ZIP", whose comment gives `--commit` below) and runs
+`tools/make_assets.py` on them (docs/first_start.md).
+
 **Where it comes from.** `tools/import_japanese.py JP_ROM RETRANSLATION`
 writes `assets/lang/ja/`:
 

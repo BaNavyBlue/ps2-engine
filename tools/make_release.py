@@ -15,7 +15,9 @@ permissions):
   * the game, built from that source, as ps2/ps2[.exe];
   * on Windows, python/: python.org's embeddable Python (its SHA-256
     checked) with Pillow unpacked into it, so the setup needs nothing
-    installed; elsewhere the setup uses the system's Python 3 and Pillow;
+    installed -- the game finds it at ../python/ on its first start
+    (ps2/docs/first_start.md); elsewhere the setup uses the system's
+    Python 3 and Pillow;
   * licenses/: each --license NAME PATH (a file, or a folder's files) --
     what the game links in -- with Python's and Pillow's on Windows;
   * README.txt for players, and setup.bat or setup.sh.
@@ -40,19 +42,20 @@ NAME = "ps2-engine"
 README = """Phantasy Star II -- a ROM-free engine, {version} for {platform_name}
 
 This is a port of Phantasy Star II (SEGA, 1989) to modern computers, in C.
-It contains none of the game: you make the game's files once, from your own
-cartridge image, with the setup below. Nothing is downloaded or sent.
+It contains none of the game: the game makes its files once, the first time
+it starts, from your own cartridge image. Nothing is downloaded or sent.
 
 1. You need your own image of Phantasy Star II for the USA/Europe,
    revision 02 -- the one commonly named "Phantasy Star II (UE) (REV02)".
    A .bin, .md, .gen or .smd file, or a .zip holding one, all work.
 
-2. Make the game's files:
-{setup_step}
-   It checks the image, makes about a thousand files under ps2/assets/
-   from it and checks every one. A few seconds.
+2. Start the game: {play_step}
+   The first time, it asks for the image: drop the file onto its window,
+   or press Enter and choose it. It checks the image, makes about a
+   thousand files under ps2/assets/ from it and checks every one -- a few
+   seconds -- and the game starts.{python_note}
 
-3. Play: {play_step}
+   The same from a terminal: {setup_step}
 
 {platform_notes}Keys (Escape, then CONTROLS, changes them): the arrow keys or W A S D for
 the pad, Enter for Start, Z X C for A B C, Escape for the menu (controls,
@@ -61,7 +64,8 @@ Gamepads work too. Saves and settings are kept beside the game, in
 ps2/saves/, or in your user folder where that cannot be written.
 
 The JAPANESE language needs the Japanese cartridge as well, and Excalibur_Z's
-retranslation repository: see tools/setup.py --help.
+retranslation (github.com/ExcalZ/ps2-retranslation: Code, Download ZIP).
+Choose JAPANESE on the LANGUAGE menu and the game asks for both.
 
 This project is not affiliated with SEGA. The engine is MIT-licensed (LICENSE);
 NOTICE.md and licenses/ list the parts that are other people's. This
@@ -72,6 +76,7 @@ README.md says how to build it.
 SETUP_BAT = r"""@echo off
 rem Makes the game's files from your own cartridge image.
 rem Drag the image onto this file, or run:  setup.bat path\to\your-image.bin
+rem (The game does the same the first time it starts: ps2\ps2.exe.)
 setlocal
 if "%~1"=="" goto usage
 "%~dp0python\python.exe" "%~dp0tools\setup.py" %*
@@ -106,23 +111,27 @@ exec "$py" "$here/tools/setup.py" "$@"
 PLATFORMS = {
     "windows": dict(
         platform_name="Windows (64-bit)",
-        setup_step="   drag your image onto setup.bat (or run: setup.bat "
+        setup_step="drag your image onto setup.bat\n   (or run: setup.bat "
                    "path\\to\\image.bin).",
         play_step="run ps2\\ps2.exe.",
+        python_note="",
         platform_notes="Windows may warn that the program is from an unknown "
                        "publisher (it is not\nsigned): \"More info\", then "
                        "\"Run anyway\".\n\n"),
     "linux": dict(
         platform_name="Linux (x86-64)",
-        setup_step="   ./setup.sh /path/to/image.bin   (it needs Python 3 "
-                   "and Pillow).",
+        setup_step="./setup.sh /path/to/image.bin",
         play_step="./ps2/ps2",
+        python_note="\n   It needs Python 3 with Pillow (Debian/Ubuntu: "
+                    "sudo apt install python3-pil;\n   Fedora: "
+                    "python3-pillow; Arch: python-pillow).",
         platform_notes=""),
     "macos": dict(
         platform_name="macOS (Apple silicon and Intel)",
-        setup_step="   ./setup.sh /path/to/image.bin   (it needs Python 3 "
-                   "and Pillow:\n   brew install python pillow).",
+        setup_step="./setup.sh /path/to/image.bin",
         play_step="./ps2/ps2",
+        python_note="\n   It needs Python 3 with Pillow: brew install "
+                    "python pillow.",
         platform_notes="macOS blocks programs from the internet that are "
                        "not signed. Once, in this\nfolder: xattr -dr "
                        "com.apple.quarantine .\n\n"),

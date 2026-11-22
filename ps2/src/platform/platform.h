@@ -173,4 +173,24 @@ void platform_set_crt(Platform *p, const CrtSettings *s);
 double platform_now(Platform *p);      /* monotonic seconds */
 void   platform_sleep(double seconds);
 
+/* (build 186) The first start (docs/first_start.md). With no game files
+ * beside it (assets/manifest.txt) and none packed in, the game asks for the
+ * cartridge image they are made from, in a window of its own -- an image
+ * dropped on it, or chosen -- and runs tools/make_assets.py on it, its steps
+ * shown as they go. `files` (`nfiles` of them) were named on the command
+ * line -- an image dropped onto the program -- and are used at once. True
+ * when the files are there now; false when the player left it (the
+ * headless platform: at once, saying on stderr how to make them). Before
+ * platform_create. src/platform/first_start_sdl3.c. */
+bool platform_make_assets(int nfiles, char **files);
+
+/* (build 186) The same window for a language whose files are made from the
+ * player's own things (lang_missing): the JAPANESE language (`key` "ja",
+ * `name` the menu's), from the Japanese cartridge and Excalibur_Z's
+ * retranslation. `files` as above. True when its files are there now.
+ * Before platform_create (settings.json named it) or while the game's
+ * window is up (LANGUAGE): the game waits on it. */
+bool platform_add_language(const char *key, const char *name, int nfiles,
+                           char **files);
+
 #endif /* PS2_PLATFORM_H */
