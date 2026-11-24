@@ -54,10 +54,14 @@ You need:
 * a C11 compiler and make;
 * SDL 3.4 or later, with pkg-config;
 * Python 3 with Pillow (for the setup);
-* optionally Cycfi's [Q](https://github.com/cycfi/Q) v1.5 and a C++20
-  compiler, for the re-voiced synth.
+* a C++20 compiler for the re-voiced synth (optional: without one the game
+  builds with the emulated chip alone). Cycfi's
+  [Q](https://github.com/cycfi/Q), the synth's library, comes with this
+  repository: its headers are in `Q/`, and `make` finds them.
 
 ```sh
+git clone https://github.com/BaNavyBlue/ps2-engine.git
+cd ps2-engine
 python3 tools/setup.py /path/to/image.bin     # the game's files, from your image
 cd ps2                                        # (or start ./ps2 and give it the image)
 make                                          # the game: ./ps2
@@ -66,9 +70,9 @@ make headless route_probe && make routes      # the checks (163 of 172 pass
 ```
 
 On Windows, use MSYS2's UCRT64 shell. `ps2/docs/windows_build.md` is the
-recipe and `ps2/tools/setup_msys2.sh` lists the packages. Build with
-`Q_DIR=/path/to/Q` when Q is not in `~/GIT/Q`. `ps2/README.md` and
-`ps2/docs/` describe the port itself.
+recipe and `ps2/tools/setup_msys2.sh` lists the packages. To build with
+another copy of Q, give `Q_DIR=/path/to/Q`. `ps2/README.md` and `ps2/docs/`
+describe the port itself.
 
 ## How it works
 
@@ -86,6 +90,12 @@ recipe and `ps2/tools/setup_msys2.sh` lists the packages. Build with
   window of its own that asks for the image and shows the steps
   (`ps2/src/platform/first_start_sdl3.c`; `ps2/docs/first_start.md`);
   `tools/setup.py` runs it from a terminal.
+* The extractors are being written again in C, so that the game needs no
+  Python anywhere: 18 of the 21 are done (`ps2/src/extract/`; `make
+  ps2_extract`, then `./ps2_extract NAME IMAGE -o OUT` runs one), each
+  checked against its Python twin by `ps2/tools/extract_c_check.py IMAGE`.
+  Until the last three (the music's) are done, the setup runs the Python
+  ones.
 * `ps2/tools/assets.sha256` lists the files the engine was proved with
   (the engine's own list, kept in `overlay/ps2/tools/`). Every file made is
   checked against it. For a PNG it compares the picture, not the bytes,
@@ -100,7 +110,8 @@ artifacts. Pushing a tag `v*` publishes them as a release.
 | Path | What |
 |---|---|
 | `ps2/` | the port: source (`src/`), tools and extractors (`tools/`), test routes (`routes/`), compiled shaders, docs |
-| `tools/` | the setup from a terminal, the release packager, the leak check, the sync from the private tree, the list of proved files' maker |
+| `tools/` | the setup from a terminal, the release packager, the leak check, the sync from the private tree, the list of proved files' maker, the copy of Q's headers |
+| `Q/` | Cycfi Q's headers (v1.5.4, unchanged), which the re-voiced synth builds with |
 | `overlay/ps2/` | the engine's own versions of files laid over the port: the icon (the private tree takes it from the cartridge) and the list of proved files |
 
 ## Licence

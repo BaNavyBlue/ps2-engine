@@ -3,7 +3,8 @@
 # (git tag v0.1.0 && git push origin v0.1.0) also publishes the three as a
 # GitHub release. No game data is used or made here: the packages carry the
 # engine and the setup, and each player makes the game's files from their
-# own cartridge image.
+# own cartridge image. Q's headers are the repository's own (Q/,
+# tools/vendor_q.py), so nothing is fetched for them.
 name: build
 
 on:
@@ -18,7 +19,6 @@ permissions:
 
 env:
   SDL_TAG: release-3.4.18
-  Q_TAG: v1.5.4
   PYTHON_EMBED: "3.14.7"
   PYTHON_EMBED_SHA256: d297e5ff019966817ad8502465176139f2d3d840fa4ed84b13bed399a6ab1f15
   PILLOW: "12.3.0"
@@ -44,13 +44,11 @@ jobs:
             mingw-w64-ucrt-x86_64-pkgconf
             mingw-w64-ucrt-x86_64-sdl3
             mingw-w64-ucrt-x86_64-python
-      - name: Q
-        run: git clone --depth 1 --branch "$Q_TAG" --recurse-submodules --shallow-submodules https://github.com/cycfi/Q.git ../Q
       - name: Build (static: one .exe, nothing beside it)
         run: |
           cd ps2
           touch shaders/*
-          make -j4 ps2 Q=1 Q_DIR="$(cd ../../Q && pwd)" CFLAGS="$CFLAGS_RELEASE" \
+          make -j4 ps2 Q=1 Q_DIR="$(cd ../Q && pwd)" CFLAGS="$CFLAGS_RELEASE" \
               SDL_LIBS="-static $(pkg-config --static --libs sdl3)"
           strip ps2.exe
           objdump -p ps2.exe | grep 'DLL Name'
@@ -73,7 +71,7 @@ jobs:
               --license libiconv "$(cygpath -m $L/libiconv)" \
               --license winpthreads "$(cygpath -m $L/winpthreads)" \
               --license gcc-runtime "$(cygpath -m $L/libgcc)" \
-              --license Q ../Q/LICENSE --out dist
+              --license Q Q/LICENSE --out dist
       - uses: actions/upload-artifact@v4
         with:
           name: ps2-engine-windows
@@ -109,14 +107,12 @@ jobs:
           cmake --build "$RUNNER_TEMP/SDL/build"
           cmake --install "$RUNNER_TEMP/SDL/build"
           cp "$RUNNER_TEMP/SDL/LICENSE.txt" "$RUNNER_TEMP/sdl3/LICENSE.txt"
-      - name: Q
-        run: git clone --depth 1 --branch "$Q_TAG" --recurse-submodules --shallow-submodules https://github.com/cycfi/Q.git ../Q
       - name: Build (SDL3 and the C++ runtime linked in)
         run: |
           export PKG_CONFIG_PATH="$RUNNER_TEMP/sdl3/lib/pkgconfig"
           cd ps2
           touch shaders/*
-          make -j4 ps2 Q=1 Q_DIR="$(cd ../../Q && pwd)" CFLAGS="$CFLAGS_RELEASE" \
+          make -j4 ps2 Q=1 Q_DIR="$(cd ../Q && pwd)" CFLAGS="$CFLAGS_RELEASE" \
               SDL_CFLAGS="$(pkg-config --cflags sdl3)" \
               SDL_LIBS="$(pkg-config --static --libs sdl3)" \
               Q_LDLIBS="-Wl,-Bstatic -lstdc++ -Wl,-Bdynamic" LDLIBS="-lm -static-libgcc"
@@ -125,7 +121,7 @@ jobs:
       - name: Package
         run: |
           python3 tools/make_release.py --platform linux --exe ps2/ps2 --version "$VERSION" \
-              --license SDL3 "$RUNNER_TEMP/sdl3/LICENSE.txt" --license Q ../Q/LICENSE --out dist
+              --license SDL3 "$RUNNER_TEMP/sdl3/LICENSE.txt" --license Q Q/LICENSE --out dist
       - uses: actions/upload-artifact@v4
         with:
           name: ps2-engine-linux
@@ -157,14 +153,12 @@ jobs:
           cmake --build "$RUNNER_TEMP/SDL/build"
           cmake --install "$RUNNER_TEMP/SDL/build"
           cp "$RUNNER_TEMP/SDL/LICENSE.txt" "$RUNNER_TEMP/sdl3/LICENSE.txt"
-      - name: Q
-        run: git clone --depth 1 --branch "$Q_TAG" --recurse-submodules --shallow-submodules https://github.com/cycfi/Q.git ../Q
       - name: Build (universal)
         run: |
           export PKG_CONFIG_PATH="$RUNNER_TEMP/sdl3/lib/pkgconfig"
           cd ps2
           touch shaders/*
-          make -j4 ps2 Q=1 Q_DIR="$(cd ../../Q && pwd)" CC=clang CXX=clang++ \
+          make -j4 ps2 Q=1 Q_DIR="$(cd ../Q && pwd)" CC=clang CXX=clang++ \
               CFLAGS="$CFLAGS_RELEASE $ARCHS" \
               Q_CXXFLAGS="-std=c++20 -Wall -Wextra -Wpedantic -O2 $ARCHS" \
               SDL_CFLAGS="$(pkg-config --cflags sdl3)" \
@@ -175,7 +169,7 @@ jobs:
       - name: Package
         run: |
           python3 tools/make_release.py --platform macos --exe ps2/ps2 --version "$VERSION" \
-              --license SDL3 "$RUNNER_TEMP/sdl3/LICENSE.txt" --license Q ../Q/LICENSE --out dist
+              --license SDL3 "$RUNNER_TEMP/sdl3/LICENSE.txt" --license Q Q/LICENSE --out dist
       - uses: actions/upload-artifact@v4
         with:
           name: ps2-engine-macos

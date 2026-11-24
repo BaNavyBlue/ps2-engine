@@ -181,7 +181,8 @@ def add_python(dest, pyzip, want, wheel, licenses):
 
 def archive(folder, platform):
     if platform == "windows":
-        path = folder.with_suffix(".zip")
+        # Not with_suffix: a version's dots (v0.1.0) are not a suffix.
+        path = folder.parent / (folder.name + ".zip")
         with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED,
                              compresslevel=9) as z:
             for p in sorted(folder.rglob("*")):

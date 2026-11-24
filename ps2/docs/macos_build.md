@@ -94,7 +94,9 @@ so only when one is out of date for real.
    repositories: a clone at `<GIT>/Claude/phantasy-star-2/ps2` finds
    `<GIT>/Q`, so `~/Documents/GIT/Q` works with the repositories in
    `~/Documents/GIT/Claude`. Anywhere else works with `Q_DIR=/path/to/Q`
-   on the make line.
+   on the make line. (build 189a) Before all of these it looks in the
+   repository's own top folder, beside `ps2/` (`ps2/../Q`), so a copy of
+   the repository that carries Q's headers there needs neither.
 
 4. The tree: unpack it as on the other machines (a folder named `ps2`
    anywhere, say `~/GIT/ps2`), and copy your `shaders/` folder into it.

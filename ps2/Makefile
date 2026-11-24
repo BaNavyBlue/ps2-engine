@@ -33,9 +33,14 @@ MAIN := src/main.c src/platform/home.c
 # (macOS) Last, Q beside the folder that holds the repositories
 # (<GIT>/Claude/phantasy-star-2/ps2 -> <GIT>/Q), wherever that folder is: a
 # Mac keeps it under ~/Documents/GIT as often as ~/GIT.
+# (build 189a) First of all, Q in the repository's own top folder, beside
+# ps2/ (ps2/../Q): a copy of the repository that carries Q's headers there
+# builds with them, at their version, with no setting and nothing else to
+# fetch.
 Q_HAS = { test -f "$(1)/q_lib/include/q/synth/gen/envelope_gen.hpp" \
           || test -f "$(1)/q_lib/include/q/synth/envelope_gen.hpp"; }
-Q_DIR ?= $(shell for d in "$$HOME/GIT/Q" \
+Q_DIR ?= $(shell for d in "$$(cd "$(CURDIR)/../Q" 2>/dev/null && pwd)" \
+                     "$$HOME/GIT/Q" \
                      "$$(cygpath -u "$$USERPROFILE" 2>/dev/null)/GIT/Q" \
                      "$$(cygpath -H 2>/dev/null)/$$USER/GIT/Q" \
                      "$$(cd "$(CURDIR)/../../../Q" 2>/dev/null && pwd)"; do \

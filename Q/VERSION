@@ -1,0 +1,4 @@
+Cycfi Q v1.5.4 (efe26114f39e4a78bd67c1456a25487d356fb910), https://github.com/cycfi/Q
+infra 62a88cab2278ac843765c986edfd4d7393ae3db2, https://github.com/cycfi/infra
+138 headers: q_lib/include and infra/include, unchanged, less
+infra's catch.hpp and doctest.hpp. Copied by tools/vendor_q.py.

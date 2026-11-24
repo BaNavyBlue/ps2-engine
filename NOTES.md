@@ -74,6 +74,17 @@ proved and what is next.
   `./ps2_extract NAME ROM -o OUT`), each held to its Python twin by
   `ps2/tools/extract_c_check.py`. The Python extractors stay as their
   reference; the game still runs them until every step has its twin.
+* (2026-11-23) Q comes with the repository. Asked whether Q could be
+  linked into the repository or cloned from the README: `Q/` holds Q
+  v1.5.4's headers and its infra's, unchanged (1.3 MB: everything the game
+  includes; infra's two test frameworks, catch.hpp and doctest.hpp, left
+  out), with Q's LICENSE and `Q/VERSION`, copied by `tools/vendor_q.py
+  Q_CLONE`. The port's Makefile looks in the repository's top folder
+  first (`ps2/../Q`, the private tree's build 189a), so any clone, or
+  GitHub's "Download ZIP", builds the game with Q from plain `make`, and
+  CI fetches nothing for it. A submodule would bring Q's whole tree (119
+  MB, and 259 MB of history) for the 2.4 MB of headers; a link points at
+  one machine's folder.
 
 ## How the tree is made
 
@@ -160,6 +171,19 @@ Windows's does).
   compiled against glibc (GCC 13.3, Ubuntu) with no warning. The leak
   check over the 40 files new or changed: only docs/history.md, with the
   same 4 raw runs and 48 lines of text as the committed one.
+* (2026-11-23, Q in the repository; the private tree's build 189a.) The
+  static `ps2.exe` built as CI builds it, with `Q/`'s headers (the
+  compile lines' -isystem are `Q/`'s), no warning, only Windows' own DLLs.
+  Packaged as v0.1.0 (`make_release.py`, the embeddable Python 3.14.7 and
+  Pillow 12.3.0, their SHA-256 checked): 25.7 MB. `make_release.py` had
+  named a dotted version's zip wrong (`with_suffix` took `.0-windows` for
+  a suffix: ps2-engine-v0.1.zip); fixed, as the tar.gz already was. The
+  zip unpacked fresh, its game started from outside its folder with the
+  image on the command line and nothing but Windows on the PATH: it found
+  `..\python\pythonw.exe`, 1,076 of 1,076 files as proved, status 0, then
+  the game (1,070 files, Direct3D 12). Started again: the game, no
+  window. The leak check over the 150 files new or changed: only
+  docs/history.md, as before.
 * A clone of this commit checked out with git's CRLF conversion on (as on
   Windows): its text stays LF (`.gitattributes`), and its setup gives
   1,076 of 1,076. From that clone, the Windows package (`make_release.py`,
@@ -204,7 +228,10 @@ Windows's does).
 
 ## Next
 
-1. Read the Actions runs; fix what the Linux and macOS jobs say.
+1. Read the Actions runs; fix what the Linux and macOS jobs say. (The
+   jobs fetch no Q now: check the first run after 2026-11-23's.) A tag
+   v0.1.0 then publishes the three packages as the first release; the
+   release job needs all three jobs to pass.
 2. Before the repository goes public: delete the first Actions run (it ran
    on the replaced commit, which GitHub keeps reachable by its ID for a
    while), and look over the repository's pages once more. Public when the

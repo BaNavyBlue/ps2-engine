@@ -252,7 +252,8 @@ make roundtrip-edits ROM=ps2.bin  # (build 131) each JSON table's edit caught at
 (`src/audio/q/`, C++20, `Q_DIR` as for q_demo) and the C++ runtime
 (`Q_LDLIBS`, `-lstdc++`; `-lc++` with clang's libc++). (build 121) The game
 takes Q by default: `Q=auto` builds `ps2` with it wherever Q is found
-(`Q_DIR`, else `~/GIT/Q`, else on Windows `GIT/Q` in the user's folder) and
+(`Q_DIR`, else (build 189a) `Q/` in the repository's top folder, beside
+`ps2/`, else `~/GIT/Q`, else on Windows `GIT/Q` in the user's folder) and
 a C++ compiler answers, and says so and builds without it anywhere else;
 `Q=0` leaves it out. `make headless` takes Q only for `Q=1`, and `make
 route_probe` never: they and plain `make` still build with neither a C++

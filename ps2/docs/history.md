@@ -15479,3 +15479,21 @@ and `make ps2_extract`.
 Left: tables, music, drums (song_text.py and tracker.py, the biggest
 part); then the Japanese importer, make_assets.py's own part and the
 game running the steps itself, with no Python in the packages.
+
+## Build 189a: Q beside ps2/ (2026-11-23)
+
+The owner asked whether Q could come with a copy of the repository
+rather than be cloned on its own. A git submodule would bring Q's whole
+tree (119 MB, and 259 MB of history) for the 2.4 MB of headers the game
+reads; a link in the repository points at one machine's folder. So a
+copy of the repository can carry Q's headers themselves, in `Q/` at its
+top, beside `ps2/`, and the Makefile now looks there first of all
+(`ps2/../Q`), before `~/GIT/Q` and the others: such a copy builds the
+game with Q, at the headers' version, with plain `make`, no `Q_DIR` and
+nothing else to fetch. This repository carries no Q (CLAUDE.md: Q is
+never committed here), so here nothing changes: `Q=auto` still finds
+`~/GIT/Q` (GAME_Q 1).
+
+The Makefile only; README's build section and docs/macos_build.md list
+the new place. Nothing under src/ changed, and nothing the routes build
+looks for Q.
