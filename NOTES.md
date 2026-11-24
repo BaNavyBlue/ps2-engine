@@ -85,6 +85,14 @@ proved and what is next.
   CI fetches nothing for it. A submodule would bring Q's whole tree (119
   MB, and 259 MB of history) for the 2.4 MB of headers; a link points at
   one machine's folder.
+* (2026-11-24) The first release, v0.1.0, is Windows and Linux: the owner
+  will check the Mac build later and wanted those two out now. The release
+  job waits for the Windows and Linux jobs only and publishes their
+  packages; the macOS job still runs on every push (its package stays the
+  run's artifact). macOS joins a release once its job has been seen to
+  pass: add it to the release job's `needs` and downloads, and to the
+  release notes. The notes now say what README.txt says: start the game,
+  it asks for the image the first time.
 
 ## How the tree is made
 
@@ -211,10 +219,15 @@ Windows's does).
 
 ## Not yet run or seen
 
-* The GitHub Actions runs: not read here (no `gh` on this machine). The Windows job repeats what was run
-  here. The Linux job (SDL3 built static on Ubuntu 24.04, libstdc++ linked
-  in) and the macOS job (a universal binary, SDL3 static, clang) are
-  untested: macOS has never compiled the port.
+* The GitHub Actions runs: not read here (no `gh` on this machine). Until
+  2026-11-24 the workflow was not valid YAML (an unquoted step name with
+  ": " in it, `Build (static: ...)`), so GitHub ran no job on any push
+  before then: the first real run is the one for the release commit and
+  the tag v0.1.0. The Windows job repeats what was run here. The Linux
+  job (SDL3 built static on Ubuntu 24.04, libstdc++ linked in) and the
+  macOS job (a universal binary, SDL3 static, clang) are untested: macOS
+  has never compiled the port. Check the file with a YAML parser before
+  pushing a change to it.
 * The extractors on Linux or macOS: they have run only on Windows. The C
   ones (`make ps2_extract`) compiled on Linux with GCC 13.3, never with
   GCC 16 and never on macOS.
@@ -228,10 +241,11 @@ Windows's does).
 
 ## Next
 
-1. Read the Actions runs; fix what the Linux and macOS jobs say. (The
-   jobs fetch no Q now: check the first run after 2026-11-23's.) A tag
-   v0.1.0 then publishes the three packages as the first release; the
-   release job needs all three jobs to pass.
+1. Read the tag v0.1.0's run: is the release (Windows, Linux) on the
+   Releases page? If a job failed, fix it; the tag then has no release
+   (ask the owner before moving the tag, or tag v0.1.1). Then the macOS
+   job, when the owner looks at it: fix what it says, and add it to the
+   release job (see the 2026-11-24 decision).
 2. Before the repository goes public: delete the first Actions run (it ran
    on the replaced commit, which GitHub keeps reachable by its ID for a
    while), and look over the repository's pages once more. Public when the

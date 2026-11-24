@@ -1,7 +1,9 @@
 # Builds the game on Windows, Linux and macOS on every push, and keeps each
 # package as the run's artifact (Actions, the run, Artifacts). A tag v*
-# (git tag v0.1.0 && git push origin v0.1.0) also publishes the three as a
-# GitHub release. No game data is used or made here: the packages carry the
+# (git tag v0.1.0 && git push origin v0.1.0) also publishes the Windows and
+# Linux packages as a GitHub release; macOS joins the release once its job
+# has been seen to pass (the release job's needs, its downloads and its
+# notes). No game data is used or made here: the packages carry the
 # engine and the setup, and each player makes the game's files from their
 # own cartridge image. Q's headers are the repository's own (Q/,
 # tools/vendor_q.py), so nothing is fetched for them.
@@ -44,7 +46,7 @@ jobs:
             mingw-w64-ucrt-x86_64-pkgconf
             mingw-w64-ucrt-x86_64-sdl3
             mingw-w64-ucrt-x86_64-python
-      - name: Build (static: one .exe, nothing beside it)
+      - name: "Build (static: one .exe, nothing beside it)"
         run: |
           cd ps2
           touch shaders/*
@@ -178,15 +180,19 @@ jobs:
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [windows, linux, macos]
+    needs: [windows, linux]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/download-artifact@v4
         with:
+          name: ps2-engine-windows
           path: dist
-          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: ps2-engine-linux
+          path: dist
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -196,11 +202,14 @@ jobs:
           cat > notes.md <<'NOTES'
           Bring your own cartridge: these packages hold the engine and its setup, none of the game.
 
-          1. Download the package for your system and unpack it.
-          2. Make the game's files from your own *Phantasy Star II* (USA/Europe, revision 02) image:
-             on Windows drag it onto `setup.bat`; on Linux and macOS run `./setup.sh /path/to/image.bin`
-             (Python 3 with Pillow needed there).
-          3. Run `ps2/ps2` (`ps2\ps2.exe` on Windows).
+          1. Download the package for your system (Windows or Linux) and unpack it.
+          2. Start the game: `ps2\ps2.exe` on Windows, `./ps2/ps2` on Linux. The first time, it asks for
+             your own *Phantasy Star II* image (USA/Europe, revision 02): drop the file onto its window,
+             or press Enter and choose it. It makes the game's files from it, checks them, and starts.
+             On Linux this needs Python 3 with Pillow (Debian/Ubuntu: `sudo apt install python3-pil`;
+             Fedora: `python3-pillow`; Arch: `python-pillow`). The Windows package carries its own.
+          3. Or from a terminal: `setup.bat path\to\image.bin` on Windows, `./setup.sh /path/to/image.bin`
+             on Linux.
 
           README.txt in each package says more. Not affiliated with SEGA.
           NOTES
