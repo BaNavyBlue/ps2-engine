@@ -145,9 +145,49 @@ person); the Japanese language made end to end (no Japanese cartridge on
 this machine); the window on Linux and macOS (the dialogs there go through
 xdg-desktop-portal or zenity, and macOS's own panel).
 
-## Later
+## In C (step 2, from build 187)
 
-- The extraction in C, in the game (step 2 of the owner's plan): no
-  Python anywhere, the same on every system.
+The owner, asked whether the game should need Python at all: "python is
+fine for some things but keep in mind some of my original intentions was
+maximum cross platform compatibility. Minimizing special or OS dependent
+libraries is part of that goal", and "unless there is something superior
+you can't have with bog standard C minimal C++ Then avoid it." So the
+extractors are being ported to C, into the game, a few builds at a time:
+C11 and the tree's own code (src/core/json.c reads JSON, src/core/
+pngwrite.c writes PNGs, src/extract/jout.c writes JSON), nothing else.
+Making a folder is the one call no C standard has (`_mkdir` on Windows,
+POSIX's `mkdir` elsewhere, as home.c and gamedata.c do already).
+
+- `src/extract/`: each Python extractor's twin, a step by the Makefile's
+  EXTRACTORS name (`ex_steps.c`). They read the image through the same
+  map (`exmap.c`, tools/rommap.py's lookups: a name exactly, then in any
+  case), share extract_gamedata.py's helpers (`excommon.c`) and take the
+  asset names tools/gen_asset_names.py writes from tools/asset_names.py
+  (`asset_names.c`, checked in). A step that cannot go on stops as the
+  Python's `sys.exit` does: `ex_fail`, which ends the step and lets its
+  memory go (an arena), so the game can run them in its own process.
+- `jout.c` writes JSON as Python's `json.dumps` does, byte for byte:
+  indent, separators, ensure_ascii's escapes, a dict's order.
+- `./ps2_extract NAME IMAGE -o OUT` (`make ps2_extract`) runs one step
+  from a command line, as its Python twin is run.
+- `python3 tools/extract_c_check.py ROM` holds them to the Python ones:
+  two whole extractions in scratch folders, one all Python, one with every
+  step that has a C twin in C; each C step must write (and take away) the
+  same files as its twin, and the two folders end the same, every file
+  the same bytes, a PNG the same picture (the C writes its own zlib
+  stream, as Pillow builds differ in theirs anyway).
+
+| Build | In C |
+|---|---|
+| 187 | the framework; palettes, paletteptrs, collision, interactions, buildings, stores, techs, gamedata |
+| 188 | the two decompressors and the tile sheets (`exart.c`), a 68000 decoder (`ex68k.c`); levels, script, npcs, flag_names |
+| 189 | the art sheets as the cartridge holds them (`exsheets.c`); battle, inline_art, art, nametables, winart, pictures |
+
+The Python extractors stay, as the reference the C ones are checked
+against (as the C player and the Python one both stay, build 180a). When
+every step has its twin, the game runs them itself and the packages carry
+no Python.
+
+## Later
 - A game folder that cannot be written (an installed copy): the files in
   the user's data folder, as the saves already go (home.c).

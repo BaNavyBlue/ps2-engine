@@ -32,6 +32,12 @@ typedef struct {
 bool png_load_indexed(PngImage *img, const char *path);
 void png_free(PngImage *img);
 
+/* (build 189) The same from a file's bytes the caller holds, past the
+ * asset store's cache and the mods (the extractors, src/extract/, which
+ * read what an earlier step wrote); `path` names it in messages. */
+bool png_decode_indexed(PngImage *img, const u8 *file, size_t size,
+                        const char *path);
+
 /* (build 142) A full-colour picture (docs/asset_format.md): RGBA, 8 bits a
  * channel, row major. png_load_rgba reads colour types 6 (RGBA) and 2
  * (RGB, opaque) at depth 8, and 3 (indexed, any depth, alpha from tRNS),

@@ -293,6 +293,19 @@ controls_check: tools/controls_check.c src/core/keys.c
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 	./controls_check
 
+# (build 187) The extractors in C (src/extract/; docs/first_start.md, "In
+# C"): each Python extractor's twin, run from a command line as the Python
+# one is (`./ps2_extract NAME IMAGE -o OUT`). C11 and the tree's own JSON
+# and PNG code, nothing else. `python3 tools/extract_c_check.py ROM` runs
+# both and holds the C ones to the Python's files.
+EXTRACT := $(wildcard src/extract/*.c)
+EXTRACT_CORE := src/core/json.c src/core/assetfs.c src/core/pngwrite.c \
+                src/core/png.c
+
+ps2_extract: tools/ps2_extract.c $(EXTRACT) $(EXTRACT_CORE) \
+             $(wildcard src/extract/*.h)
+	$(CC) $(CFLAGS) -o $@ $(filter %.c,$^) $(LDLIBS)
+
 # (build 179) COMPUTER PLAYS's check: seed 1 in us to the ending through
 # the headless window's own path (the Escape menu, NEW GAME) at FAST, AUTO
 # and AUTO 2X, against the stand-alone tool (`route_probe --computer`):
@@ -780,7 +793,7 @@ BINARIES := ps2 ps2_headless psg_demo fm_demo smps_trace level_probe \
             intro_probe building_probe pause_probe menu_probe route_probe \
             route_probe_asan crt_ref crt_gpu_check display_probe q_demo \
             ps2_headless_q drum_hits fm_probe patches_check art_dump \
-            save_resave controls_check
+            save_resave controls_check ps2_extract
 
 clean:
 	rm -f $(BINARIES) $(addsuffix .exe,$(BINARIES)) frame.ppm

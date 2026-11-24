@@ -15232,3 +15232,250 @@ sixth part).
 
 **Next**: step 2, the extraction in C, when the owner asks;
 NOTES_next_context.md's "Next" lists what waits for him.
+
+## Build 187: the extractors in C, begun (2026-11-22)
+
+Build 186's first start runs the Python extractors, so the game needs a
+Python with Pillow: carried in the Windows package, installed elsewhere.
+Asked whether C was not good enough, the owner answered: "python is fine
+for some things but keep in mind some of my original intentions was
+maximum cross platform compatibility. Minimizing special or OS dependent
+libraries is part of that goal", and then "unless there is something
+superior you can't have with bog standard C minimal C++ Then avoid it.
+You get to interpret what Superior is." Read as: SDL3 earns its place (a
+window, input, sound, the GPU and pads on three systems, which C has no
+way to give), Q stays the optional C++ it is, and the extraction -- bytes
+in, files out -- is C11 and the tree's own code, nothing else.
+
+So step 2 (docs/first_start.md, "In C"): the 21 extractors, about 10,400
+lines of Python with their helpers, ported to C a few at a time, each step
+the twin of a Python one and held to its files.
+
+### The framework (src/extract/)
+
+* `extract.h`, `exbase.c`: an Extract is the image, its map and an arena.
+  Everything a step allocates comes from the arena, and `ex_fail` ends the
+  step as `sys.exit` ends a Python extractor: a longjmp back to `ex_run`,
+  which lets the arena go -- so the game can run the steps in its own
+  process and live on after one refuses. Text built a piece at a time
+  (ExStr), paths joined with '/', folders made with `_mkdir` on Windows
+  and POSIX's `mkdir` elsewhere (the one call no C standard has; home.c
+  and gamedata.c do the same).
+* `exmap.c`: tools/rom_map.json read with src/core/json.c, the image
+  checked by its size and SHA-1 (`sha1.c`, FIPS 180-4), and rommap.py's
+  lookups with its exact rules: a name exactly, then in any case, the
+  first label in line order before any drum; a constant's case-blind
+  match the last in the map's order (rommap.py builds that dict with a
+  comprehension, so a later key wins); `blob` as Python's slice, nothing
+  when the end lies before the start. The indexes are sorted arrays of
+  (key, rank), so no sort needs a global.
+* `jout.c`: JSON written as json.dumps writes it -- with an indent, ","
+  and ": " and a line a member; without, ", " and ": "; "[]" and "{}";
+  ensure_ascii's escapes (\uXXXX in small hex, surrogate pairs past
+  U+FFFF); a dict's keys in the order first set, a key set again keeping
+  its place; sort_keys by code point, which for UTF-8 is strcmp's order.
+  Integers only: no extractor writes a float.
+* `excommon.c`: extract_gamedata.py's helpers (the name codes,
+  constant_names, id_keys, run_of, block_at, label_at, file_at) and
+  ps2png.py's palette strip, drawn with src/core/pngwrite.c (its own
+  zlib stream: a PNG is the same picture as Pillow's, not the same
+  bytes, which builds of Pillow do not agree on either; make_assets.py
+  checks PNGs by picture since build 186).
+* `asset_names.c`: tools/asset_names.py's tables, written by the new
+  tools/gen_asset_names.py (`--check` says whether it is current), so the
+  names have one source.
+* `tools/ps2_extract.c`: `./ps2_extract NAME IMAGE [-o OUT] [--assets DIR]
+  [--map MAP]`, each step as its Python twin is run; `--list` names the
+  steps in C. `make ps2_extract`.
+
+MinGW's GCC checks printf formats as Microsoft's old msvcrt takes them;
+the tree builds against UCRT, which is C99's, so the format attribute is
+gnu_printf there (`EX_PRINTF`) and %zu, %lld pass as on glibc.
+
+### The first eight steps
+
+palettes (the Pal_* labels' palettes.json), paletteptrs (every PalettePtrs
+entry as a palette strip, paletteptrs.json), collision (each level's
+blocks' quadrants as text, the jet scooter's table), interactions (the
+doors and the town-edge exits), buildings (portraits, the buildings'
+music, the portraits' windows), stores (the stock, named by the door that
+opens each store, and Shir's lists), techs (the techniques and who learns
+which), gamedata (items, characters, the footwear's agility). Each was
+ported line for line from its Python, Python's floor division and modulo
+kept (ex_floordiv, ex_mod) where the Python divides a difference that
+could be negative.
+
+### The check
+
+tools/extract_c_check.py IMAGE: two whole extractions in scratch folders,
+every Makefile step in order -- one all Python, one with each step
+`ps2_extract --list` names run in C -- the folder looked at around each
+step. Each C step must write and take away the same files as its twin,
+and the two folders end the same: every file the same bytes, a PNG the
+same picture (make_assets.py's file_digest). On the Windows desktop:
+
+    extract_c: 8 steps in C (palettes, paletteptrs, collision,
+    interactions, buildings, stores, techs, gamedata): their 292 files the
+    Python's (77 PNGs the same picture, 215 the same bytes); the whole
+    extraction 1041 files, 0 differ
+    extract_c: PASS
+
+(17 s for both extractions.) Every JSON file the C wrote was the
+Python's byte for byte at the first run.
+
+Nothing the game builds changed: src/extract/ is ps2_extract's alone
+until the game runs the steps itself. `make -j32 all headless route_probe
+patches_check ps2_extract` builds; the 172 routes PASS. glibc (the
+server, GCC 13.3): `make -k Q=0 headless route_probe ps2_extract` with
+-Werror=implicit-function-declaration, no warning. Not run on Linux or the
+Mac (no image there), nor compiled on the Mac or with Linux's GCC 16.
+
+Left for the next builds: levels, script, npcs, flag_names, battle;
+inline_art, nametables, winart, art, pictures (the decompression and the
+tile sheets); tables, music, drums (song_text.py and tracker.py, the
+biggest part); then the Japanese importer, make_assets.py's own part (the
+image's kinds, the zip, the SHA-256 check) and the game running the steps
+itself, with no Python in the packages.
+
+## Build 188: the levels, the script, the people and the flags in C (2026-11-22)
+
+Step 2 goes on (docs/first_start.md, "In C"): four more extractors in C,
+and what they share with the art steps still to come.
+
+### Shared
+
+* `exart.c`: the cartridge's two compressions -- DecompressArt's format
+  (tools/ps2art.py: a count byte, then groups of a value and a 32-bit mask
+  of where it goes, then a literal for each place no mask covered) and
+  Nemesis (tools/nemesis.py: the code table, the 16-bit window, the inline
+  symbols past $FC, the XOR mode) -- each with a `_try` form that hands
+  back the Python's error to a caller that goes on; and ps2png.py's tile
+  sheet, flat picture and colour ramp, with the grey ramp that art with
+  no known palette is drawn in.
+* `ex68k.c`: extract_npcs.py's 68000 decoder -- every instruction the
+  game uses, its length and its operands, the same opcodes refused -- so
+  a walk through the code stays on instruction boundaries.
+* `excommon.c` takes extract_paletteptrs.py's table reader and its label
+  rule (where two labels share an address, the one that does not end the
+  block before it), which levels reads too; paletteptrs reads the whole
+  table first now, as the Python does, the same files.
+
+### The four steps
+
+* levels (tools/extract_levels.py): each LevelData record's two planes,
+  collision table and interactions; the tilesets out of loc_9342 (the
+  tiles in Nemesis, the blocks in DecompressArt's format) as sheets, the
+  blocks as text and drawn 32x32 in the first level's palette; each
+  level's Tiled map (a backdrop plane in a map of its own) and JSON,
+  levels.json, the two tile animations, the map patches LoadLevelData
+  makes, and the mist. 316 files.
+* script (extract_script.py): the window text, each block's deltas
+  walked as LoadScript walks them and decoded by the script's charset.
+* npcs (extract_npcs.py): who stands where, the art lists and their
+  sheets, the townspeople's types, the chests and the 25 scene objects,
+  each object read from its init in the 68000 code.
+* flag_names (extract_flag_names.py): a name for each flag byte, every
+  label's block decoded to find the routines that name one. Its
+  hand-checked table (57 entries) was written into the C from the
+  Python's by a script, not retyped.
+
+### The check
+
+    extract_c: 12 steps in C (palettes, paletteptrs, levels, collision,
+    interactions, script, buildings, stores, techs, npcs, gamedata,
+    flag_names): their 665 files the Python's (119 PNGs the same picture,
+    546 the same bytes); the whole extraction 1041 files, 0 differ
+    extract_c: PASS
+
+(14 s for both extractions.) Each new step wrote the Python's files at
+its first run. The C is quicker, though not by much (levels 0.24 s
+against the Python's 0.69 s, flag_names 0.08 s against 0.26 s).
+
+The Makefile's ps2_extract rule depends on src/extract's headers now,
+so changing one rebuilds it.
+
+Nothing the game builds changed. `make -j32 all headless route_probe
+patches_check ps2_extract` builds with no warning; the 172 routes PASS.
+glibc (the server, GCC 13.3): `make -k Q=0 headless route_probe
+ps2_extract` with -Werror=implicit-function-declaration, no warning. Not
+run on Linux or the Mac, nor compiled on the Mac or with Linux's GCC 16.
+
+Left: battle; inline_art, art, nametables, winart, pictures (their
+decompressors and sheets are in now); tables, music, drums (song_text.py
+and tracker.py, the biggest part); then the Japanese importer,
+make_assets.py's own part and the game running the steps itself, with no
+Python in the packages.
+
+## Build 189: the battle, the art, the screens and the pictures in C (2026-11-22)
+
+Step 2 goes on (docs/first_start.md, "In C"): six more extractors in C,
+18 of the 21 now, so everything but the music has its twin.
+
+### Shared
+
+* `exsheets.c`: the art sheets as the cartridge holds them, which
+  tools/disasm_art.py (DisasmArt) gives the Python steps -- each
+  art/<stem>.bin the disassembly includes, decompressed and laid out at
+  the width extract_art.py guesses for it, and each art block inline in
+  ps2.asm, 16 tiles across, padded to whole rows as the sheet PNGs are.
+  Read once a run and kept. The inline labels (70) and their output
+  names (11) were written into the C from extract_inline_art.py by a
+  script, not retyped.
+* `exbase.c`: `ex_remove` (a file, if it is one) and `ex_remove_ending`
+  (a folder's files with one ending: the steps clear what an older build
+  wrote). It reads the folder with dirent.h, which the tree already uses
+  (autoplay.c) and every compiler it builds with has.
+* `jout.c`: `jo_from`, a parsed JSON value as one to write, for a step
+  that merges into a file already there (nametables.json).
+* `png.c`: the indexed reader's decoding is `png_decode_indexed` now, from
+  bytes the caller holds, so the extractors can read the palette PNGs an
+  earlier step wrote past the asset store's cache and the mods. The game
+  reads through `png_load_indexed` as before, and the routes show the
+  split changed nothing. This is the one change to what the game builds.
+
+### The six steps
+
+* battle (tools/extract_battle.py): the enemies, the formations, their
+  groups and regions, the characters' and the enemies' sprites (the
+  animation tables, the frames, the sprite maps), the props and the
+  effects' art, into battle.json.
+* inline_art (extract_inline_art.py): each inline block of art as a grey
+  sheet in assets/tiles.
+* art (extract_art.py): each art/<stem>.bin as a sheet in its palette (the
+  palettes the palettes step wrote, by name), grey where none is known.
+* nametables (extract_nametables.py): the screens' 23 nametables, the
+  words the game writes to the VDP, as Tiled maps, each cell drawn from
+  the art video memory holds at its tile, in a tileset a sheet, palette
+  line and priority, flipped by Tiled's own flags; and nametables.json.
+  Its three tables were written in from the Python's by a script.
+* winart (extract_winart.py): the 84 window maps, each its size from the
+  window records that draw it, into winart.json and a Tiled map each,
+  the portraits' interiors drawn from their sheets.
+* pictures (extract_pictures.py): the 27 portraits and the library
+  graph, and the 25 cut-scene pictures, as RGBA PNGs with their JSON and,
+  where an effect recolours them, their slot maps. Its tables (the
+  scenes, the slot maps, Rolf's and the graph's art, the windows the game
+  never opens) were written in from the Python's by a script.
+
+### The check
+
+    extract_c: 18 steps in C (palettes, paletteptrs, levels, collision,
+    interactions, script, buildings, stores, techs, npcs, gamedata, battle,
+    inline_art, art, nametables, winart, flag_names, pictures): their 981
+    files the Python's (271 PNGs the same picture, 710 the same bytes); the
+    whole extraction 1041 files, 0 differ
+    extract_c: PASS
+
+Each new step wrote the Python's files at its first run. pictures takes
+0.20 s in C against the Python's 0.90 s.
+
+`make -j32 all headless route_probe patches_check ps2_extract` builds
+with no warning; the 172 routes PASS. glibc (the server, GCC 13.3): `make
+-k Q=0 headless route_probe ps2_extract` with
+-Werror=implicit-function-declaration, no warning. Not run on Linux or
+the Mac, nor compiled on the Mac or with Linux's GCC 16. `make` (png.c)
+and `make ps2_extract`.
+
+Left: tables, music, drums (song_text.py and tracker.py, the biggest
+part); then the Japanese importer, make_assets.py's own part and the
+game running the steps itself, with no Python in the packages.

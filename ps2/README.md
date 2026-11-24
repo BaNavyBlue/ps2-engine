@@ -28,7 +28,7 @@ parts the next task needs.
 | `docs/emulator_saves.md` | (build 138e) The port's saves in the emulator: the battery RAM's layout as the ROM reads and writes it, `tools/to_srm.py` (a port save into an `.srm` slot and back, the ROM's power-on check and CONTINUE worked through), the scenes' file for RetroArch |
 | `docs/mods.md` | (builds 138b-c) The mods folder, every build's: a file there read in place of the game's own, the packaged game's originals written out on first start, the music's fallback when a mod is refused |
 | `docs/languages.md` | (builds 163-165) The languages: LANGUAGE on the Escape menu, a language's folder (`assets/lang/<key>/`) standing in for the game's own files, Excalibur_Z's retranslation converted (`tools/import_retranslation.py`) and drawn in his proportional face, what is his and what was written for the original game, Japanese later |
-| `docs/first_start.md` | (build 186) A copy of the game without its files makes them on its first start, from the player's own cartridge: the window that asks for the image (dropped, chosen, or on the command line) and shows `tools/make_assets.py`'s steps; the JAPANESE language offered the same way; which Python; how it was tried |
+| `docs/first_start.md` | (build 186) A copy of the game without its files makes them on its first start, from the player's own cartridge: the window that asks for the image (dropped, chosen, or on the command line) and shows `tools/make_assets.py`'s steps; the JAPANESE language offered the same way; which Python; how it was tried; (187) the extractors in C, step by step |
 | `docs/harness.md` | `route_probe` and the route language, `fuzz`, `route_probe -i`, `play.py`, `fuzz_levels.py`, the route list |
 | `docs/old/` | (build 142b) The old handover and questions files of builds 112-113 (`handover_113_windows.txt`, `questions_113.txt`), moved from the tree's top; history.md cites them by name |
 | `docs/machines.md` | (build 142a) What runs where: the headless server's unattended proof of every commit (`server_proof.sh`, a git hook), the Linux desktop and the Windows machine's windowed builds, shaders and GPU check |
@@ -79,6 +79,9 @@ parts the next task needs.
 | `tools/rom_map.json`, `tools/rommap.py` | (build 185) Where the disassembly's labels, files and constants are in the cartridge image, and the reader every extractor takes the image through (it checks the image's size and SHA-1) |
 | `tools/make_rom_map.sh`, `tools/make_rom_map.py` | (build 185) rom_map.json made again from the disassembly: assembled with AS for its listing, the output checked against the ROM byte for byte, the labels' addresses read off the listing |
 | `tools/make_assets.py` | (build 186) `make extract ROM=...` with no make, for the game's first start (docs/first_start.md): the files given told apart by what they are (the US image, the Japanese one, the retranslation), every extractor the Makefile names run, the JAPANESE language made, checked against `tools/assets.sha256` where there is one; `[K/N]` lines for the window, exit 0-4 |
+| `src/extract/`, `tools/ps2_extract.c` | (build 187) The extractors in C, each a Python extractor's twin (docs/first_start.md, "In C"): C11 and the tree's own JSON and PNG code; `./ps2_extract NAME IMAGE -o OUT` runs one as its Python twin is run |
+| `tools/extract_c_check.py` | (build 187) The C extractors held to the Python ones: two whole extractions, every step with a C twin run in C in one; the same files written by each step, every file the same in the end (a PNG the same picture) |
+| `tools/gen_asset_names.py` | (build 187) `src/extract/asset_names.c` from `tools/asset_names.py`; `--check` says whether it is current |
 | `tools/extract_script.py` | Every block of window text (`GameScriptPtrs`, 26 blocks, 611 scripts) into `assets/script/` |
 | `tools/extract_winart.py` | Pulls the 84 `WinArt_*` tilemaps out of `ps2.asm` |
 | `tools/extract_inline_art.py` | Decompresses art stored as inline `dc.b` (FontsIconsArt, SegaLogoArt); (156) not the art the pictures replaced |
@@ -383,6 +386,13 @@ a window asks for the image -- dropped on it, chosen, or named on the
 command line -- and shows the steps (docs/first_start.md). The JAPANESE
 language is added the same way, from the Japanese cartridge and
 Excalibur_Z's retranslation, when LANGUAGE is closed on it.
+
+(build 187) The extractors are being ported to C (`src/extract/`, C11 and
+the tree's own code, so that making the files needs no Python on any
+system): `make ps2_extract`, then `./ps2_extract NAME IMAGE -o OUT` runs
+one as its Python twin is run, and `python3 tools/extract_c_check.py
+IMAGE` holds every one ported so far to its twin's files
+(docs/first_start.md, "In C", lists them).
 
 Before build 55 there was no `assets` target at all: `make assets` found
 the `assets/` directory, had no rule for it and did nothing, even with
@@ -1125,6 +1135,12 @@ working list of what comes next is NOTES_next_context.md's latest "Next".
   179) COMPUTER PLAYS needs no Python anywhere); a Flatpak when wanted.
 
 Done since this list was written, and where:
+
+- The extractors in C, begun (builds 187-189): the framework, the two
+  decompressors, a 68000 decoder, the art sheets and eighteen of the
+  twenty-one steps (all but the music's three), each writing its Python
+  twin's files exactly. docs/first_start.md, "In C"; docs/history.md,
+  Builds 187 to 189.
 
 - The first start makes the game's files (build 186): a copy without
   them opens a window that takes the player's cartridge image (dropped,

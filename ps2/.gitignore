@@ -24,6 +24,7 @@ dist/
 /controls_check
 /art_dump
 /save_resave
+/ps2_extract
 *.exe
 *.o
 *.d

@@ -404,13 +404,11 @@ static bool unfilter(u8 *raw, size_t raw_len, int width, int height,
     return true;
 }
 
-static bool png_read_indexed(PngImage *img, const char *path)
+bool png_decode_indexed(PngImage *img, const u8 *file, size_t size,
+                        const char *path)
 {
     memset(img, 0, sizeof *img);
 
-    /* The bytes come from the RAM file store, which owns them. */
-    size_t size = 0;
-    const u8 *file = assetfs_get(path, &size);
     if (file == NULL || size < 8) {
         fprintf(stderr, "png: cannot read %s\n", path);
         return false;
@@ -508,6 +506,14 @@ static bool png_read_indexed(PngImage *img, const char *path)
         return false;
     }
     return true;
+}
+
+static bool png_read_indexed(PngImage *img, const char *path)
+{
+    /* The bytes come from the RAM file store, which owns them. */
+    size_t size = 0;
+    const u8 *file = assetfs_get(path, &size);
+    return png_decode_indexed(img, file, size, path);
 }
 
 bool png_load_indexed(PngImage *img, const char *path)

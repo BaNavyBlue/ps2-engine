@@ -62,8 +62,18 @@ proved and what is next.
   for its two files the same way. `tools/setup.py` became a wrapper around
   that script; the list of proved files moved from `tools/` to
   `overlay/ps2/tools/`, which each sync lays down as `ps2/tools/`, where the
-  script looks. Step 2, the extraction in
-  C so that no Python is needed anywhere, waits for the owner.
+  script looks.
+* (2026-11-22) Step 2, the extraction in C, so that no Python is needed
+  anywhere. The owner asked "why should I need python at all is c not good
+  enough?", and set the bar: maximum cross-platform reach, as few special
+  or OS-dependent libraries as possible, nothing but standard C (and a
+  little C++) unless something is clearly better. So the extractors are
+  C11 with the tree's own JSON and PNG code and nothing more (SDL3 stays
+  the game's only library; Q stays optional). The private tree's builds
+  187-189 wrote 18 of the 21 steps in C (`ps2/src/extract/`, run one with
+  `./ps2_extract NAME ROM -o OUT`), each held to its Python twin by
+  `ps2/tools/extract_c_check.py`. The Python extractors stay as their
+  reference; the game still runs them until every step has its twin.
 
 ## How the tree is made
 
@@ -140,6 +150,16 @@ Windows's does).
   but the Japanese crawl (no files here), its new part with the private
   tree's frames. The leak check over the 23 files changed: the same three
   files and counts as at the last commit, nothing new.
+* (2026-11-22, the private tree's build 189: the extractors in C.) After
+  the sync: `setup.py` 1,076 of 1,076 files as proved (the assets did not
+  change); `make -j32 all headless route_probe patches_check ps2_extract`
+  with no warning; `make routes` 163 of 172, the same 9 Japanese routes
+  failing as at 186. `tools/extract_c_check.py` here: 18 steps in C, their
+  981 files the Python's (271 PNGs the same picture, 710 the same bytes),
+  the whole extraction's 1,041 files the same. In the private tree the C
+  compiled against glibc (GCC 13.3, Ubuntu) with no warning. The leak
+  check over the 40 files new or changed: only docs/history.md, with the
+  same 4 raw runs and 48 lines of text as the committed one.
 * A clone of this commit checked out with git's CRLF conversion on (as on
   Windows): its text stays LF (`.gitattributes`), and its setup gives
   1,076 of 1,076. From that clone, the Windows package (`make_release.py`,
@@ -171,7 +191,9 @@ Windows's does).
   here. The Linux job (SDL3 built static on Ubuntu 24.04, libstdc++ linked
   in) and the macOS job (a universal binary, SDL3 static, clang) are
   untested: macOS has never compiled the port.
-* The extractors on Linux or macOS: they have run only on Windows.
+* The extractors on Linux or macOS: they have run only on Windows. The C
+  ones (`make ps2_extract`) compiled on Linux with GCC 13.3, never with
+  GCC 16 and never on macOS.
 * The JAPANESE language through `setup.py --ja` or the game's window (no
   Japanese image here; the expected hashes are the private tree's).
 * The packaged game played by a person: only its start-up log and the
@@ -189,9 +211,12 @@ Windows's does).
    owner says.
 3. With the Japanese image here: JAPANESE through the game's window, then
    the 9 language routes and lang_check's Japanese crawl.
-4. Later: the extraction in C (step 2; the owner's word first); other
-   revisions of the cartridge (refused by their SHA-1; supporting one
-   means a map of its own).
+4. Step 2's rest, in the private tree, synced after: the last three
+   extractors in C (tables, music, drums), the Japanese importer,
+   make_assets.py's own part, then the game running the C steps itself and
+   the packages without Python.
+5. Later: other revisions of the cartridge (refused by their SHA-1;
+   supporting one means a map of its own).
 
 ## Open
 
