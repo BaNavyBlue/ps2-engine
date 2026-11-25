@@ -380,8 +380,14 @@ const JsonValue *ex_read_json(Extract *x, const char *path)
         ex_fail(x, "%s: there is no such file (an earlier step writes it)",
                 path);
     }
+    return ex_parse_json(x, (const char *)text, path);
+}
+
+const JsonValue *ex_parse_json(Extract *x, const char *text,
+                               const char *path)
+{
     size_t where = 0;
-    JsonValue *v = json_parse((const char *)text, &where);
+    JsonValue *v = json_parse(text, &where);
     if (v == NULL) {
         ex_fail(x, "%s: not JSON (near byte %zu)", path, where);
     }
@@ -426,6 +432,23 @@ bool ex_run(Extract *x, const ExStep *step, const ExArgs *a)
         args.out = step->default_out;
     }
     step->run(x, &args);
+    x->jump = NULL;
+    free_arena(x);
+    return true;
+}
+
+bool ex_call(Extract *x, void (*fn)(Extract *x, const void *arg),
+             const void *arg)
+{
+    jmp_buf here;
+    x->error[0] = '\0';
+    x->jump = &here;
+    if (setjmp(here) != 0) {
+        x->jump = NULL;
+        free_arena(x);
+        return false;
+    }
+    fn(x, arg);
     x->jump = NULL;
     free_arena(x);
     return true;

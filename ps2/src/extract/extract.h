@@ -224,11 +224,115 @@ JOut *jo_from(Extract *x, const JsonValue *v);
  * indent (", " and ": "). ensure_ascii, as the default: anything past
  * '~' as \uXXXX. */
 char *jo_dump(Extract *x, const JOut *v, int indent, bool sort_keys);
+/* (build 191) The same with ensure_ascii=False: only '"', '\\' and the
+ * bytes below a space escaped, the rest as its UTF-8. */
+char *jo_dump_unicode(Extract *x, const JOut *v, int indent,
+                      bool sort_keys);
 /* json.dumps of one string. */
 char *jo_quote(Extract *x, const char *s);
+
+/* ---- (build 191) work that is not one of the steps ---- */
+
+/* fn(x, arg) run as a step is: ex_fail ends it, its memory goes after;
+ * false with x->error when it failed. No map is needed (ex_open). */
+bool ex_call(Extract *x, void (*fn)(Extract *x, const void *arg),
+             const void *arg);
+
+/* JSON text parsed, the tree freed with the step's memory; a stop, with
+ * `path` named, when it is not JSON. */
+const JsonValue *ex_parse_json(Extract *x, const char *text,
+                               const char *path);
+
+/* The Japanese cartridge, as tools/import_japanese.py knows it: its
+ * first 768 KB (a 1 MB overdump is fine) and their CRC32. */
+#define EX_JP_SIZE 0xC0000u
+#define EX_JP_CRC  0xBEC8EB5Au
+
+/* tools/import_japanese.py: the JAPANESE language (assets/lang/ja/) from
+ * the Japanese cartridge and Excalibur_Z's retranslation
+ * (docs/languages.md; ex_japanese.c). */
+typedef struct {
+    const char *image;          /* the cartridge's image, or a zip of it */
+    const char *retranslation;  /* the folder holding work/dialogue.json;
+                                   NULL: the two files below */
+    const char *out;            /* -o; NULL: ASSETS/lang/ja */
+    const char *assets;         /* the game's own files; NULL: "assets" */
+    const char *commit;         /* --commit; NULL or "": none */
+    /* (build 192) work/dialogue.json's and work/script.json's bytes, from
+     * the retranslation's zip, when `retranslation` is NULL */
+    const u8   *dialogue;
+    size_t      dialogue_size;
+    const u8   *script;
+    size_t      script_size;
+} ExJapanese;
+
+bool ex_japanese(Extract *x, const ExJapanese *a);
 
 /* ---- hashes ---- */
 
 void ex_sha1(const u8 *data, size_t n, u8 out[20]);
+
+/* (build 192) SHA-256 (exdigest.c), and a file as tools/make_assets.py's
+ * file_digest gives it: the SHA-256 of its bytes in hex, or for a PNG
+ * "png:" and the SHA-256 of its picture as Pillow opens it -- mode, size,
+ * palette, transparency, pixels -- since two zlibs pack the same picture
+ * in other bytes. NULL when the file cannot be read; a PNG this cannot
+ * open as Pillow would gives a digest no list holds (EX_DIGEST_UNREAD). */
+void  ex_sha256(const u8 *data, size_t n, u8 out[32]);
+char *ex_file_digest(Extract *x, const char *path);
+#define EX_DIGEST_UNREAD "png:unreadable"
+
+/* ---- (build 192) tools/make_assets.py in C (exmake.c) ---- */
+
+/* The game's files from what the player gives -- the US/European
+ * cartridge, revision 02, in any of the ways an image is kept; or the
+ * Japanese cartridge and Excalibur_Z's retranslation -- each told apart
+ * by what it is, as make_assets.py tells them: the steps (EX_STEPS, the
+ * JAPANESE language, the preload list) into GAME/assets, every step's
+ * lines into GAME/make_assets.log, then the files checked against
+ * GAME/tools/assets.sha256 where there is one. It says what the Python
+ * says, line for line, and ends with its exit status (EX_MAKE_*). A
+ * window runs it a step at a time: ex_make_begin, ex_make_step for each
+ * step (stopping at a failure, unless keep_going), ex_make_finish,
+ * ex_make_end; ex_make_assets runs it all. */
+enum {
+    EX_MAKE_DONE    = 0,    /* made (and checked, where there is a list) */
+    EX_MAKE_FAILED  = 1,    /* a step failed (the log says how) */
+    EX_MAKE_NOTHING = 2,    /* nothing the files can be made from */
+    EX_MAKE_DIFFERS = 3     /* made, but some differ from the list's */
+};
+
+typedef struct {
+    const char *game;            /* the game's folder: assets/, tools/,
+                                    the log; NULL or "": the current one */
+    const char *const *files;    /* the images and the retranslation, in
+                                    any order, as make_assets.py's FILE...
+                                    (then its --ja and --retranslation) */
+    int         nfiles;
+    bool        keep_going;
+    /* Each line said; NULL prints them to stdout. */
+    void      (*say)(void *user, const char *line);
+    void       *user;
+} ExMakeArgs;
+
+typedef struct ExMake ExMake;
+
+/* The files told apart and the steps planned. NULL with *status when
+ * there is nothing to make (EX_MAKE_NOTHING, the reason said) or it
+ * cannot start (EX_MAKE_FAILED: no map, no memory). */
+ExMake     *ex_make_begin(const ExMakeArgs *a, int *status);
+int         ex_make_steps(const ExMake *m);
+const char *ex_make_step_name(const ExMake *m, int k);
+/* Step k, 0 first: "[k+1/N] NAME" said, then the step run. False when it
+ * failed (the end of what it said is said). */
+bool        ex_make_step(ExMake *m, int k);
+bool        ex_make_keep_going(const ExMake *m);
+/* After the steps: the failures named, or the files checked; the exit
+ * status. */
+int         ex_make_finish(ExMake *m);
+void        ex_make_end(ExMake *m);
+
+/* All of it, as `python3 tools/make_assets.py` runs: the exit status. */
+int ex_make_assets(const ExMakeArgs *a);
 
 #endif /* PS2_EXTRACT_H */

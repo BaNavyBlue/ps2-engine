@@ -379,7 +379,9 @@ GitHub's "Download ZIP", whose comment gives `--commit` below) and runs
 `tools/make_assets.py` on them (docs/first_start.md).
 
 **Where it comes from.** `tools/import_japanese.py JP_ROM RETRANSLATION`
-writes `assets/lang/ja/`:
+writes `assets/lang/ja/` ((build 191) and its twin in C, `./ps2_extract
+japanese JP_ROM RETRANSLATION`, the same files: docs/first_start.md, "In
+C"):
 
 * The font: FontsIconsArt, at $26800 in the JP image ($29EB8 in the US;
   the five `lea (FontsIconsArt).l, a0` of the US at $73CC, $75BE, $853C,

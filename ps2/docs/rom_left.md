@@ -86,7 +86,14 @@ tools/rom_left.py reads ps2.asm the way AS does:
   smps.c cites. A line that says "not ported" or "unported" does not count.
 
 tools/ is counted beside src/ (routines.tsv's last column) but not as the
-port: it holds the extractors and the harness.
+port: it holds the extractors and the harness. (build 192) So is
+src/extract/, the extractors in C (docs/first_start.md, "In C"): the
+tools' twins, which make the game's files, not the port of its code.
+Builds 188-190's C extractors named five routines the review has as the
+tools' (NemDec, DecompressArt2, LoadDynWindowsInRam, LoadPCMDrums,
+cfHandler), so the tool had exited 1 since 188; counted with the tools,
+src/'s numbers are build 183's again (845 routines, 16,745 lines) and the
+review is in step.
 
 ## The reading
 

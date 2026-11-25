@@ -384,14 +384,16 @@ def main():
     names_wanted = set(label_line)
     asm_line_re = re.compile(r"ps2\.asm[: ]+(\d+)(?:-(\d+))?")
 
-    def citations(top, suffixes):
+    def citations(top, suffixes, skip=(), prefix=""):
         names = defaultdict(set)
         spans = []                  # (first, last, file), 0-based lines
         refused = defaultdict(set)
         for path in sorted(top.rglob("*")):
             if path.suffix not in suffixes or "__pycache__" in path.parts:
                 continue
-            rel = path.relative_to(top).as_posix()
+            if path.relative_to(top).parts[0] in skip:
+                continue
+            rel = prefix + path.relative_to(top).as_posix()
             for text in path.read_text(errors="replace").splitlines():
                 low = text.lower()
                 bad = "not ported" in low or "unported" in low
@@ -405,10 +407,20 @@ def main():
                         spans.append((a, b, rel))
         return names, spans, refused
 
+    # (build 192) src/extract/ is the extractors in C, the tools' twins that
+    # make the game's files from the cartridge (docs/first_start.md, "In
+    # C"), not the port of the game's code: what it names counts with the
+    # tools' citations, not src/'s (builds 188-190's extractors named five
+    # routines the review has as the tools' -- NemDec, DecompressArt2, ...).
     cited, cited_spans, not_ported = citations(
-        args.src, (".c", ".h", ".cpp", ".hpp", ".hlsl"))
+        args.src, (".c", ".h", ".cpp", ".hpp", ".hlsl"), skip=("extract",))
     tools_cited, tools_spans, _ = citations(
         ROOT / "tools", (".py", ".c", ".cpp", ".h"))
+    extract_cited, extract_spans, _ = citations(
+        args.src / "extract", (".c", ".h"), prefix="../src/extract/")
+    for name, files in extract_cited.items():
+        tools_cited[name] |= files
+    tools_spans += extract_spans
 
     def cited_files(r, names, spans):
         files = {f for n in r["labels"] for f in names[n]}

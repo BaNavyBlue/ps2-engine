@@ -74,6 +74,15 @@ proved and what is next.
   `./ps2_extract NAME ROM -o OUT`), each held to its Python twin by
   `ps2/tools/extract_c_check.py`. The Python extractors stay as their
   reference; the game still runs them until every step has its twin.
+  (2026-11-25) The private tree's builds 190-192a finished that: the last
+  three steps (tables, music, drums), the Japanese importer (`./ps2_extract
+  japanese`) and make_assets.py's own part (`./ps2_extract assets IMAGE`:
+  the files told apart, every step, the preload list, the check against
+  the list of proved files), each held to its Python by
+  `extract_c_check.py`, `japanese_c_check.py` and `make_assets_c_check.py`.
+  Synced here at 192a, on the owner's word ("If we're testing the asset
+  extraction obviously you need to push the engine"). The game's window
+  still runs the Python; switching it to the C is next.
 * (2026-11-23) Q comes with the repository. Asked whether Q could be
   linked into the repository or cloned from the README: `Q/` holds Q
   v1.5.4's headers and its infra's, unchanged (1.3 MB: everything the game
@@ -192,6 +201,23 @@ Windows's does).
   the game (1,070 files, Direct3D 12). Started again: the game, no
   window. The leak check over the 150 files new or changed: only
   docs/history.md, as before.
+* (2026-11-25, the private tree's build 192a: the whole extraction in C.)
+  After the sync: `setup.py` 1,076 of 1,076 (the assets did not change);
+  `make -j32 all headless route_probe patches_check ps2_extract` with no
+  warning; `make routes` 163 of 172, the same 9 Japanese routes failing.
+  `extract_c_check.py`: 21 steps, 1,041 files the Python's (273 PNGs the
+  same picture, 768 the same bytes). `make_assets_c_check.py IMAGE`: 20
+  runs, both the same, digests 1,091 of 1,095 (the 4 left unread as they
+  should be). Synced at 192 first, that check stopped at once: it copied
+  this tree's list of proved files into its Python games only, and the
+  private tree has no list; 192a leaves it behind. Its JAPANESE part and
+  `japanese_c_check.py` want the Japanese cartridge here (`--ja`): their
+  `--stand-in` is built from the Japanese files, which this tree has not
+  made, and exits 2 saying so. In a copy of the files to commit, `assets/`
+  holding only the shipped files: `./ps2_extract assets` on the zipped
+  image, 1,076 of 1,076 as proved. The leak check over the 36 files new
+  or changed: docs/history.md (4 raw runs, 48 lines of text) and
+  docs/languages.md (1 line), as in the committed ones.
 * A clone of this commit checked out with git's CRLF conversion on (as on
   Windows): its text stays LF (`.gitattributes`), and its setup gives
   1,076 of 1,076. From that clone, the Windows package (`make_release.py`,
@@ -219,18 +245,21 @@ Windows's does).
 
 ## Not yet run or seen
 
-* The GitHub Actions runs: not read here (no `gh` on this machine). Until
-  2026-11-24 the workflow was not valid YAML (an unquoted step name with
-  ": " in it, `Build (static: ...)`), so GitHub ran no job on any push
-  before then: the first real run is the one for the release commit and
-  the tag v0.1.0. The Windows job repeats what was run here. The Linux
-  job (SDL3 built static on Ubuntu 24.04, libstdc++ linked in) and the
-  macOS job (a universal binary, SDL3 static, clang) are untested: macOS
-  has never compiled the port. Check the file with a YAML parser before
-  pushing a change to it.
-* The extractors on Linux or macOS: they have run only on Windows. The C
+* Until 2026-11-24 the workflow was not valid YAML (an unquoted step name
+  with ": " in it, `Build (static: ...)`), so runs #1-#4 failed without
+  running a job. Check the file with a YAML parser before pushing a change
+  to it. Runs #5 (tag v0.1.0) and #6 (main, 05d3077), as the owner read
+  them: completed successfully, every job, macOS included -- so the port
+  compiles and links on macOS (clang, universal), and release v0.1.0
+  (Windows, Linux) is published. Nobody has run the macOS package yet,
+  nor the Linux package (the owner's own Linux build works).
+* The extractors on Linux or macOS: they have run only on Windows (the C
+  ones' digests and refusals also on Linux, in the private tree). The C
   ones (`make ps2_extract`) compiled on Linux with GCC 13.3, never with
-  GCC 16 and never on macOS.
+  GCC 16 and never on macOS; CI builds the game, not `ps2_extract`. On
+  the owner's Linux machine (2026-11-25, pushed for it): `make
+  ps2_extract`, `./ps2_extract assets IMAGE` in a copy with the made files
+  cleared, `python3 tools/make_assets_c_check.py IMAGE`.
 * The JAPANESE language through `setup.py --ja` or the game's window (no
   Japanese image here; the expected hashes are the private tree's).
 * The packaged game played by a person: only its start-up log and the
@@ -241,21 +270,22 @@ Windows's does).
 
 ## Next
 
-1. Read the tag v0.1.0's run: is the release (Windows, Linux) on the
-   Releases page? If a job failed, fix it; the tag then has no release
-   (ask the owner before moving the tag, or tag v0.1.1). Then the macOS
-   job, when the owner looks at it: fix what it says, and add it to the
-   release job (see the 2026-11-24 decision).
-2. Before the repository goes public: delete the first Actions run (it ran
-   on the replaced commit, which GitHub keeps reachable by its ID for a
-   while), and look over the repository's pages once more. Public when the
-   owner says.
+1. The macOS package (run #5's artifact `ps2-engine-macos`), when the
+   owner tries it on a Mac: if it plays, attach it to release v0.1.0 and
+   add macOS to the release job (see the 2026-11-24 decision).
+2. (2026-11-24) Public, with release v0.1.0. The owner deleted run #1, the
+   only public link to the replaced commit e4902a1; that commit (with the
+   stripped `PSII_Disasm/`) still opens by its ID (checked: HTTP 200).
+   Removing it for certain means GitHub Support, or deleting and
+   recreating the repository (then push main and the tag again): the
+   owner's call, offered and not taken up.
 3. With the Japanese image here: JAPANESE through the game's window, then
    the 9 language routes and lang_check's Japanese crawl.
-4. Step 2's rest, in the private tree, synced after: the last three
-   extractors in C (tables, music, drums), the Japanese importer,
-   make_assets.py's own part, then the game running the C steps itself and
-   the packages without Python.
+4. Step 2's rest, in the private tree, synced after: the game's
+   first-start window running the C steps itself (`ex_make_*` in
+   extract.h, one a frame; a UTF-8 open on Windows for SDL's paths), then
+   the packages without Python (make_release.py's embeddable Python and
+   Pillow go) and a release.
 5. Later: other revisions of the cartridge (refused by their SHA-1;
    supporting one means a map of its own).
 

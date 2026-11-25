@@ -4,6 +4,7 @@ Python ones they port (docs/first_start.md, "In C").
 
     make ps2_extract
     python3 tools/extract_c_check.py ROM [--scratch DIR] [--keep]
+                                         [--only NAME,...]
 
 Two whole extractions from the image, each in a scratch folder of its own,
 every step the Makefile names (EXTRACTORS) in its order, as `make extract`
@@ -20,7 +21,9 @@ known. Then:
   * tools/gen_asset_names.py --check: the C's asset names are
     tools/asset_names.py's.
 
-Exit 1 on any difference. The scratch folders go unless --keep.
+Exit 1 on any difference. The scratch folders go unless --keep. (build
+190) --only runs just the named steps in C, the rest in Python: one step
+checked while another is being written.
 """
 import argparse
 import os
@@ -105,6 +108,9 @@ def main():
     ap.add_argument("--keep", action="store_true")
     ap.add_argument("--c", dest="c_tool", type=Path, default=None,
                     help="the C tool (./ps2_extract)")
+    ap.add_argument("--only", default=None,
+                    help="(build 190) NAME,...: run only these steps in C, "
+                         "the rest in Python")
     a = ap.parse_args()
 
     failures = []
@@ -119,6 +125,12 @@ def main():
     c_tool = c_tool.resolve()
     listed = subprocess.run([str(c_tool), "--list"], stdout=subprocess.PIPE,
                             text=True, check=True).stdout.split()
+    if a.only is not None:
+        wanted = [n for n in a.only.split(",") if n]
+        unknown = [n for n in wanted if n not in listed]
+        if unknown:
+            raise SystemExit("extract_c: no step %s in C" % ", ".join(unknown))
+        listed = [n for n in listed if n in wanted]
     rom = a.rom.resolve()
 
     scratch = Path(tempfile.mkdtemp(prefix="extract_c_", dir=a.scratch))

@@ -31,6 +31,100 @@ static JsonValue *new_value(JsonType type)
     return v;
 }
 
+/* Four hex digits at s, or -1 (a NUL among them stops the reading). */
+static long hex4(const char *s)
+{
+    long v = 0;
+    for (int i = 0; i < 4; i++) {
+        char c = s[i];
+        int d;
+        if (c >= '0' && c <= '9') {
+            d = c - '0';
+        } else if (c >= 'a' && c <= 'f') {
+            d = c - 'a' + 10;
+        } else if (c >= 'A' && c <= 'F') {
+            d = c - 'A' + 10;
+        } else {
+            return -1;
+        }
+        v = v * 16 + d;
+    }
+    return v;
+}
+
+/* One byte more of the string being built; false when out of memory (the
+ * string is then freed). */
+static bool put_byte(char **out, size_t *len, size_t *cap, char ch)
+{
+    if (*len + 2 > *cap) {
+        size_t grown_cap = *cap * 2;
+        char *grown = realloc(*out, grown_cap);
+        if (grown == NULL) {
+            free(*out);
+            *out = NULL;
+            return false;
+        }
+        *out = grown;
+        *cap = grown_cap;
+    }
+    (*out)[(*len)++] = ch;
+    return true;
+}
+
+/* (build 191) A \u escape at p->pos (on the 'u'), and a second one after
+ * it when the two are a surrogate pair, as UTF-8 -- as Python's json
+ * reads them (the Japanese importer, src/extract/ex_japanese.c, reads
+ * another project's files). Until 191 each was a '?': save files are
+ * ASCII, and nothing in the tree is escaped so. A lone surrogate is
+ * U+FFFD; U+0000 ends the string where it stands. */
+static bool put_escape_u(Parser *p, char **out, size_t *len, size_t *cap)
+{
+    long c = hex4(&p->text[p->pos + 1]);
+    if (c < 0) {
+        p->failed = true;
+        return false;
+    }
+    p->pos += 4;
+    if (c >= 0xD800 && c <= 0xDBFF && p->text[p->pos + 1] == '\\'
+        && p->text[p->pos + 2] == 'u') {
+        long low = hex4(&p->text[p->pos + 3]);
+        if (low >= 0xDC00 && low <= 0xDFFF) {
+            c = 0x10000 + ((c - 0xD800) << 10) + (low - 0xDC00);
+            p->pos += 6;
+        }
+    }
+    if (c >= 0xD800 && c <= 0xDFFF) {
+        c = 0xFFFD;
+    }
+    char bytes[4];
+    int n;
+    if (c < 0x80) {
+        bytes[0] = (char)c;
+        n = 1;
+    } else if (c < 0x800) {
+        bytes[0] = (char)(0xC0 | (c >> 6));
+        bytes[1] = (char)(0x80 | (c & 0x3F));
+        n = 2;
+    } else if (c < 0x10000) {
+        bytes[0] = (char)(0xE0 | (c >> 12));
+        bytes[1] = (char)(0x80 | ((c >> 6) & 0x3F));
+        bytes[2] = (char)(0x80 | (c & 0x3F));
+        n = 3;
+    } else {
+        bytes[0] = (char)(0xF0 | (c >> 18));
+        bytes[1] = (char)(0x80 | ((c >> 12) & 0x3F));
+        bytes[2] = (char)(0x80 | ((c >> 6) & 0x3F));
+        bytes[3] = (char)(0x80 | (c & 0x3F));
+        n = 4;
+    }
+    for (int i = 0; i < n; i++) {
+        if (!put_byte(out, len, cap, bytes[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
 static char *parse_string_raw(Parser *p)
 {
     if (p->text[p->pos] != '"') {
@@ -64,12 +158,19 @@ static char *parse_string_raw(Parser *p)
                     ch = '\r';
                     break;
                 }
+                case 'b': {
+                    ch = '\b';
+                    break;
+                }
+                case 'f': {
+                    ch = '\f';
+                    break;
+                }
                 case 'u': {
-                    /* Save files are ASCII; anything else becomes '?'. */
-                    for (int i = 0; i < 4 && p->text[p->pos + 1] != '\0'; i++) {
+                    if (put_escape_u(p, &out, &len, &cap)) {
                         p->pos++;
+                        continue;
                     }
-                    ch = '?';
                     break;
                 }
                 case '\0': {
@@ -80,21 +181,13 @@ static char *parse_string_raw(Parser *p)
                     break;      /* \" \\ \/ stand for themselves */
                 }
             }
-            if (p->failed) {
+            if (p->failed || out == NULL) {
                 break;
             }
         }
-        if (len + 2 > cap) {
-            cap *= 2;
-            char *grown = realloc(out, cap);
-            if (grown == NULL) {
-                free(out);
-                out = NULL;
-                break;
-            }
-            out = grown;
+        if (!put_byte(&out, &len, &cap, ch)) {
+            break;
         }
-        out[len++] = ch;
         p->pos++;
     }
 

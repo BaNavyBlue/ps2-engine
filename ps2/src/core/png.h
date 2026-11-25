@@ -51,4 +51,9 @@ typedef struct {
 bool png_load_rgba(PngRgba *img, const char *path);
 void png_rgba_free(PngRgba *img);
 
+/* (build 191) The reader's inflate on raw deflate (RFC 1951, no zlib
+ * header): a zip's entries (src/extract/exzip.c). The bytes are malloc'd,
+ * the caller frees them; NULL on a stream that is not deflate's. */
+u8 *png_inflate_raw(const u8 *in, size_t len, size_t *out_len);
+
 #endif /* PS2_PNG_H */

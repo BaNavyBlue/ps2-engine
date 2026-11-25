@@ -38,6 +38,11 @@ every step goes to make_assets.log beside the game. Its exit status:
      Japanese cartridge without the retranslation (or the other way round)
   3  the files are made, but some differ from the list's
   4  this Python has no Pillow, which the extractors need
+
+(build 192) Its twin in C is `./ps2_extract assets FILE...`
+(src/extract/exmake.c; docs/first_start.md, "In C"): the same arguments,
+lines, files and exit statuses, held to this by
+tools/make_assets_c_check.py.
 """
 import argparse
 import hashlib

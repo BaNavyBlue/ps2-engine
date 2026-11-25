@@ -254,18 +254,17 @@ static void build_dynamic(Inflate *z, Huff *lit, Huff *dist)
     huff_build(dist, lengths + hlit, hdist);
 }
 
-/* zlib stream (RFC 1950): two header bytes, deflate data, adler32. */
-static u8 *zlib_inflate(const u8 *in, size_t len, size_t *out_len)
+/* Deflate blocks from in[pos] up to the last one. NULL on a bad stream,
+ * and on an empty one (*ok says which: true for the empty). */
+static u8 *inflate_from(const u8 *in, size_t len, size_t pos,
+                        size_t *out_len, bool *ok)
 {
-    if (len < 2) {
-        return NULL;
-    }
-
+    *ok = false;
     Inflate z;
     memset(&z, 0, sizeof z);
     z.in = in;
     z.in_len = len;
-    z.in_pos = 2;          /* CMF, FLG */
+    z.in_pos = pos;
 
     for (;;) {
         int last = inf_bit(&z);
@@ -309,8 +308,30 @@ static u8 *zlib_inflate(const u8 *in, size_t len, size_t *out_len)
         }
     }
 
+    *ok = true;
     *out_len = z.out_len;
     return z.out;
+}
+
+/* zlib stream (RFC 1950): two header bytes, deflate data, adler32. */
+static u8 *zlib_inflate(const u8 *in, size_t len, size_t *out_len)
+{
+    if (len < 2) {
+        return NULL;
+    }
+    bool ok;
+    return inflate_from(in, len, 2, out_len, &ok);    /* past CMF, FLG */
+}
+
+u8 *png_inflate_raw(const u8 *in, size_t len, size_t *out_len)
+{
+    bool ok;
+    *out_len = 0;
+    u8 *out = inflate_from(in, len, 0, out_len, &ok);
+    if (out == NULL && ok) {
+        out = malloc(1);        /* nothing in it: an empty file in a zip */
+    }
+    return out;
 }
 
 /* ---- PNG ---- */

@@ -90,12 +90,15 @@ describe the port itself.
   window of its own that asks for the image and shows the steps
   (`ps2/src/platform/first_start_sdl3.c`; `ps2/docs/first_start.md`);
   `tools/setup.py` runs it from a terminal.
-* The extractors are being written again in C, so that the game needs no
-  Python anywhere: 18 of the 21 are done (`ps2/src/extract/`; `make
-  ps2_extract`, then `./ps2_extract NAME IMAGE -o OUT` runs one), each
-  checked against its Python twin by `ps2/tools/extract_c_check.py IMAGE`.
-  Until the last three (the music's) are done, the setup runs the Python
-  ones.
+* The extraction is being written again in C, so that the game needs no
+  Python anywhere (`ps2/src/extract/`, built by `make ps2_extract`). All
+  21 extractors have their C twin, and so do the Japanese importer and
+  `make_assets.py` itself: in `ps2/`, `./ps2_extract assets IMAGE` makes
+  the game's files and checks them as the setup does, and `./ps2_extract
+  NAME IMAGE -o OUT` runs one step. `ps2/tools/extract_c_check.py IMAGE`
+  and `ps2/tools/make_assets_c_check.py IMAGE` hold the C to the Python.
+  Until the first-start window runs the C itself, the game and the setup
+  run the Python.
 * `ps2/tools/assets.sha256` lists the files the engine was proved with
   (the engine's own list, kept in `overlay/ps2/tools/`). Every file made is
   checked against it. For a PNG it compares the picture, not the bytes,

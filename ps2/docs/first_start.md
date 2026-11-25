@@ -175,18 +175,108 @@ POSIX's `mkdir` elsewhere, as home.c and gamedata.c do already).
   step that has a C twin in C; each C step must write (and take away) the
   same files as its twin, and the two folders end the same, every file
   the same bytes, a PNG the same picture (the C writes its own zlib
-  stream, as Pillow builds differ in theirs anyway).
+  stream, as Pillow builds differ in theirs anyway). (build 190) `--only
+  NAME,...` runs only those steps in C, the rest in Python.
 
 | Build | In C |
 |---|---|
 | 187 | the framework; palettes, paletteptrs, collision, interactions, buildings, stores, techs, gamedata |
 | 188 | the two decompressors and the tile sheets (`exart.c`), a 68000 decoder (`ex68k.c`); levels, script, npcs, flag_names |
 | 189 | the art sheets as the cartridge holds them (`exsheets.c`); battle, inline_art, art, nametables, winart, pictures |
+| 190 | song_text.py's vocabulary and walk (`exsong.c`), its disassembly and annotate (`ex_songtext.c`), tracker.py's export (`ex_tracker.c`); tables, music, drums -- all 21 |
+| 191 | zip files as Python's zipfile reads them (`exzip.c`); the Japanese importer, tools/import_japanese.py (`ex_japanese.c`, `ps2_extract japanese`) |
+| 192 | tools/make_assets.py itself (`exmake.c`, `ps2_extract assets`): the image as players keep it, the files told apart, every step, the preload list (make_manifest.py), the check against the proved files with its digest (`exdigest.c`: SHA-256, a PNG's picture as Pillow opens it; `ps2_extract digest`) |
+
+(build 190) The music step builds the song text it made back into the
+driver's image with the game's own song builder (src/audio/songtext.c,
+through a reader that serves the files from memory, so nothing on a disk
+is read), and refuses to write anything unless it gives the image again
+byte for byte; then once more with each song read from its .trk, as the
+game reads them, which the Python never checked.
+
+(build 191) The JAPANESE language in C: `./ps2_extract japanese JP_IMAGE
+RETRANSLATION [-o OUT] [--assets DIR] [--commit C]` is
+tools/import_japanese.py's twin, the same arguments, the same files (the
+face, the character map, the script, the names, the name board,
+lang.json, NOTICE.txt) and the same lines said. The cartridge may come in
+a zip, read as Python's zipfile reads it (`exzip.c`: the end record found
+where zipfile looks, stored and deflated entries -- the inflate is the
+PNG reader's, src/core/png.c -- each checked by its CRC). The text is
+Unicode in the Python and UTF-8 here; what the Python does to a string
+is done to its code points (str.isspace, re's `\d`, str.splitlines, by
+tables of Python 3.14's). src/core/json.c reads `\u` escapes as UTF-8
+now, and `\b`, `\f` as their bytes (each `\u` was a `?` until 191:
+nothing in the tree is escaped so, but another commit of the
+retranslation may be).
+
+`python3 tools/japanese_c_check.py RETRANSLATION --ja JP_IMAGE` holds it
+to the Python: both write a scratch folder each from the same files, and
+must write the same files and say the same lines; both must take the
+image in a zip and refuse a zip of two images; with the retranslation's
+proved commit, every file must be assets/lang/ja's. With no Japanese
+cartridge at hand, `--stand-in US_IMAGE` makes one for the check from the
+US image -- its own font art where the Japanese cartridge's is, a
+character map and a name board's art built back from assets/lang/ja's
+lang.json and names.json, four bytes at its end set so its CRC32 is the
+one both importers ask for -- and holds all but the face (font.png,
+font_upper.png) to assets/lang/ja too.
+
+(build 192) make_assets.py in C: `./ps2_extract assets FILE...
+[--ja JP_IMAGE] [--retranslation R] [--keep-going] [--game DIR]` takes
+what make_assets.py takes and does what it does, in one process:
+
+- each file told apart by what it is -- the US image by the map's size
+  and SHA-1 (raw; a .smd by its name or its header's AA BB, put in
+  order; a copier's 512-byte header dropped; a zip holding one image),
+  the Japanese one by its CRC, the retranslation by its two files (a
+  checkout, GitHub's zip, or that zip unpacked); every refusal in the
+  Python's words, its header's title and version quoted as Python's
+  repr() quotes them;
+- every step run where it lies: the US image read once, the 21 steps on
+  it in the Makefile's order (`ex_steps.c`), the JAPANESE language with
+  the retranslation's two files read out of its zip where they lie
+  (`ExJapanese`'s dialogue and script) rather than unpacked to a folder,
+  then the preload list, make_manifest.py's walk of assets/ and its file
+  byte for byte;
+- `[K/N] STEP` as each starts, the end of a failed step's output, every
+  step's lines in `make_assets.log`, "FAILED: ..." with --keep-going's
+  list as the Python's;
+- then, where `tools/assets.sha256` is, every file of its sections held
+  to it, the Python's lines and its exit 3. The digest is file_digest's
+  (`exdigest.c`): the SHA-256 of a file's bytes, a PNG's of its picture
+  as Pillow opens it -- mode, size, PLTE's own entries, tRNS as Pillow's
+  reader takes it, the pixels a channel to a byte. The kinds Pillow
+  opens without converting them are read here (indexed at 1-8 bits, grey,
+  grey and alpha, RGB, RGBA at 8); any other PNG (16 bits, grey below 8,
+  interlaced, broken) is "png:unreadable", which no list holds, so it
+  counts as differing. `./ps2_extract digest FILE...` prints them.
+
+What is not the Python's, on purpose: the US image is not copied to a
+temporary folder first; the log names each step where the Python's gave
+each tool's command line; a failed step's tail is its lines and its
+reason where the Python's was the tool's output and a traceback; there
+is no exit 4 (no Pillow to need). The API (extract.h's ex_make_*) runs it
+a step at a time, for a window that draws between steps.
+
+`python3 tools/make_assets_c_check.py IMAGE [RETRANSLATION (--ja JP_IMAGE
+| --stand-in)]` holds it to the Python: each run is make_assets.py in a
+scratch copy of the game (Makefile, tools/, assets/ holding only the
+files no extractor makes) beside `ps2_extract assets` in a copy holding
+only the map, on the same files, and both must end with the same exit,
+the same lines (the log's path aside) and the same files: the refusals,
+the image in each of its forms (each a whole extraction), the list as
+made and the list changed, a step that fails (with and without
+--keep-going), the JAPANESE language after the game's files from a
+folder, its root, GitHub's zip, a zip of another commit and one with
+its files at the top, and all three files at once. And the digests:
+every file under assets/ and PNGs of each kind Pillow writes, the C's
+the Python's, the kinds it does not read "png:unreadable".
 
 The Python extractors stay, as the reference the C ones are checked
-against (as the C player and the Python one both stay, build 180a). When
-every step has its twin, the game runs them itself and the packages carry
-no Python.
+against (as the C player and the Python one both stay, build 180a). Every
+step has its twin now (build 190), the Japanese importer (191) and
+make_assets.py (192); next, the game runs them itself in its first-start
+window, and the packages carry no Python.
 
 ## Later
 - A game folder that cannot be written (an installed copy): the files in

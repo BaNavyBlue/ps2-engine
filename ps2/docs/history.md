@@ -15497,3 +15497,390 @@ never committed here), so here nothing changes: `Q=auto` still finds
 The Makefile only; README's build section and docs/macos_build.md list
 the new place. Nothing under src/ changed, and nothing the routes build
 looks for Q.
+
+## Build 190: the tables, the music and the drums in C (2026-11-24)
+
+Step 2's last three extractors (docs/first_start.md, "In C"): all 21
+steps have their twin in C now, and the C makes every file of the
+extraction as the Python does.
+
+### Shared
+
+* `exsong.c` (`exsong.h`): song_text.py's vocabulary -- the channels, the
+  flags' operand counts, the header bits, Names (the notes from
+  note_frequencies.json's names, the drums, instruments, envelopes and
+  sounds), flag_text, Track, and walk, a track's stream followed as the
+  sequencer follows it until a state comes round again. The drums'
+  names (extract_drums.py's DRUMS) live here, as extract_music.py takes
+  them from extract_drums.py. `ExsSeen`, a dict from a walk's packed
+  state to an int, serves both walks (song_text's and the tracker's).
+* tools/extract_c_check.py: `--only NAME,...` runs only the named steps
+  in C, the rest in Python, so a step can be checked while another is
+  being written.
+* The Makefile: ps2_extract links src/audio/songtext.c and
+  instruments.c, the game's own song builder (below).
+
+### The three steps
+
+* tables (tools/extract_tables.py): the two colour ramps as pictures,
+  dissolve_order.json, the ending's credits as text (checked to give the
+  ROM's bytes back before it is written), the old .bin files deleted.
+* drums (extract_drums.py): the drum program's dispatch decoded from its
+  Z80 bytes, each sample from its label to the next, the WAVs (a rate is
+  Python's round(), a half to the even) and drums.json.
+* music (extract_music.py): the driver's image (SoundDriverBase to
+  PCMDrums, the driver's code zeroed, `even`'s pad dropped), the pointer
+  tables named by the labels they point at, note_frequencies.json (the
+  hz and cents in the Python's double arithmetic, its round()),
+  fm_instruments.json, songs.json; then
+  * `ex_songtext.c`: song_text.disassemble -- every track walked, the
+    labels named for the first track to land there, the songs that share
+    a stream byte put in one file, the lines laid out as the Python lays
+    them -- and annotate's `# heard:` comments. The Python finds a
+    note's line through its assembler's record of where each byte came
+    from; here each line keeps the events written on it, which is the
+    same line. Kept as the Python does it: annotate strips `\s*#
+    heard:.*$` from every line of a file it reads, which also cuts the
+    song files' and effects.txt's header line that names the comments
+    ("... `# heard:` comments say what" ends at the backtick) -- the
+    files in assets/ have it so.
+  * `ex_tracker.c` (an agent's port of tracker.py's export half): the
+    timed walk, the channels unrolled to a common repeat, the sections,
+    the copies, the rows, every song's .trk.
+  * The headers' prose (song_text.py's five headers and the song files',
+    extract_music.py's two "about" texts) was written into the C from the
+    Python by a script, not retyped.
+
+The music step builds its text back before writing it, as
+write_song_text did in a temporary folder: with the game's own song
+builder (`songtext_build`), through a reader that serves the files from
+memory under a folder on no disk, so nothing on a disk is read. The
+stream text must give the image again byte for byte, or nothing is
+written. Then the song builder reads it once more with each song from
+its .trk, as the game reads them; that image is laid out otherwise (a
+tracker song's blocks after the streams, its repeats written out --
+tracker.py's prove shows it plays the same by the chip's writes), so this
+second build is only required to be accepted, and a .trk the game could
+not read is never written. (A first try compared that image with the
+ROM's too, and it differs: 31,836 bytes against 23,593.)
+
+### The check
+
+    extract_c: 21 steps in C (palettes, paletteptrs, levels, collision,
+    interactions, script, buildings, stores, techs, npcs, gamedata, battle,
+    inline_art, tables, music, drums, art, nametables, winart, flag_names,
+    pictures): their 1041 files the Python's (273 PNGs the same picture,
+    768 the same bytes); the whole extraction 1041 files, 0 differ
+    extract_c: PASS
+
+And the C-made tree against assets/ as committed: 1,041 of 1,041, 768
+the same bytes and 273 PNGs the same picture. Every step run as `make
+extract` runs it, one process a step: 1.1 s in C, 5.6 s in Python. The
+tracker's port matched all 23 songs at its first full run, and again
+under UBSan; the tempo's text and BPM for every tempo byte 0-255 and
+the titles' casing (str.title: "town2b" gives "Town2B") the Python's.
+
+`make -j32 all headless route_probe patches_check ps2_extract` builds
+with no warning; the 172 routes PASS, no route_out file changed. glibc
+(the server, GCC 13.3): `make -k Q=0 headless route_probe ps2_extract`
+with -Werror=implicit-function-declaration, no warning. Not run on Linux
+or the Mac (the extraction has never run off this Windows desktop), nor
+compiled on the Mac or with Linux's GCC 16. Nothing the game builds
+changed. `make ps2_extract`.
+
+Left of step 2: the Japanese importer (tools/import_japanese.py),
+make_assets.py's own part (the image's kinds: .smd, a copier's header, a
+zip; the check against the proved files), then the game running the C
+steps itself in its first-start window, with no Python in the packages.
+
+## Build 191: the Japanese importer in C (2026-11-25)
+
+Step 2 goes on (docs/first_start.md, "In C"): tools/import_japanese.py,
+which makes the JAPANESE language from the Japanese cartridge and
+Excalibur_Z's retranslation, has its twin in C, and the cartridge may
+come in a zip read in C.
+
+### The importer
+
+* `src/extract/ex_japanese.c`, `./ps2_extract japanese JP_IMAGE
+  RETRANSLATION [-o OUT] [--assets DIR] [--commit C]`: the Python's
+  arguments and files -- the face (font.png, font_upper.png: each code's
+  lower and upper tile from FontsIconsArt), the character map's 187
+  characters, every US script id's Japanese in the port's notation with
+  0D05 ended and the second halves of the US's split messages empty,
+  each message ended where the US one is (script_ends.py's rule: 1103
+  and 190C here), names.json (the names, labels and windows drawn, the
+  name board's rows), lang.json, NOTICE.txt -- and the lines it says.
+  It runs on an Extract with no map (`ex_call`, new in exbase.c: a step's
+  stop and arena for work that is not one of the 21).
+* The Python's text is Unicode, the C's UTF-8: what the Python does to a
+  string is done to its code points. str.isspace (rstrip, strip, re's
+  `\s`) and the decimal digits re's `\d` and int() take (Unicode 16's
+  category Nd, Python 3.14's) are tables generated from Python 3.14;
+  str.splitlines's line ends (\r\n, \v, \f, \x1c-\x1e, U+0085, U+2028,
+  U+2029) are read as it reads them; text files must be strict UTF-8, as
+  read_text("utf-8") requires. A dict's last value at its first key's
+  place is jout's (`jo_set`), and the name board's tiles find the last
+  code with them, as the Python's dict comprehension keeps.
+* `jo_dump_unicode` (jout.c): json.dumps with ensure_ascii=False -- the
+  kana of names.json and lang.json as UTF-8, only '"', '\' and the bytes
+  below a space escaped.
+* `src/extract/exzip.c`: zip files as Python's zipfile (3.14) reads them
+  -- the end record where _EndRecData looks for it, is_zipfile's test of
+  the first directory entry, the directory in its order, an entry from
+  its local header with the directory's sizes, stored or deflated, its
+  CRC checked; encrypted, zip64 and other methods refused, as zipfile
+  refuses them or as no cartridge's zip needs. `ex_crc32` is zlib.crc32.
+  The inflate is the PNG reader's: src/core/png.c's `png_inflate_raw`
+  runs it on raw deflate (the zlib stream's reader starts it two bytes
+  in, as before).
+* src/core/json.c reads `\u` escapes (a surrogate pair as one character)
+  as UTF-8, and `\b`, `\f` as their bytes; until 191 each `\u` was a `?`
+  and `\b`, `\f` the letters. Nothing in the tree is escaped so (749 JSON
+  files looked at, saves, mods and route_out included); the
+  retranslation at its proved commit is not either, but another commit
+  may be.
+
+### The check
+
+`tools/japanese_c_check.py RETRANSLATION --ja JP_IMAGE`: the Python and
+the C each write the language into a scratch folder from the same files;
+the same files (a PNG the same picture), the same lines; the image in a
+deflated zip taken by both, a zip holding two images and (with
+--stand-in) the US image refused by both; and with the retranslation's
+proved commit (061e1f5), every file the one assets/lang/ja holds.
+RETRANSLATION is taken as the game takes it: a checkout, its GitHub zip,
+or that zip unpacked (make_assets.py's unpack_retranslation).
+
+There is no Japanese cartridge on this machine (docs/languages.md: the
+owner's ps2jp.zip is elsewhere), so `--stand-in US_IMAGE` makes an image
+for the check: the US cartridge's own FontsIconsArt stream where the
+Japanese one's is (192 tiles too), a character map with each of
+lang.json's characters at its code, made of the tiles that spell it, a
+name board's art giving names.json's six rows, and the last four bytes
+set so the first 768 KB are CRC32 BEC8EB5A, which both importers ask for
+(a CRC's tail chosen from its table, the entries' top bytes back from the
+end). Nothing in it is the Japanese cartridge's. Its face is the US
+font's tiles, so font.png and font_upper.png are held to the Python's
+alone; the rest must be assets/lang/ja's.
+
+    japanese_c: a stand-in image; 32 files the Python's (2 PNGs the same
+    picture, 30 the same bytes), the same lines; 30 files the same as
+    assets/lang/ja's (the face left out)
+    japanese_c: PASS
+
+The retranslation came from GitHub at the proved commit (its "Download
+ZIP", whose comment is the commit). Four mutants of ex_japanese.c, built
+in scratch, each fail the check where they should: $010B's run-on not
+kept (Script_TechAction.txt and an extra line said), the window rows'
+number not cut (names.json), 0D05 not ended (Script_CentralTower.txt),
+the ink taken as any colour (both PNGs). Under ASan and UBSan (CLANG64's
+clang): the check PASS, no report; and 300 damaged zips (cut short,
+bytes changed in the directory, the headers, the deflate stream) each
+refused with its reason or read, none reported.
+
+The game's own code changed in json.c (every save and asset read) and
+png.c (the inflate's entry), so the whole proof set: build 190's files
+(`git archive HEAD`) proved in scratch as the baseline, b190base, and the
+working tree after, r191, both PROOF_COLOUR=1 at 32 jobs -- every stage
+the same (172 routes PASS, 815 route files and 172 colour hashes, none
+different; crt_check, crt_sim_check, patches_check, audio_check, the
+attract WAV, the Dark Force trials, probe_check, mods_check, no build
+warning). lang_check and script_ends --check PASS. extract_c_check
+PASS: the 21 steps' 1,041 files the Python's (jout and json.c changed
+under them). `make -j32 all headless route_probe patches_check
+ps2_extract` builds with no warning; glibc (the server, GCC 13.3): `make
+-k Q=0 headless route_probe ps2_extract` with
+-Werror=implicit-function-declaration, no warning. `make ps2_extract`.
+
+Not run: the importer on the Japanese cartridge itself (none here; the
+check's `--ja` is for the machine that has it), on Linux or the Mac;
+compiled with GCC 16 or on the Mac. Left of step 2: make_assets.py's own
+part (the image's kinds: .smd, a copier's header, a zip; telling the
+files apart; the check against the proved files), then the game running
+the C steps in its first-start window, with no Python in the packages.
+
+## Build 192: make_assets.py in C (2026-11-25)
+
+Step 2 goes on (docs/first_start.md, "In C"): tools/make_assets.py, what
+the game's first start runs on the files the player gives, has its twin
+in C, so every part of making the game's files is C now; what is left is
+the game running it.
+
+### make_assets.py's part
+
+* `src/extract/exmake.c`, `./ps2_extract assets FILE... [--ja JP_IMAGE]
+  [--retranslation R] [--keep-going] [--game DIR]`: the Python's
+  arguments, put together as its main() does (the files, then --ja's and
+  --retranslation's), its lines and its exit statuses (0 done, 1 a step
+  failed, 2 nothing to make the files from, 3 made but not as the list
+  says; its 4, no Pillow, has nothing to stand for here). DIR is the
+  game's folder (assets/, tools/rom_map.json, tools/assets.sha256 and
+  make_assets.log under it), the current one by default.
+* The files told apart as the Python does, by what each is: a folder is
+  the retranslation when it holds work/dialogue.json and work/script.json
+  or its one subfolder does (GitHub's zip unpacked); a zip is when it
+  holds both at its top or under one folder; otherwise the bytes are
+  read as an image -- a zip holding exactly one .bin/.md/.gen/.smd
+  opened, a .smd (by its name, or 512 past a 16 KB multiple with AA BB at
+  8) put in order, a copier's 512-byte header dropped -- and taken as the
+  US cartridge by the map's size and SHA-1, as the Japanese one by its
+  first 768 KB's CRC (EX_JP_SIZE, EX_JP_CRC in extract.h now, which
+  ex_japanese.c takes). Every refusal in the Python's words: a file not
+  there (str(Path)'s form), a folder that is not the retranslation, a zip
+  of other than one image, a cartridge not known -- its SHA-1, and its
+  header's title and version as Python's repr() of the ASCII-decoded,
+  stripped bytes quotes them (the quote it picks, \t \n \r and \xNN, U+FFFD
+  for a byte past ASCII) -- the same cartridge twice, the JAPANESE
+  language's halves alone, the language before the game's files.
+* The steps where they lie: the US image read once and every step of
+  EX_STEPS (the Makefile's EXTRACTORS, in its order) run on it in the
+  same process, each with its Makefile -o under GAME and GAME/assets; the
+  JAPANESE language from the folder, or from the zip's two files read
+  where they lie (ExJapanese's new dialogue and script bytes:
+  ex_japanese.c's read_work), the zip's comment its commit when it is
+  one, the "(the retranslation's commit ...)" line when that is not the
+  proved one; then the preload list, make_manifest.py's walk of assets/
+  (its files left out: manifest.txt, icon/, the four listings, .tsx and
+  .bak, dot files) and its file, byte for byte. `[K/N] STEP` as each
+  starts; a failed step's last 2000 characters, its lines and its reason
+  (the Python's: the tool's output and its traceback); with
+  --keep-going the rest still run, and "FAILED: a, b, ..." names them.
+  Each step's lines go to make_assets.log.
+* The check against tools/assets.sha256, where it is: its sections "us"
+  and (when assets/lang/ja/lang.json is there) "ja", a later line for a
+  file the one kept, as the Python's dict keeps it; "checked: K of N",
+  the first 20 MISSING and DIFFERS, exit 3 -- the Python's lines.
+* `src/extract/exdigest.c`: SHA-256, and file_digest -- a file's SHA-256,
+  a PNG's ("png:") of what the Python hashes from Pillow: the mode, the
+  size, the palette (PLTE's own entries, as Pillow 12's getpalette gives
+  them), repr() of the transparency as Pillow's PNG reader takes a tRNS
+  (an index when it is one 0 among 255s, as its _simple_palette's `$`
+  takes a newline at the end too; bytes otherwise, a grey level, an RGB
+  triple), and tobytes() (a pixel's channels a byte each, an indexed
+  pixel below 8 bits unpacked). The kinds Pillow opens without converting
+  them are read so: indexed at 1, 2, 4 or 8 bits, grey, grey and alpha,
+  RGB and RGBA at 8. Any other PNG -- 16 bits, grey below 8 bits,
+  interlaced, a broken chunk -- is "png:unreadable" (EX_DIGEST_UNREAD),
+  which no list holds: it counts as differing where the Python would hash
+  what Pillow made of it or stop. No file of the game's is such a PNG.
+  `./ps2_extract digest FILE...` prints them as the list does.
+* An API for the window (extract.h): ex_make_begin tells the files apart
+  and plans the steps, ex_make_step runs one, ex_make_finish checks and
+  gives the status, ex_make_end; ex_make_assets runs it all.
+
+### The checks
+
+`tools/make_assets_c_check.py IMAGE RETRANSLATION --stand-in` (or `--ja
+JP_IMAGE`): each run is the Python in a scratch copy of the game
+(Makefile, tools/, assets/ holding only the files no extractor makes,
+found by a Python run into an empty game first) beside the C in a copy
+holding only tools/rom_map.json, on the same files; the same exit, the
+same lines (the log's path aside), the same files under assets/, each the
+same bytes or a PNG the same picture:
+
+    make_assets_c: 33 runs, both the same (23293 files compared);
+    JAPANESE: the stand-in; digests 1124 of 1128 the Python's, 4 left
+    unread (broken_crc.png, mode_1.png, mode_I_16.png, not_a.png)
+    make_assets_c: PASS
+
+The 33: ten refusals (nothing given, no such file, no cartridge, one byte
+changed, a header with a quote of each kind, controls and a byte past
+ASCII, two lengths about the header's, a zip of two images, a folder
+that is no retranslation, the US image twice); the US image raw, .smd
+named so and named .bin, with a copier's header, zipped, its .smd zipped
+-- each a whole extraction, each the same as the raw one's; the proved
+list (1,077 of 1,077), then changed (a PNG's and a JSON's digest, a file
+not made, a file listed twice): 1,075 of 1,078 and exit 3 in both; a
+step that fails (assets/data a file): levels, and with --keep-going ten
+steps, the same in both; the JAPANESE language's refusals (each half
+alone, without the game's files, the cartridge twice), then the
+language from the retranslation's folder, its root, GitHub's zip, a zip
+of another commit (the line said), one with its files at the top; the
+list with a "ja" section (1,109 of 1,109); all three files at once into
+an empty game. The digests: every file under assets/ (1,109), and PNGs
+Pillow wrote of each mode and depth -- 1, L, LA, RGB, RGBA, I;16, P at
+1, 2, 4 and 8 bits, P with a tRNS index, tRNS bytes and tRNS bytes with
+quotes and escapes, L and RGB with a tRNS -- plus a broken CRC, a file
+named .png that is none, a text file: the C's the Python's, the 1-bit
+and 16-bit grey, the broken CRC and the non-PNG "png:unreadable".
+
+Seven mutants of exmake.c and exdigest.c, built in scratch, each fail the
+check where they should: a .smd's halves swapped (both .smd runs), the
+copier's header kept, the repr()'s quote always ', icon/ in the preload
+list (every manifest.txt), the first of two lines for a file kept (the
+changed list's count), the palette padded to 256 entries (the 4-bit
+pictures' digests), a zip's files under its folder not taken (GitHub's
+zip refused). Under ASan and UBSan (CLANG64's clang): the check PASS, no
+report; and 700 damaged inputs -- 300 images and zips (cut short, bytes
+changed anywhere or near the directory; in a game whose map names no
+image, so none is taken), 300 PNGs through `digest`, 100 retranslation
+zips with the stand-in -- refused (233), stopped with their reason (67,
+as the Python's would raise), or read (5 zips made the language), none
+reported. On the server (GCC 13.3, glibc) `ps2_extract digest` gives
+every file under assets/ the Windows build's digest, byte for byte, and
+the refusals read as here.
+
+extract_c_check PASS (1,041 files) and japanese_c_check --stand-in PASS
+(32 files), ex_japanese.c and extract.h having changed under them.
+
+### rom_left.py: src/extract/ with the tools
+
+`python3 tools/rom_left.py` had exited 1 since build 188: the C
+extractors in src/extract/ name five routines (NemDec, DecompressArt2,
+LoadDynWindowsInRam, LoadPCMDrums, cfHandler) that the review has as the
+tools' (REPLACED by tools/nemesis.py, ps2art.py, extract_drums.py; cfHandler
+PORTED in smps.c), and the tool counted every file under src/ as the
+port. src/extract/ is the tools' twin, not the port of the game's code:
+it counts with tools/ now (routines.tsv's last column). src/'s numbers
+are build 183's again -- 845 routines, 16,745 lines cited, the lower
+bound 10,433 -- and the review is in step, exit 0. "Tools cite" is 18
+routines where 183's file had 19: the Python extractors read the image
+since build 185, not the disassembly, and name fewer labels.
+
+Nothing the game builds changed (src/extract/ is ps2_extract's alone):
+`make -j32 all headless route_probe patches_check ps2_extract` builds
+with no warning, the 172 routes PASS and no route_out file changed (but
+rom_left's two). glibc (the server, GCC 13.3): `make -k Q=0 headless
+route_probe ps2_extract` with -Werror=implicit-function-declaration, no
+warning. `make ps2_extract`.
+
+Not run: a whole `ps2_extract assets` on Linux or the Mac (the server has
+no image, and none was sent there), the Japanese cartridge itself (the
+stand-in again); compiled with GCC 16 or on the Mac. Left of step 2: the
+game running exmake.c in its first-start window (one step a frame, the
+image path from SDL's drop and dialog, the files beside the game), then
+packages with no Python in them.
+
+## Build 192a: the C checks in a tree of other files (2026-11-25)
+
+Two of the step-2 checks assumed this tree's own files, and failed in a
+copy of the game made from the US cartridge alone that also keeps a list
+of proved files (tools/assets.sha256, which make_assets.py checks against
+when it is there; this tree has none):
+
+* tools/make_assets_c_check.py copied tools/ into the Python's scratch
+  games, the list with it, while the C's got only the map. The probe (the
+  Python making the files in an empty game, to learn which files no step
+  makes) then checked an empty game's files against that list, exit 3,
+  and the check stopped: "the Python failed in an empty game". The list
+  now stays behind in every scratch game; the runs that want one write
+  their own (write_list), as before. write_list's comment says the
+  sections are make_assets.py's.
+* tools/japanese_c_check.py's `--stand-in` builds its image from
+  assets/lang/ja's lang.json and names.json, and without them stopped on
+  a Python traceback; make_assets_c_check's `--stand-in` the same, through
+  it. Both now say why and exit 2 (give the Japanese cartridge with
+  `--ja`). With `--ja` and no assets/lang/ja, japanese_c_check holds the
+  two importers to each other and says the tree's own were not there to
+  compare; before, every file was a failure ("not there").
+
+Here, with the retranslation's GitHub zip unpacked into scratch (its
+commit given with `--commit`, which a zip's comment gives otherwise):
+make_assets_c_check `--stand-in` PASS, 33 runs, digests 1,124 of 1,128
+(build 192's numbers); japanese_c_check `--stand-in` PASS, 32 files the
+Python's, 30 the same as assets/lang/ja's (the face left out). In a copy
+made from the US cartridge alone, with a list of its own:
+make_assets_c_check IMAGE PASS, 20 runs, digests 1,091 of 1,095 (no
+JAPANESE: none of lang/ja's files); both `--stand-in`s exit 2 with the
+sentence. Nothing under src/ changed; no make target.

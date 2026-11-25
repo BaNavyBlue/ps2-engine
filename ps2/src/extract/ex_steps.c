@@ -16,6 +16,9 @@ void ex_step_npcs(Extract *x, const ExArgs *a);
 void ex_step_gamedata(Extract *x, const ExArgs *a);
 void ex_step_battle(Extract *x, const ExArgs *a);
 void ex_step_inline_art(Extract *x, const ExArgs *a);
+void ex_step_tables(Extract *x, const ExArgs *a);
+void ex_step_music(Extract *x, const ExArgs *a);
+void ex_step_drums(Extract *x, const ExArgs *a);
 void ex_step_art(Extract *x, const ExArgs *a);
 void ex_step_nametables(Extract *x, const ExArgs *a);
 void ex_step_winart(Extract *x, const ExArgs *a);
@@ -36,6 +39,9 @@ const ExStep EX_STEPS[] = {
     { "gamedata",     ex_step_gamedata,     "assets/data" },
     { "battle",       ex_step_battle,       "assets/data" },
     { "inline_art",   ex_step_inline_art,   "assets/tiles" },
+    { "tables",       ex_step_tables,       "assets/tables" },
+    { "music",        ex_step_music,        "assets/music" },
+    { "drums",        ex_step_drums,        "assets/music" },
     { "art",          ex_step_art,          "assets" },
     { "nametables",   ex_step_nametables,   "assets/nametables" },
     { "winart",       ex_step_winart,       "assets/winart.json" },

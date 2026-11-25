@@ -302,10 +302,14 @@ controls_check: tools/controls_check.c src/core/keys.c
 # C"): each Python extractor's twin, run from a command line as the Python
 # one is (`./ps2_extract NAME IMAGE -o OUT`). C11 and the tree's own JSON
 # and PNG code, nothing else. `python3 tools/extract_c_check.py ROM` runs
-# both and holds the C ones to the Python's files.
+# both and holds the C ones to the Python's files. (build 192) `./ps2_extract
+# assets FILE...` is tools/make_assets.py's twin (src/extract/exmake.c),
+# held to it by tools/make_assets_c_check.py.
 EXTRACT := $(wildcard src/extract/*.c)
+# (build 190) The music step builds its song text back with the game's own
+# song builder: songtext.c and the instrument bank it reads.
 EXTRACT_CORE := src/core/json.c src/core/assetfs.c src/core/pngwrite.c \
-                src/core/png.c
+                src/core/png.c src/audio/songtext.c src/audio/instruments.c
 
 ps2_extract: tools/ps2_extract.c $(EXTRACT) $(EXTRACT_CORE) \
              $(wildcard src/extract/*.h)

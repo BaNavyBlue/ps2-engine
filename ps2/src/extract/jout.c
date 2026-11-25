@@ -213,13 +213,18 @@ static unsigned long next_code(const unsigned char **p)
     return c;
 }
 
-static void quote(ExStr *o, const char *s)
+/* `ascii` false is ensure_ascii=False: only '"', '\\' and the bytes below
+ * a space escaped, everything else as it is. */
+static void quote(ExStr *o, const char *s, bool ascii)
 {
     ex_str_addc(o, '"');
     const unsigned char *p = (const unsigned char *)s;
     while (*p != '\0') {
+        const unsigned char *at = p;
         unsigned long c = next_code(&p);
-        if (c == '"') {
+        if (!ascii && c >= 0x20 && c != '"' && c != '\\') {
+            ex_str_addn(o, (const char *)at, (size_t)(p - at));
+        } else if (c == '"') {
             ex_str_add(o, "\\\"");
         } else if (c == '\\') {
             ex_str_add(o, "\\\\");
@@ -262,7 +267,7 @@ static void newline(ExStr *o, int indent, int depth)
 }
 
 static void dump(Extract *x, ExStr *o, const JOut *v, int indent,
-                 bool sort_keys, int depth)
+                 bool sort_keys, bool ascii, int depth)
 {
     switch (v->type) {
     case JO_NULL:
@@ -275,7 +280,7 @@ static void dump(Extract *x, ExStr *o, const JOut *v, int indent,
         ex_str_addf(o, "%lld", v->num);
         return;
     case JO_STR:
-        quote(o, v->str);
+        quote(o, v->str, ascii);
         return;
     case JO_ARR:
         break;
@@ -304,10 +309,10 @@ static void dump(Extract *x, ExStr *o, const JOut *v, int indent,
             newline(o, indent, depth + 1);
         }
         if (obj) {
-            quote(o, items[i]->key);
+            quote(o, items[i]->key, ascii);
             ex_str_add(o, ": ");
         }
-        dump(x, o, items[i], indent, sort_keys, depth + 1);
+        dump(x, o, items[i], indent, sort_keys, ascii, depth + 1);
     }
     if (indent >= 0) {
         newline(o, indent, depth);
@@ -319,7 +324,15 @@ char *jo_dump(Extract *x, const JOut *v, int indent, bool sort_keys)
 {
     ExStr o;
     ex_str_init(x, &o);
-    dump(x, &o, v, indent, sort_keys, 0);
+    dump(x, &o, v, indent, sort_keys, true, 0);
+    return o.buf;
+}
+
+char *jo_dump_unicode(Extract *x, const JOut *v, int indent, bool sort_keys)
+{
+    ExStr o;
+    ex_str_init(x, &o);
+    dump(x, &o, v, indent, sort_keys, false, 0);
     return o.buf;
 }
 
@@ -327,6 +340,6 @@ char *jo_quote(Extract *x, const char *s)
 {
     ExStr o;
     ex_str_init(x, &o);
-    quote(&o, s);
+    quote(&o, s, true);
     return o.buf;
 }
