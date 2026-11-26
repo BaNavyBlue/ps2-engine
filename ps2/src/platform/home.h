@@ -13,6 +13,13 @@
  * program's folder cannot be found. */
 void home_enter(void);
 
+/* (build 193) A path named on the command line, as the folder the game
+ * was started in reads it, into `out`: home_enter may have left that
+ * folder for the game's own, so a relative path is joined to the one it
+ * left. UTF-8 in and out (on Windows the folder is read by its wide
+ * name). */
+void home_given_path(const char *given, char *out, size_t n);
+
 /* The folder every save goes under -- the player's slots, settings.json,
  * and COMPUTER PLAYS's own folder -- into `out`: PS2_SAVES when set; else
  * "saves" beside the game when that can be written; else the user's own

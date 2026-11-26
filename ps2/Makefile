@@ -23,6 +23,10 @@ PLAYER := $(wildcard src/player/*.c)
 # runs.
 HARNESS := $(wildcard src/harness/*.c) $(PLAYER)
 MAIN := src/main.c src/platform/home.c
+# (build 187) The extractors in C (below, ps2_extract); (build 193) the
+# game's first-start window runs them (src/platform/first_start_sdl3.c),
+# so ps2 and make dist's link them. ps2_headless does not.
+EXTRACT := $(wildcard src/extract/*.c)
 
 # (build 121) Cycfi's Q, header-only (see q_demo below). Here, above Q=auto,
 # which looks for it: $(HOME)/GIT/Q, or on Windows the same under the
@@ -142,8 +146,8 @@ build/ps2_res.o: src/platform/ps2.rc assets/icon/ps2.ico
 endif
 
 ps2: $(CORE) $(GAME) $(HARNESS) $(MAIN) src/platform/platform_sdl3.c \
-     src/platform/crt_gpu.c src/platform/first_start_sdl3.c $(GAME_Q_OBJ) \
-     $(WIN_RES) | shaders-here
+     src/platform/crt_gpu.c src/platform/first_start_sdl3.c $(EXTRACT) \
+     $(GAME_Q_OBJ) $(WIN_RES) | shaders-here
 	@test -n "$(SDL_LIBS)" || { \
 	    echo "SDL3 not found by pkg-config."; \
 	    echo "Install SDL3 development files, or build the"; \
@@ -201,7 +205,7 @@ build/pack.o: src/platform/pack.S build/pack.bin
 
 $(DIST_EXE): $(CORE) $(GAME) $(HARNESS) $(MAIN) src/platform/platform_sdl3.c \
              src/platform/crt_gpu.c src/platform/first_start_sdl3.c \
-             $(GAME_Q_OBJ) $(WIN_RES) build/pack.o
+             $(EXTRACT) $(GAME_Q_OBJ) $(WIN_RES) build/pack.o
 	@test -n "$(SDL_LIBS)" || { echo "SDL3 not found by pkg-config."; exit 1; }
 	@mkdir -p build/dist
 	$(CC) $(CFLAGS) -DPS2_PACKED $(GAME_Q_DEFS) $(SDL_CFLAGS) -s -o $@ $^ \
@@ -304,8 +308,8 @@ controls_check: tools/controls_check.c src/core/keys.c
 # and PNG code, nothing else. `python3 tools/extract_c_check.py ROM` runs
 # both and holds the C ones to the Python's files. (build 192) `./ps2_extract
 # assets FILE...` is tools/make_assets.py's twin (src/extract/exmake.c),
-# held to it by tools/make_assets_c_check.py.
-EXTRACT := $(wildcard src/extract/*.c)
+# held to it by tools/make_assets_c_check.py. (build 193) The game links
+# them too (EXTRACT, above): its first-start window makes the files.
 # (build 190) The music step builds its song text back with the game's own
 # song builder: songtext.c and the instrument bank it reads.
 EXTRACT_CORE := src/core/json.c src/core/assetfs.c src/core/pngwrite.c \

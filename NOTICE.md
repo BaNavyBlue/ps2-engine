@@ -5,8 +5,8 @@
 *Phantasy Star II* is copyright SEGA. This repository contains none of the
 game's data: no ROM, and no art, music, maps or text taken from one. To play,
 you need a cartridge image of your own (see the README for which ones work).
-The setup step makes the game's files from that image on your machine; they
-are never part of this repository or its releases.
+The game makes its files from that image on your machine, the first time
+it starts; they are never part of this repository or its releases.
 
 This project is not affiliated with, endorsed by or connected to SEGA.
 
@@ -28,7 +28,7 @@ which keep their own terms.
 
 Released builds carry these notices in their `licenses/` folder, with those
 of what the build links in (on Windows also the GCC runtime, winpthreads and
-libiconv, and the bundled Python and Pillow). Because the game links
+libiconv). Because the game links
 Nuked-OPN2 (LGPL-2.1) statically, each release package is also the complete
 source it was built from, so it can be rebuilt with a changed copy of that
 library.

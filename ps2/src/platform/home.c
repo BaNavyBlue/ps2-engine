@@ -29,6 +29,10 @@
 #define MODS_HERE   "mods"
 #define PROBE_NAME  ".ps2_write_test"
 
+/* (build 193) The folder home_enter left for the game's own, in UTF-8;
+ * "" when it left none. */
+static char g_left[1024];
+
 static bool readable(const char *path)
 {
     FILE *f = fopen(path, "rb");
@@ -128,8 +132,15 @@ void home_enter(void)
         return;
     }
     *slash = L'\0';
+    wchar_t here[MAX_PATH];
+    bool    known = _wgetcwd(here, MAX_PATH) != NULL;
     if (_wchdir(exe) == 0) {
         fprintf(stderr, "home: the game's folder, %ls\n", exe);
+        if (!known
+            || WideCharToMultiByte(CP_UTF8, 0, here, -1, g_left,
+                                   (int)sizeof g_left, NULL, NULL) <= 0) {
+            g_left[0] = '\0';
+        }
     }
 #elif defined(__APPLE__)
     /* (macOS) No /proc: dyld's path to the program, resolved through any
@@ -146,8 +157,11 @@ void home_enter(void)
         return;
     }
     *slash = '\0';
+    char here[PATH_MAX];
+    bool known = getcwd(here, sizeof here) != NULL;
     if (chdir(exe) == 0) {
         fprintf(stderr, "home: the game's folder, %s\n", exe);
+        snprintf(g_left, sizeof g_left, "%s", known ? here : "");
     }
 #else
     char    exe[1024];
@@ -161,10 +175,28 @@ void home_enter(void)
         return;
     }
     *slash = '\0';
+    char here[1024];
+    bool known = getcwd(here, sizeof here) != NULL;
     if (chdir(exe) == 0) {
         fprintf(stderr, "home: the game's folder, %s\n", exe);
+        snprintf(g_left, sizeof g_left, "%s", known ? here : "");
     }
 #endif
+}
+
+void home_given_path(const char *given, char *out, size_t n)
+{
+#ifdef _WIN32
+    bool absolute = given[0] == '/' || given[0] == '\\'
+                 || (given[0] != '\0' && given[1] == ':');
+#else
+    bool absolute = given[0] == '/';
+#endif
+    if (absolute || given[0] == '\0' || g_left[0] == '\0') {
+        snprintf(out, n, "%s", given);
+    } else {
+        snprintf(out, n, "%s/%s", g_left, given);
+    }
 }
 
 void home_saves(char *out, size_t n)

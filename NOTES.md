@@ -2,12 +2,12 @@
 
 The public version of the phantasy-star-2 port: the same engine, with no
 assets and no ROM data in the tree. A player supplies a cartridge image they
-own: the game asks for it on its first start and runs the port's extractors
-on it into `ps2/assets/` (`ps2/tools/make_assets.py`; `tools/setup.py` does
-the same from a terminal), checking every file. The extractors read the image itself, finding what
-they need through `ps2/tools/rom_map.json`; no disassembly is needed or
-shipped. README.md is the front page; this file holds the decisions, what is
-proved and what is next.
+own: the game asks for it on its first start and makes `ps2/assets/` from it
+itself, in C (`ps2/src/extract/`; `./ps2_extract assets IMAGE` does the same
+from a terminal), checking every file. The extraction reads the image
+itself, finding what it needs through `ps2/tools/rom_map.json`; no
+disassembly is needed or shipped, and no Python. README.md is the front
+page; this file holds the decisions, what is proved and what is next.
 
 ## Decisions (the owner)
 
@@ -82,7 +82,8 @@ proved and what is next.
   `extract_c_check.py`, `japanese_c_check.py` and `make_assets_c_check.py`.
   Synced here at 192a, on the owner's word ("If we're testing the asset
   extraction obviously you need to push the engine"). The game's window
-  still runs the Python; switching it to the C is next.
+  still ran the Python; it runs the C since the private tree's build 193
+  (below, 2026-11-25, later).
 * (2026-11-23) Q comes with the repository. Asked whether Q could be
   linked into the repository or cloned from the README: `Q/` holds Q
   v1.5.4's headers and its infra's, unchanged (1.3 MB: everything the game
@@ -102,12 +103,26 @@ proved and what is next.
   pass: add it to the release job's `needs` and downloads, and to the
   release notes. The notes now say what README.txt says: start the game,
   it asks for the image the first time.
+* (2026-11-25, later) No Python anywhere a player goes. The private tree's
+  build 193 has the game's first-start window run the C extraction on a
+  thread of its own, every file by its UTF-8 name (`ps2/src/extract/exfs.c`:
+  wide calls on Windows), so the game needs nothing to make its files.
+  Synced and pushed at the owner's word ("yes, sync the engine and push
+  both"). With it the packages lost python.org's embeddable Python, Pillow,
+  `setup.bat` and `setup.sh` (`tools/make_release.py`, the workflow's
+  download step), and `tools/setup.py` went: from a terminal, a player gives
+  the image on the game's command line, and a build from source has
+  `./ps2_extract assets IMAGE`. `tools/make_expected.py` takes each file's
+  digest from `ps2_extract digest` (the picture of a PNG, as the game
+  checks it), so the engine's own tools need nothing but Python's own
+  library; the Python extractors and their checks, in `ps2/tools/`, want
+  Pillow still, as the reference the C is held to.
 
 ## How the tree is made
 
 ```sh
 python3 tools/sync_private.py ~/Desktop/GIT/Claude/phantasy-star-2   # ps2/, scrubbed
-python3 tools/setup.py ROM                                           # ps2/assets/, checked
+(cd ps2 && make ps2_extract && ./ps2_extract assets ROM)             # ps2/assets/, checked
 (cd ps2 && make -j all headless route_probe && make -j routes)       # the proofs
 python3 tools/make_expected.py ~/Desktop/GIT/Claude/phantasy-star-2  # when the assets changed
 python3 tools/rom_leak_check.py --rom ROM --assets PRIVATE/ps2/assets \
@@ -119,8 +134,8 @@ python3 tools/rom_leak_check.py --rom ROM --assets PRIVATE/ps2/assets \
 marks it), so the engine's own files live outside it, or in `overlay/ps2/`
 (laid over each sync: the icon, and `tools/assets.sha256`, the list of
 proved files, which `make_expected.py` writes in both places). The made
-assets and the builds go with each sync too: run the setup again after
-one. Left behind: assets/ (but for the
+assets and the builds go with each sync too: make the files again after
+one (`patches_check` and the routes read them). Left behind: assets/ (but for the
 retranslation, the language list and the Q patches, which are the port's or
 free to pass on), route_out/ (frames and recordings of the game), every
 picture and sound (docs' screenshots too), CLAUDE.md,
@@ -218,6 +233,25 @@ Windows's does).
   image, 1,076 of 1,076 as proved. The leak check over the 36 files new
   or changed: docs/history.md (4 raw runs, 48 lines of text) and
   docs/languages.md (1 line), as in the committed ones.
+* (2026-11-25, later, the private tree's build 193: the window runs the
+  C; packages without Python.) After the sync: `./ps2_extract assets` on
+  the zipped image, 1,076 of 1,076 as proved; `make -j32 all headless
+  route_probe patches_check ps2_extract` with no warning; `make routes` 163
+  of 172, the same 9 Japanese routes failing. `extract_c_check.py` PASS (21
+  steps, 1,041 files) and `make_assets_c_check.py IMAGE` PASS (20 runs,
+  digests 1,091 of 1,095). `make_expected.py` through `ps2_extract digest`
+  wrote the list byte for byte as Pillow's digests had (1,076 files, 33 for
+  JAPANESE), but for its reworded header. The Windows package built as CI
+  builds it (static, only Windows' own DLLs), packed with no Python: 6.5 MB
+  (25.7 MB with it). Unzipped fresh, its game started from another folder
+  with the zipped image on its command line: the window and its steps,
+  1,076 of 1,076 as proved, the files in the game's own folder and nothing
+  in the folder it was started from, then the game (1,070 files, Direct3D
+  12), about 1.7 s in all; started again, straight to the game. The leak
+  check over the 27 files new or changed: docs/history.md (4 raw runs, 48
+  lines) and docs/languages.md (1 line), as in the committed ones. In the
+  private tree the window's code compiled on glibc against SDL3's headers;
+  never linked or run on Linux or macOS.
 * A clone of this commit checked out with git's CRLF conversion on (as on
   Windows): its text stays LF (`.gitattributes`), and its setup gives
   1,076 of 1,076. From that clone, the Windows package (`make_release.py`,
@@ -253,15 +287,18 @@ Windows's does).
   compiles and links on macOS (clang, universal), and release v0.1.0
   (Windows, Linux) is published. Nobody has run the macOS package yet,
   nor the Linux package (the owner's own Linux build works).
-* The extractors on Linux or macOS: they have run only on Windows (the C
-  ones' digests and refusals also on Linux, in the private tree). The C
-  ones (`make ps2_extract`) compiled on Linux with GCC 13.3, never with
-  GCC 16 and never on macOS; CI builds the game, not `ps2_extract`. On
-  the owner's Linux machine (2026-11-25, pushed for it): `make
-  ps2_extract`, `./ps2_extract assets IMAGE` in a copy with the made files
-  cleared, `python3 tools/make_assets_c_check.py IMAGE`.
-* The JAPANESE language through `setup.py --ja` or the game's window (no
-  Japanese image here; the expected hashes are the private tree's).
+* The extraction on Linux or macOS: it has run only on Windows (the C
+  ones' digests and refusals also on Linux, in the private tree). Since
+  the game links it (2026-11-25, later), CI compiles it with the game on
+  all three; its first run there will say. On the owner's Linux machine:
+  the game started with no files (`./ps2/ps2 /path/to/image.bin`, or the
+  window's drop and dialog), and `make ps2_extract`, `./ps2_extract
+  assets IMAGE`, `python3 tools/make_assets_c_check.py IMAGE` in `ps2/`.
+* The packages without Python: the Windows one tried here; the Linux and
+  macOS ones never run.
+* The JAPANESE language through the game's window or `./ps2_extract
+  assets JP_IMAGE RETRANSLATION` (no Japanese image here; the expected
+  hashes are the private tree's).
 * The packaged game played by a person: only its start-up log and the
   first-start window's pictures were read. Dropping the image on the
   window and the file dialog need a person.
@@ -281,11 +318,9 @@ Windows's does).
    owner's call, offered and not taken up.
 3. With the Japanese image here: JAPANESE through the game's window, then
    the 9 language routes and lang_check's Japanese crawl.
-4. Step 2's rest, in the private tree, synced after: the game's
-   first-start window running the C steps itself (`ex_make_*` in
-   extract.h, one a frame; a UTF-8 open on Windows for SDL's paths), then
-   the packages without Python (make_release.py's embeddable Python and
-   Pillow go) and a release.
+4. A release of the packages without Python (v0.1.0's still carry
+   Python and Pillow): read the push's CI run, then tag (`git tag v0.2.0
+   && git push origin v0.2.0`) when the owner says.
 5. Later: other revisions of the cartridge (refused by their SHA-1;
    supporting one means a map of its own).
 

@@ -515,15 +515,17 @@ void platform_set_crt(Platform *p, const CrtSettings *s)
     (void)s;
 }
 
-/* (build 186) No window to ask in: how to make the files, and no. */
+/* (build 186) No window to ask in: how to make the files, and no.
+ * (build 193) With the C: ps2_extract, or the game's own window. */
 bool platform_make_assets(int nfiles, char **files)
 {
     (void)nfiles;
     (void)files;
     fprintf(stderr, "The game's files are not here (assets/manifest.txt). "
                     "Make them from your own cartridge image:\n"
-                    "    python3 tools/make_assets.py IMAGE\n"
-                    "(or make extract ROM=IMAGE; docs/first_start.md)\n");
+                    "    make ps2_extract && ./ps2_extract assets IMAGE\n"
+                    "(or start the game, ps2, which asks for it; "
+                    "docs/first_start.md)\n");
     return false;
 }
 
@@ -534,8 +536,8 @@ bool platform_add_language(const char *key, const char *name, int nfiles,
     (void)files;
     fprintf(stderr, "lang: %s's files are not here (assets/lang/%s/); "
                     "the game goes on in the language it had. For the "
-                    "JAPANESE language: python3 tools/make_assets.py "
-                    "JP_IMAGE RETRANSLATION\n",
+                    "JAPANESE language: ./ps2_extract assets JP_IMAGE "
+                    "RETRANSLATION\n",
             (name != NULL) ? name : "?", (key != NULL) ? key : "?");
     return false;
 }

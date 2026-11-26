@@ -31,7 +31,12 @@
  * `make extract ROM=...` passes it; OUT the Python's -o (its default
  * too); MAP tools/rom_map.json. tools/extract_c_check.py runs these beside
  * the Python ones and holds them to the same files. Exit 1 when the step
- * stops, with its reason. C11 alone. */
+ * stops, with its reason. C11 alone.
+ *
+ * (build 193) Every path is taken as UTF-8 (src/extract/exfs.c): on
+ * Windows the arguments are read again from the wide command line, so a
+ * file of any name opens, as Python's arguments and the game's window's
+ * do. */
 
 #include "../src/extract/extract.h"
 
@@ -41,7 +46,7 @@
 
 static u8 *read_all(const char *path, size_t *size)
 {
-    FILE *fh = fopen(path, "rb");
+    FILE *fh = ex_fopen(path, "rb");
     if (fh == NULL) {
         return NULL;
     }
@@ -187,7 +192,7 @@ static int japanese(int argc, char **argv)
     return ok ? 0 : 1;
 }
 
-int main(int argc, char **argv)
+static int run(int argc, char **argv)
 {
     if (argc == 2 && strcmp(argv[1], "--list") == 0) {
         for (int i = 0; i < EX_STEP_COUNT; i++) {
@@ -250,4 +255,12 @@ int main(int argc, char **argv)
     ex_close(&x);
     free(rom);
     return ok ? 0 : 1;
+}
+
+int main(int argc, char **argv)
+{
+    char **utf8 = ex_utf8_args(argc, argv);
+    int status = run(argc, (utf8 != NULL) ? utf8 : argv);
+    free(utf8);
+    return status;
 }

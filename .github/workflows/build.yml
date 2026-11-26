@@ -4,9 +4,10 @@
 # Linux packages as a GitHub release; macOS joins the release once its job
 # has been seen to pass (the release job's needs, its downloads and its
 # notes). No game data is used or made here: the packages carry the
-# engine and the setup, and each player makes the game's files from their
-# own cartridge image. Q's headers are the repository's own (Q/,
-# tools/vendor_q.py), so nothing is fetched for them.
+# engine, and the game makes its own files, in C, from each player's own
+# cartridge image the first time it starts -- no Python in any package.
+# Q's headers are the repository's own (Q/, tools/vendor_q.py), so nothing
+# is fetched for them.
 name: build
 
 on:
@@ -21,9 +22,6 @@ permissions:
 
 env:
   SDL_TAG: release-3.4.18
-  PYTHON_EMBED: "3.14.7"
-  PYTHON_EMBED_SHA256: d297e5ff019966817ad8502465176139f2d3d840fa4ed84b13bed399a6ab1f15
-  PILLOW: "12.3.0"
   VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('build-{0}', github.run_number) }}
   CFLAGS_RELEASE: -std=c11 -Wall -Wextra -Wpedantic -O2
 
@@ -54,21 +52,11 @@ jobs:
               SDL_LIBS="-static $(pkg-config --static --libs sdl3)"
           strip ps2.exe
           objdump -p ps2.exe | grep 'DLL Name'
-      - name: Python and Pillow for the setup
-        shell: bash
-        run: |
-          curl -fsSLo python-embed.zip "https://www.python.org/ftp/python/${PYTHON_EMBED}/python-${PYTHON_EMBED}-embed-amd64.zip"
-          echo "${PYTHON_EMBED_SHA256}  python-embed.zip" | sha256sum -c
-          short="${PYTHON_EMBED%.*}"
-          python -m pip download --only-binary=:all: --no-deps --platform win_amd64 \
-              --python-version "$short" --implementation cp --abi "cp${short/./}" \
-              "pillow==${PILLOW}" -d wheels
       - name: Package
         run: |
           L=/ucrt64/share/licenses
           python3 tools/make_release.py --platform windows --exe ps2/ps2.exe \
-              --version "$VERSION" --python-zip python-embed.zip \
-              --python-sha256 "$PYTHON_EMBED_SHA256" --pillow-wheel "$(ls wheels/pillow-*.whl)" \
+              --version "$VERSION" \
               --license SDL3 "$(cygpath -m $L/SDL3)" \
               --license libiconv "$(cygpath -m $L/libiconv)" \
               --license winpthreads "$(cygpath -m $L/winpthreads)" \
@@ -200,16 +188,15 @@ jobs:
           cd dist
           sha256sum * > SHA256SUMS.txt
           cat > notes.md <<'NOTES'
-          Bring your own cartridge: these packages hold the engine and its setup, none of the game.
+          Bring your own cartridge: these packages hold the engine, none of the game.
 
           1. Download the package for your system (Windows or Linux) and unpack it.
           2. Start the game: `ps2\ps2.exe` on Windows, `./ps2/ps2` on Linux. The first time, it asks for
              your own *Phantasy Star II* image (USA/Europe, revision 02): drop the file onto its window,
-             or press Enter and choose it. It makes the game's files from it, checks them, and starts.
-             On Linux this needs Python 3 with Pillow (Debian/Ubuntu: `sudo apt install python3-pil`;
-             Fedora: `python3-pillow`; Arch: `python-pillow`). The Windows package carries its own.
-          3. Or from a terminal: `setup.bat path\to\image.bin` on Windows, `./setup.sh /path/to/image.bin`
-             on Linux.
+             or press Enter and choose it. It makes the game's files from it, in about a second, checks
+             them, and starts. Nothing else needs installing: no Python.
+          3. Or give the image on the command line: `ps2\ps2.exe path\to\image.bin`,
+             `./ps2/ps2 /path/to/image.bin`.
 
           README.txt in each package says more. Not affiliated with SEGA.
           NOTES

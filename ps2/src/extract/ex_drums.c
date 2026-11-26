@@ -301,7 +301,7 @@ static void write_wav(Extract *x, const char *path, const u8 *data,
 /* Path.exists() for a file. */
 static bool file_there(const char *path)
 {
-    FILE *fh = fopen(path, "rb");
+    FILE *fh = ex_fopen(path, "rb");
     if (fh == NULL) {
         return false;
     }

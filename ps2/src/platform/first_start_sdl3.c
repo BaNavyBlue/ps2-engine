@@ -1,31 +1,33 @@
 /* (build 186) The first start, SDL3's (platform.h, docs/first_start.md).
  *
- * The game's files are made from the player's own cartridge by
- * tools/make_assets.py. This is the window that asks for it: an image
- * dropped on it or chosen in the system's file dialog, the script run on
- * it with its steps shown as they go, and what it said when it could not.
- * The game's own font is one of the files to be made, so the window writes
- * in SDL's built-in 8x8 face (SDL_RenderDebugText), on an SDL_Renderer of
- * its own; it closes before the game's window opens, or -- adding a
- * language -- stands over it while the game waits.
+ * The game's files are made from the player's own cartridge. This is the
+ * window that asks for it: an image dropped on it or chosen in the
+ * system's file dialog, the files made from it with the steps shown as
+ * they go, and what was said when they could not be. The game's own font
+ * is one of the files to be made, so the window writes in SDL's built-in
+ * 8x8 face (SDL_RenderDebugText), on an SDL_Renderer of its own; it
+ * closes before the game's window opens, or -- adding a language --
+ * stands over it while the game waits.
  *
- * The script runs in a Python found once a run: PS2_PYTHON; a Python
- * packaged beside the game (python/ in the folder above the game's or in
- * its own, pythonw.exe first on Windows, which opens no console); then
- * python3, python and (Windows) py -3 on the PATH. Each is asked to import
- * Pillow first, which the extractors need. */
+ * (build 193) The files are made in C, in the game's own process:
+ * src/extract/'s ex_make_* (tools/make_assets.py's twin, exmake.c), on a
+ * thread of their own, so the window is drawn and its events read while a
+ * step runs (the longest, the levels', takes a tenth of a second), and the
+ * steps never wait for a frame to be shown. Until build 192 this window
+ * ran the Python script in a Python it found (one packaged beside the
+ * game, or the PATH's, with Pillow), a process beside it. Every path is
+ * UTF-8, as SDL gives a dropped or chosen file's:
+ * src/extract/exfs.c opens them by their wide names on Windows. */
 #include "platform.h"
+
+#include "home.h"
+#include "../extract/extract.h"
 
 #include <SDL3/SDL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#endif
 
 /* The window: 80 columns and 45 rows of the 8x8 face, drawn twice the
  * size (whole multiples when it is made bigger). */
@@ -41,13 +43,16 @@
 
 #define FS_PATH     1024
 #define FS_LINE     160
-#define FS_TAIL     12                      /* the script's last lines kept */
+#define FS_SAID     512                     /* a line said, kept whole */
+#define FS_TAIL     12                      /* the last lines said kept */
 #define FS_FILES    4
 
-#define SCRIPT      "tools/make_assets.py"
+/* What the files are made with: the map of the cartridge (where each
+ * thing lies in it), beside the game. */
+#define MAP         "tools/rom_map.json"
 
-/* How long a Python gets to answer whether it has Pillow. */
-#define PROBE_SECONDS 15.0
+/* The run's status when the window was closed between its steps. */
+#define RUN_STOPPED (-1)
 
 typedef enum {
     WHAT_GAME,          /* the game's own files, from the US cartridge */
@@ -56,12 +61,21 @@ typedef enum {
 
 typedef enum {
     STATE_ASK,          /* waiting for the files */
-    STATE_RUN,          /* the script running */
-    STATE_FAILED,       /* it could not: what it said, and ask again */
+    STATE_RUN,          /* the files being made */
+    STATE_FAILED,       /* they could not be: what was said, and ask again */
     STATE_DIFFERS,      /* made, but not all as proved: play on or quit */
     STATE_DONE,
     STATE_LEFT          /* the player closed it */
 } State;
+
+/* What the run has said: the last lines, and the step it is on. */
+typedef struct {
+    char tail[FS_TAIL][FS_SAID];
+    int  tail_count;
+    int  step;
+    int  steps;
+    char step_name[FS_LINE];
+} Said;
 
 typedef struct {
     What          what;
@@ -70,21 +84,24 @@ typedef struct {
     SDL_Window   *window;
     SDL_Renderer *renderer;
 
-    /* The files to give the script: for the game one image, for the
+    /* The files to make them from: for the game one image, for the
      * JAPANESE language the cartridge and the retranslation. */
     char cartridge[FS_PATH];
     char retranslation[FS_PATH];
 
-    /* The script's run. */
-    SDL_Process *proc;
-    char         partial[FS_LINE];
-    size_t       partial_len;
-    char         tail[FS_TAIL][FS_LINE];
-    int          tail_count;
-    int          step;
-    int          steps;
-    char         step_name[FS_LINE];
-    int          exit_code;
+    /* The run, on its own thread (make_files). What it says goes into
+     * `out` there, under `lock`; each frame copies it into `shown` under
+     * the lock and draws from the copy, so the lock is held for a copy
+     * and never while a frame is drawn. */
+    SDL_Thread   *thread;
+    SDL_Mutex    *lock;
+    SDL_AtomicInt stop;                 /* the window closed: no more steps */
+    SDL_AtomicInt ended;                /* the thread has its status */
+    const char   *files[2];             /* cartridge, retranslation */
+    int           nfiles;
+    Said          out;
+    Said          shown;
+    int           exit_code;
 
     /* The file dialog, whose answer may come on another thread. */
     SDL_AtomicInt dialog_open;
@@ -94,169 +111,38 @@ typedef struct {
     char note[FS_LINE * 2];             /* one line under the instructions */
 } FirstStart;
 
-/* ---- the Python ---- */
-
-static char g_python[3][FS_PATH];       /* argv's first one or two */
-static int  g_python_args = -1;         /* -1 not looked for, 0 none found */
-
 static bool path_is(const char *path, SDL_PathType type)
 {
     SDL_PathInfo info;
     return SDL_GetPathInfo(path, &info) && info.type == type;
 }
 
-/* Whether ARGV runs a Python with Pillow: it is asked to import it. */
-static bool probe_python(const char *const *argv)
-{
-    const char *args[8];
-    int n = 0;
-    for (; argv[n] != NULL && n < 4; n++) {
-        args[n] = argv[n];
-    }
-    args[n++] = "-c";
-    args[n++] = "import PIL";
-    args[n]   = NULL;
+/* ---- the run ---- */
 
-    SDL_PropertiesID props = SDL_CreateProperties();
-    SDL_SetPointerProperty(props, SDL_PROP_PROCESS_CREATE_ARGS_POINTER,
-                           (void *)args);
-    SDL_SetNumberProperty(props, SDL_PROP_PROCESS_CREATE_STDIN_NUMBER,
-                          SDL_PROCESS_STDIO_NULL);
-    SDL_SetNumberProperty(props, SDL_PROP_PROCESS_CREATE_STDOUT_NUMBER,
-                          SDL_PROCESS_STDIO_NULL);
-    SDL_SetNumberProperty(props, SDL_PROP_PROCESS_CREATE_STDERR_NUMBER,
-                          SDL_PROCESS_STDIO_NULL);
-    SDL_Process *p = SDL_CreateProcessWithProperties(props);
-    SDL_DestroyProperties(props);
-    if (p == NULL) {
-        return false;
+static void tail_push(Said *s, const char *line)
+{
+    if (s->tail_count == FS_TAIL) {
+        memmove(s->tail[0], s->tail[1], sizeof s->tail[0] * (FS_TAIL - 1));
+        s->tail_count--;
     }
-    int    code  = -1;
-    Uint64 start = SDL_GetTicks();
-    bool   ended = false;
-    while (!(ended = SDL_WaitProcess(p, false, &code))
-           && (double)(SDL_GetTicks() - start) / 1000.0 < PROBE_SECONDS) {
-        SDL_PumpEvents();
-        SDL_Delay(20);
-    }
-    if (!ended) {
-        SDL_KillProcess(p, true);
-        SDL_WaitProcess(p, true, &code);
-        code = -1;
-    }
-    SDL_DestroyProcess(p);
-    return code == 0;
+    SDL_snprintf(s->tail[s->tail_count++], FS_SAID, "%s", line);
 }
 
-#ifdef _WIN32
-/* (Windows) The windowless twin of a console Python named by its path --
- * pythonw.exe beside python.exe or python3.exe -- into `out`, where there
- * is one: a console Python started by a game with no console of its own
- * opens a console window over it. */
-static const char *windowless(const char *path, char *out, size_t n)
+/* A line the run says (exmake.c's, make_assets.py's words), on the run's
+ * thread: a step's `[K/N] WHAT`, or a sentence kept for the screen. Each
+ * goes to the console too. */
+static void said(void *user, const char *text)
 {
-    const char *base = path;
-    for (const char *p = path; *p != '\0'; p++) {
-        if (*p == '/' || *p == '\\') {
-            base = p + 1;
-        }
-    }
-    if (SDL_strcasecmp(base, "python.exe") != 0
-        && SDL_strcasecmp(base, "python3.exe") != 0) {
-        return NULL;
-    }
-    static const char name[] = "pythonw.exe";
-    size_t dir = (size_t)(base - path);
-    if (dir + sizeof name > n) {
-        return NULL;
-    }
-    memcpy(out, path, dir);
-    memcpy(out + dir, name, sizeof name);
-    return path_is(out, SDL_PATHTYPE_FILE) ? out : NULL;
-}
-#endif
-
-static void find_python(void)
-{
-    if (g_python_args >= 0) {
-        return;
-    }
-    g_python_args = 0;
-    const char *forced = SDL_getenv("PS2_PYTHON");
-#ifdef _WIN32
-    char        twin_buf[FS_PATH];
-    const char *twin = (forced != NULL) ? windowless(forced, twin_buf,
-                                                     sizeof twin_buf)
-                                        : NULL;
-#endif
-    const char *candidates[][3] = {
-#ifdef _WIN32
-        { twin, NULL, NULL },
-#endif
-        { forced, NULL, NULL },
-#ifdef _WIN32
-        /* pythonw and pyw first: no console window (windowless above) */
-        { "..\\python\\pythonw.exe", NULL, NULL },
-        { "..\\python\\python.exe", NULL, NULL },
-        { "python\\pythonw.exe", NULL, NULL },
-        { "python\\python.exe", NULL, NULL },
-        { "pythonw", NULL, NULL },
-        { "pyw", "-3", NULL },
-        { "python3", NULL, NULL },
-        { "python", NULL, NULL },
-        { "py", "-3", NULL },
-#else
-        { "../python/bin/python3", NULL, NULL },
-        { "python/bin/python3", NULL, NULL },
-        { "python3", NULL, NULL },
-        { "python", NULL, NULL },
-#endif
-    };
-    for (size_t i = 0; i < SDL_arraysize(candidates); i++) {
-        const char *first = candidates[i][0];
-        if (first == NULL || first[0] == '\0') {
-            continue;
-        }
-        /* A path is tried only where it is; a bare name on the PATH. */
-        bool is_path = strchr(first, '/') != NULL
-                    || strchr(first, '\\') != NULL;
-        if (is_path && !path_is(first, SDL_PATHTYPE_FILE)) {
-            continue;
-        }
-        if (probe_python(candidates[i])) {
-            int n = 0;
-            for (; n < 2 && candidates[i][n] != NULL; n++) {
-                SDL_snprintf(g_python[n], FS_PATH, "%s", candidates[i][n]);
-            }
-            g_python_args = n;
-            fprintf(stderr, "first start: Python %s%s%s\n", g_python[0],
-                    (n > 1) ? " " : "", (n > 1) ? g_python[1] : "");
-            return;
-        }
-    }
-    fprintf(stderr, "first start: no Python with Pillow found\n");
-}
-
-/* ---- the script's run ---- */
-
-static void tail_push(FirstStart *fs, const char *line)
-{
-    if (fs->tail_count == FS_TAIL) {
-        memmove(fs->tail[0], fs->tail[1], sizeof fs->tail[0] * (FS_TAIL - 1));
-        fs->tail_count--;
-    }
-    SDL_snprintf(fs->tail[fs->tail_count++], FS_LINE, "%s", line);
-}
-
-/* One whole line of the script's: a step's `[K/N] WHAT`, or a sentence
- * kept for the screen. Each goes to the console too. */
-static void take_line(FirstStart *fs, char *line)
-{
+    FirstStart *fs = user;
+    char line[FS_SAID];
+    SDL_snprintf(line, sizeof line, "%s", text);
     size_t n = strlen(line);
     while (n > 0 && (line[n - 1] == '\r' || line[n - 1] == ' ')) {
         line[--n] = '\0';
     }
     fprintf(stderr, "make_assets: %s\n", line);
+    SDL_LockMutex(fs->lock);
+    bool step = false;
     if (line[0] == '[') {
         char *end = NULL;
         long  k   = SDL_strtol(line + 1, &end, 10);
@@ -265,136 +151,102 @@ static void take_line(FirstStart *fs, char *line)
             of = SDL_strtol(end + 1, &end, 10);
         }
         if (of > 0 && end != NULL && end[0] == ']' && end[1] == ' ') {
-            fs->step  = (int)k;
-            fs->steps = (int)of;
-            SDL_snprintf(fs->step_name, sizeof fs->step_name, "%s", end + 2);
-            return;
+            fs->out.step  = (int)k;
+            fs->out.steps = (int)of;
+            SDL_snprintf(fs->out.step_name, sizeof fs->out.step_name, "%s",
+                         end + 2);
+            step = true;
         }
     }
-    if (n > 0) {
-        tail_push(fs, line);
+    if (!step && n > 0) {
+        tail_push(&fs->out, line);
     }
+    SDL_UnlockMutex(fs->lock);
 }
 
-static void read_output(FirstStart *fs)
+/* The run's thread: every step, then the check, then its status --
+ * EX_MAKE_*, or RUN_STOPPED when the window was closed between steps. */
+static int SDLCALL make_files(void *user)
 {
-    SDL_IOStream *out = SDL_GetProcessOutput(fs->proc);
-    if (out == NULL) {
-        return;
-    }
-    char buf[512];
-    size_t got;
-    while ((got = SDL_ReadIO(out, buf, sizeof buf)) > 0) {
-        for (size_t i = 0; i < got; i++) {
-            if (buf[i] == '\n') {
-                fs->partial[fs->partial_len] = '\0';
-                take_line(fs, fs->partial);
-                fs->partial_len = 0;
-            } else if (fs->partial_len + 1 < sizeof fs->partial) {
-                fs->partial[fs->partial_len++] = buf[i];
+    FirstStart *fs = user;
+    ExMakeArgs a;
+    SDL_zero(a);
+    a.game   = NULL;                    /* here: home_enter's folder */
+    a.files  = fs->files;
+    a.nfiles = fs->nfiles;
+    a.say    = said;
+    a.user   = fs;
+    int status = EX_MAKE_FAILED;
+    ExMake *m = ex_make_begin(&a, &status);
+    if (m != NULL) {
+        int  n       = ex_make_steps(m);
+        bool stopped = false;
+        for (int k = 0; k < n; k++) {
+            if (SDL_GetAtomicInt(&fs->stop) != 0) {
+                fprintf(stderr, "first start: stopped before step %d of "
+                                "%d\n", k + 1, n);
+                stopped = true;
+                break;
+            }
+            if (!ex_make_step(m, k) && !ex_make_keep_going(m)) {
+                break;
             }
         }
+        status = stopped ? RUN_STOPPED : ex_make_finish(m);
+        ex_make_end(m);
     }
+    SDL_SetAtomicInt(&fs->ended, 1);
+    return status;
 }
 
-static bool start_script(FirstStart *fs)
+/* (No run is going: the window's own thread alone touches `out`.) */
+static bool start_make(FirstStart *fs)
 {
-    fs->tail_count = 0;
-    fs->step       = 0;
-    fs->steps      = 0;
-    fs->step_name[0] = '\0';
-    fs->note[0]      = '\0';
-    fs->partial_len  = 0;
+    SDL_zero(fs->out);
+    fs->note[0] = '\0';
 
-    if (!path_is(SCRIPT, SDL_PATHTYPE_FILE)) {
-        tail_push(fs, "This copy of the game has no " SCRIPT ", which makes "
-                      "its files.");
+    if (!path_is(MAP, SDL_PATHTYPE_FILE)) {
+        tail_push(&fs->out, "This copy of the game has no " MAP ", the map "
+                            "of the cartridge its files are made with.");
         fs->state = STATE_FAILED;
         return false;
     }
-    find_python();
-    if (g_python_args <= 0) {
-        tail_push(fs, "The game's files are made by a Python 3 script, and "
-                      "no Python 3 with Pillow was found.");
-#ifdef _WIN32
-        tail_push(fs, "Install Python 3 from python.org, then in a command "
-                      "prompt: py -m pip install pillow");
-#elif defined(__APPLE__)
-        tail_push(fs, "In a terminal: brew install python pillow");
-#else
-        tail_push(fs, "Debian/Ubuntu: sudo apt install python3 python3-pil");
-        tail_push(fs, "Fedora: sudo dnf install python3 python3-pillow");
-        tail_push(fs, "Arch: sudo pacman -S python python-pillow");
-#endif
-        tail_push(fs, "Or name one: PS2_PYTHON=/path/to/python3");
-        fs->state = STATE_FAILED;
-        return false;
-    }
-
-    const char *args[12];
-    int n = 0;
-    for (int i = 0; i < g_python_args; i++) {
-        args[n++] = g_python[i];
-    }
-    args[n++] = "-X";
-    args[n++] = "utf8";
-    args[n++] = "-u";
-    args[n++] = SCRIPT;
+    fs->nfiles = 0;
     if (fs->cartridge[0] != '\0') {
-        args[n++] = fs->cartridge;
+        fs->files[fs->nfiles++] = fs->cartridge;
     }
     if (fs->retranslation[0] != '\0') {
-        args[n++] = fs->retranslation;
+        fs->files[fs->nfiles++] = fs->retranslation;
     }
-    args[n] = NULL;
-
-    SDL_PropertiesID props = SDL_CreateProperties();
-    SDL_SetPointerProperty(props, SDL_PROP_PROCESS_CREATE_ARGS_POINTER,
-                           (void *)args);
-    SDL_SetNumberProperty(props, SDL_PROP_PROCESS_CREATE_STDIN_NUMBER,
-                          SDL_PROCESS_STDIO_NULL);
-    SDL_SetNumberProperty(props, SDL_PROP_PROCESS_CREATE_STDOUT_NUMBER,
-                          SDL_PROCESS_STDIO_APP);
-    SDL_SetBooleanProperty(props,
-                           SDL_PROP_PROCESS_CREATE_STDERR_TO_STDOUT_BOOLEAN,
-                           true);
-    fs->proc = SDL_CreateProcessWithProperties(props);
-    SDL_DestroyProperties(props);
-    if (fs->proc == NULL) {
-        char line[FS_LINE];
-        SDL_snprintf(line, sizeof line, "%s could not be started: %s",
-                     g_python[0], SDL_GetError());
-        tail_push(fs, line);
+    fprintf(stderr, "first start: making the files from %s%s%s\n",
+            fs->cartridge, (fs->retranslation[0] != '\0') ? " and " : "",
+            fs->retranslation);
+    SDL_SetAtomicInt(&fs->stop, 0);
+    SDL_SetAtomicInt(&fs->ended, 0);
+    fs->thread = SDL_CreateThread(make_files, "first start", fs);
+    if (fs->thread == NULL) {
+        char line[FS_SAID];
+        SDL_snprintf(line, sizeof line, "The game could not start making its "
+                                        "files: %s", SDL_GetError());
+        tail_push(&fs->out, line);
         fs->state = STATE_FAILED;
         return false;
     }
-    fprintf(stderr, "first start: %s %s%s%s\n", SCRIPT, fs->cartridge,
-            (fs->retranslation[0] != '\0') ? " " : "", fs->retranslation);
     fs->state = STATE_RUN;
     return true;
 }
 
-/* The run's end, when it has ended: its last output, its status. */
-static void watch_script(FirstStart *fs)
+/* The run has ended: its status. */
+static void end_make(FirstStart *fs)
 {
-    read_output(fs);
-    int code = -1;
-    if (!SDL_WaitProcess(fs->proc, false, &code)) {
-        return;
-    }
-    read_output(fs);
-    if (fs->partial_len > 0) {
-        fs->partial[fs->partial_len] = '\0';
-        take_line(fs, fs->partial);
-        fs->partial_len = 0;
-    }
-    SDL_DestroyProcess(fs->proc);
-    fs->proc      = NULL;
+    int code = EX_MAKE_FAILED;
+    SDL_WaitThread(fs->thread, &code);
+    fs->thread    = NULL;
     fs->exit_code = code;
-    fprintf(stderr, "first start: %s ended, status %d\n", SCRIPT, code);
-    if (code == 0) {
+    fprintf(stderr, "first start: the run ended, status %d\n", code);
+    if (code == EX_MAKE_DONE) {
         fs->state = STATE_DONE;
-    } else if (code == 3) {
+    } else if (code == EX_MAKE_DIFFERS) {
         fs->state = STATE_DIFFERS;
     } else {
         fs->state = STATE_FAILED;
@@ -404,17 +256,19 @@ static void watch_script(FirstStart *fs)
     }
 }
 
-static void stop_script(FirstStart *fs)
+/* Closed mid-run: the steps stop where they are, after the one running.
+ * The preload list is the last step, so a half-made assets/ is never
+ * taken for a whole one, and the next start asks again. */
+static void stop_make(FirstStart *fs)
 {
-    if (fs->proc == NULL) {
+    if (fs->thread == NULL) {
         return;
     }
-    SDL_KillProcess(fs->proc, true);
+    SDL_SetAtomicInt(&fs->stop, 1);
     int code = 0;
-    SDL_WaitProcess(fs->proc, true, &code);
-    SDL_DestroyProcess(fs->proc);
-    fs->proc = NULL;
-    fprintf(stderr, "first start: %s stopped\n", SCRIPT);
+    SDL_WaitThread(fs->thread, &code);
+    fs->thread = NULL;
+    fprintf(stderr, "first start: the run stopped, status %d\n", code);
 }
 
 /* ---- the files given ---- */
@@ -431,7 +285,7 @@ static const char *base_name(const char *path)
 
 /* Whether a file is the retranslation rather than a cartridge, for the
  * screen to say which it has: a folder, or a zip naming
- * work/dialogue.json (its names are stored uncompressed). The script
+ * work/dialogue.json (its names are stored uncompressed). exmake.c
  * tells them apart again, properly. */
 static bool looks_like_retranslation(const char *path)
 {
@@ -464,7 +318,7 @@ static void offer(FirstStart *fs, const char *path)
     }
     if (fs->what == WHAT_GAME) {
         SDL_snprintf(fs->cartridge, sizeof fs->cartridge, "%s", path);
-        start_script(fs);
+        start_make(fs);
         return;
     }
     if (looks_like_retranslation(path)) {
@@ -474,7 +328,7 @@ static void offer(FirstStart *fs, const char *path)
     }
     fs->state = STATE_ASK;
     if (fs->cartridge[0] != '\0' && fs->retranslation[0] != '\0') {
-        start_script(fs);
+        start_make(fs);
     }
 }
 
@@ -526,99 +380,21 @@ static void choose(FirstStart *fs)
 
 /* ---- the command line, as UTF-8 ---- */
 
-#ifdef _WIN32
-/* Windows hands main() its arguments in the ANSI code page, which cannot
- * hold every file name; they are read again from the wide command line
- * by CommandLineToArgvW's rules, the program's own name skipped. */
-static int wide_arguments(char out[][FS_PATH], int max)
-{
-    const wchar_t *p = GetCommandLineW();
-    if (p == NULL) {
-        return 0;
-    }
-    if (*p == L'"') {                       /* the program: up to a quote */
-        p++;
-        while (*p != L'\0' && *p != L'"') {
-            p++;
-        }
-        if (*p == L'"') {
-            p++;
-        }
-    } else {
-        while (*p != L'\0' && *p != L' ' && *p != L'\t') {
-            p++;
-        }
-    }
-    int count = 0;
-    static wchar_t arg[FS_PATH];
-    for (;;) {
-        while (*p == L' ' || *p == L'\t') {
-            p++;
-        }
-        if (*p == L'\0' || count == max) {
-            break;
-        }
-        size_t n      = 0;
-        bool   quoted = false;
-        while (*p != L'\0' && (quoted || (*p != L' ' && *p != L'\t'))) {
-            size_t slashes = 0;
-            while (*p == L'\\') {
-                slashes++;
-                p++;
-            }
-            if (*p == L'"') {
-                for (size_t s = 0; s < slashes / 2 && n + 1 < FS_PATH; s++) {
-                    arg[n++] = L'\\';
-                }
-                if (slashes % 2 == 1) {
-                    if (n + 1 < FS_PATH) {
-                        arg[n++] = L'"';
-                    }
-                } else if (quoted && p[1] == L'"') {
-                    if (n + 1 < FS_PATH) {
-                        arg[n++] = L'"';
-                    }
-                    p++;
-                } else {
-                    quoted = !quoted;
-                }
-                p++;
-            } else {
-                for (size_t s = 0; s < slashes && n + 1 < FS_PATH; s++) {
-                    arg[n++] = L'\\';
-                }
-                if (*p != L'\0' && (quoted || (*p != L' ' && *p != L'\t'))) {
-                    if (n + 1 < FS_PATH) {
-                        arg[n++] = *p;
-                    }
-                    p++;
-                }
-            }
-        }
-        arg[n] = L'\0';
-        if (WideCharToMultiByte(CP_UTF8, 0, arg, -1, out[count], FS_PATH,
-                                NULL, NULL) > 0) {
-            count++;
-        }
-    }
-    return count;
-}
-#endif
-
+/* The command line's files, as UTF-8 (on Windows read again from the wide
+ * command line: main() has them in the ANSI code page, which cannot hold
+ * every name; ex_utf8_args), each read from the folder the game was
+ * started in (home_enter may have left it). */
 static int given_files(int nfiles, char **files, char out[][FS_PATH],
                        int max)
 {
-#ifdef _WIN32
-    (void)nfiles;
-    (void)files;
-    return wide_arguments(out, max);
-#else
+    char **utf8 = ex_utf8_args(nfiles, files);
+    char **from = (utf8 != NULL) ? utf8 : files;
     int n = 0;
     for (; n < nfiles && n < max; n++) {
-        SDL_snprintf(out[n], FS_PATH, "%s", files[n]);
+        home_given_path(from[n], out[n], FS_PATH);
     }
+    free(utf8);
     return n;
-#endif
 }
 
 /* ---- the screen ---- */
@@ -682,9 +458,9 @@ static void bar(SDL_Renderer *r, int row, int step, int steps)
 
 static int tail_text(SDL_Renderer *r, const FirstStart *fs, int row, int max)
 {
-    int from = (fs->tail_count > max) ? fs->tail_count - max : 0;
-    for (int i = from; i < fs->tail_count && row < FS_ROWS - 7; i++) {
-        row = text(r, row, 2, fs->tail[i]);
+    int from = (fs->shown.tail_count > max) ? fs->shown.tail_count - max : 0;
+    for (int i = from; i < fs->shown.tail_count && row < FS_ROWS - 7; i++) {
+        row = text(r, row, 2, fs->shown.tail[i]);
     }
     return row;
 }
@@ -699,12 +475,13 @@ static void draw_game(SDL_Renderer *r, const FirstStart *fs)
         case STATE_RUN: {
             row = text(r, row, 0, "Making the game's files from");
             row = text(r, row, 2, base_name(fs->cartridge)) + 2;
-            bar(r, row, fs->step, fs->steps);
+            bar(r, row, fs->shown.step, fs->shown.steps);
             row += 2;
             char line[FS_LINE * 2];
-            SDL_snprintf(line, sizeof line, "step %d of %d: %s", fs->step,
-                         fs->steps, fs->step_name);
-            text(r, row, 0, (fs->steps > 0) ? line : "starting...");
+            SDL_snprintf(line, sizeof line, "step %d of %d: %s",
+                         fs->shown.step, fs->shown.steps,
+                         fs->shown.step_name);
+            text(r, row, 0, (fs->shown.steps > 0) ? line : "starting...");
             break;
         }
         case STATE_DIFFERS: {
@@ -754,12 +531,12 @@ static void draw_japanese(SDL_Renderer *r, const FirstStart *fs)
     colour(r, 0xE8, 0xE8, 0xE8);
     if (fs->state == STATE_RUN) {
         row = text(r, row, 0, "Making its files...") + 2;
-        bar(r, row, fs->step, fs->steps);
+        bar(r, row, fs->shown.step, fs->shown.steps);
         row += 2;
         char line[FS_LINE * 2];
-        SDL_snprintf(line, sizeof line, "step %d of %d: %s", fs->step,
-                     fs->steps, fs->step_name);
-        text(r, row, 0, (fs->steps > 0) ? line : "starting...");
+        SDL_snprintf(line, sizeof line, "step %d of %d: %s", fs->shown.step,
+                     fs->shown.steps, fs->shown.step_name);
+        text(r, row, 0, (fs->shown.steps > 0) ? line : "starting...");
         return;
     }
     if (fs->state == STATE_DIFFERS) {
@@ -810,6 +587,9 @@ static void draw(FirstStart *fs)
     SDL_Renderer *r = fs->renderer;
     colour(r, 0x08, 0x10, 0x30);
     SDL_RenderClear(r);
+    SDL_LockMutex(fs->lock);
+    fs->shown = fs->out;
+    SDL_UnlockMutex(fs->lock);
     if (fs->what == WHAT_GAME) {
         draw_game(r, fs);
     } else {
@@ -920,11 +700,11 @@ static bool run(FirstStart *fs)
                 offer(fs, fs->dialog_path);
             }
         }
-        if (fs->proc != NULL) {
+        if (fs->thread != NULL) {
             if (fs->state == STATE_LEFT) {
-                stop_script(fs);
-            } else {
-                watch_script(fs);
+                stop_make(fs);
+            } else if (SDL_GetAtomicInt(&fs->ended) != 0) {
+                end_make(fs);
             }
         }
         if (fs->state != STATE_DONE && fs->state != STATE_LEFT) {
@@ -949,12 +729,25 @@ static bool run(FirstStart *fs)
 static FirstStart *first_start_new(What what, const char *lang_name)
 {
     FirstStart *fs = SDL_calloc(1, sizeof *fs);
-    if (fs != NULL) {
-        fs->what      = what;
-        fs->lang_name = lang_name;
-        fs->state     = STATE_ASK;
+    if (fs == NULL) {
+        return NULL;
     }
+    fs->lock = SDL_CreateMutex();
+    if (fs->lock == NULL) {
+        SDL_free(fs);
+        return NULL;
+    }
+    fs->what      = what;
+    fs->lang_name = lang_name;
+    fs->state     = STATE_ASK;
     return fs;
+}
+
+static void first_start_free(FirstStart *fs)
+{
+    stop_make(fs);
+    SDL_DestroyMutex(fs->lock);
+    SDL_free(fs);
 }
 
 bool platform_make_assets(int nfiles, char **files)
@@ -966,11 +759,11 @@ bool platform_make_assets(int nfiles, char **files)
         return false;
     }
     if (!open_window(fs, "Phantasy Star II")) {
-        SDL_free(fs);
+        first_start_free(fs);
         return false;
     }
-    /* Named on the command line: given to the script together (the
-     * Japanese cartridge and the retranslation may come along). */
+    /* Named on the command line: given together (the Japanese cartridge
+     * and the retranslation may come along). */
     char given[FS_FILES][FS_PATH];
     int  n = given_files(nfiles, files, given, FS_FILES);
     if (n > 0) {
@@ -980,7 +773,7 @@ bool platform_make_assets(int nfiles, char **files)
                          given[1]);
         }
         draw(fs);
-        start_script(fs);
+        start_make(fs);
         if (fs->state == STATE_FAILED) {
             fs->cartridge[0]     = '\0';
             fs->retranslation[0] = '\0';
@@ -988,7 +781,7 @@ bool platform_make_assets(int nfiles, char **files)
     }
     bool made = run(fs);
     close_window(fs);
-    SDL_free(fs);
+    first_start_free(fs);
     return made;
 }
 
@@ -1010,7 +803,7 @@ bool platform_add_language(const char *key, const char *name, int nfiles,
     SDL_snprintf(title, sizeof title, "Phantasy Star II -- the %s language",
                  name);
     if (!open_window(fs, title)) {
-        SDL_free(fs);
+        first_start_free(fs);
         return false;
     }
     char given[FS_FILES][FS_PATH];
@@ -1020,6 +813,6 @@ bool platform_add_language(const char *key, const char *name, int nfiles,
     }
     bool made = run(fs);
     close_window(fs);
-    SDL_free(fs);
+    first_start_free(fs);
     return made;
 }

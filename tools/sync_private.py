@@ -23,8 +23,9 @@ What it does, into this repository's ps2/ (emptied first):
   * checks what came across: no author name or address left, no address of
     a machine, no home folder's path; exit 1 if any is found.
 
-Then, separately: tools/rom_leak_check.py over the tree, tools/setup.py and
-the proofs (NOTES.md says how), and tools/make_expected.py when the assets
+Then, separately: tools/rom_leak_check.py over the tree, the game's files
+made again (in ps2/: make ps2_extract && ./ps2_extract assets IMAGE), the
+proofs (NOTES.md says how), and tools/make_expected.py when the assets
 changed.
 """
 import fnmatch
@@ -42,7 +43,7 @@ MARKER = ".synced-from-private"        # OUT is ours to empty when it has it
 
 # Paths under ps2/ that stay behind.
 EXCLUDE = [
-    "assets/*",             # the game's data, made by the setup from a ROM
+    "assets/*",             # the game's data, made by the game from a ROM
     "route_out/*",          # route and proof outputs: frames, games, logs
     "CLAUDE.md",            # the private tree's working rules and machines
     "NOTES_next_context.md",
@@ -120,7 +121,7 @@ def main():
                   "back in ps2/ first" % kept)
             return 1
         # A player's saves and mods (KEEP_LOCAL) outlive the sync; the
-        # game's files (assets/) are made again by tools/setup.py.
+        # game's files (assets/) are made again from the image.
         for folder in KEEP_LOCAL:
             if (OUT / folder).exists():
                 kept.mkdir(exist_ok=True)

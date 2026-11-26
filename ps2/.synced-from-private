@@ -1,2 +1,2 @@
-ps2/ is the private port's, as of: Build 192a: the C checks in a tree of other files
+ps2/ is the private port's, as of: Build 193: the first-start window makes the files in C
 Made by tools/sync_private.py; it empties this folder each time.

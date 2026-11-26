@@ -27,22 +27,18 @@
  * output and a traceback. tools/make_assets_c_check.py holds the two
  * together.
  *
- * Standard C, with POSIX's opendir and stat, which MinGW has too (as
- * exbase.c lists a folder). */
-
-#define _POSIX_C_SOURCE 200809L
+ * Standard C; a folder's names and what a path is come from exfs.c,
+ * which opens Windows' files by their wide names (build 193: the game's
+ * window hands this the UTF-8 paths SDL gives). */
 
 #include "extract.h"
 
 #include "exzip.h"
 
-#include <dirent.h>
 #include <setjmp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 /* The retranslation's commit assets/lang/ja was made from (its lang.json's
  * "source"): another may carry other text, and the player is told so. */
@@ -221,7 +217,7 @@ static bool is_sep(char c)
 }
 
 /* The path without the separators at its end (a folder named "dir/"),
- * as the system's stat wants it on Windows. */
+ * as Windows' stat wants it. */
 static const char *trimmed(Extract *x, const char *path)
 {
     size_t n = strlen(path);
@@ -233,14 +229,12 @@ static const char *trimmed(Extract *x, const char *path)
 
 static bool is_file(Extract *x, const char *path)
 {
-    struct stat st;
-    return stat(trimmed(x, path), &st) == 0 && S_ISREG(st.st_mode);
+    return ex_path_kind(trimmed(x, path), NULL) == EX_PATH_FILE;
 }
 
 static bool is_dir(Extract *x, const char *path)
 {
-    struct stat st;
-    return stat(trimmed(x, path), &st) == 0 && S_ISDIR(st.st_mode);
+    return ex_path_kind(trimmed(x, path), NULL) == EX_PATH_DIR;
 }
 
 /* Path(path).name: the last part. */
@@ -457,24 +451,21 @@ static const char *retranslation_root(Extract *x, const char *dir)
     if (both_files(x, dir)) {
         return dir;
     }
-    DIR *d = opendir(trimmed(x, dir));
+    ExDir *d = ex_dir_open(trimmed(x, dir));
     if (d == NULL) {
         return NULL;
     }
     int subs = 0;
     const char *sub = NULL;
-    struct dirent *e;
-    while ((e = readdir(d)) != NULL) {
-        if (strcmp(e->d_name, ".") == 0 || strcmp(e->d_name, "..") == 0) {
-            continue;
-        }
-        const char *p = ex_path(x, dir, e->d_name);
+    const char *entry;
+    while ((entry = ex_dir_next(d)) != NULL) {
+        const char *p = ex_path(x, dir, entry);
         if (is_dir(x, p)) {
             subs++;
             sub = p;
         }
     }
-    closedir(d);
+    ex_dir_close(d);
     return (subs == 1 && both_files(x, sub)) ? sub : NULL;
 }
 
@@ -547,12 +538,12 @@ static Kind identify(ExMake *m, const char *given, const char **refusal)
 {
     Extract *x = &m->plan;
     const char *name = path_name(x, given);
-    struct stat st;
-    if (stat(trimmed(x, given), &st) != 0) {
+    ExPathKind what = ex_path_kind(trimmed(x, given), NULL);
+    if (what == EX_PATH_NONE) {
         *refusal = ex_fmt(x, "%s: there is no such file", path_str(x, given));
         return KINDS;
     }
-    if (S_ISDIR(st.st_mode)) {
+    if (what == EX_PATH_DIR) {
         const char *root = retranslation_root(x, given);
         if (root == NULL) {
             *refusal = ex_fmt(x, "%s: a folder, but not the retranslation's "
@@ -741,7 +732,7 @@ static void plan(Extract *x, void *arg)
     s->name = "the preload list";
     s->out = m->assets;
 
-    m->log = fopen(m->log_path, "w");
+    m->log = ex_fopen(m->log_path, "w");
     if (m->log == NULL) {
         ex_fail(x, "%s: cannot write it", m->log_path);
     }
@@ -851,29 +842,25 @@ static void listed(Extract *x, Listing *l, const char *rel, const char *name,
 /* Path.rglob("*")'s files under dir (rel its place under assets/). */
 static void walk(Extract *x, Listing *l, const char *dir, const char *rel)
 {
-    DIR *d = opendir(dir);
+    ExDir *d = ex_dir_open(dir);
     if (d == NULL) {
         return;
     }
-    struct dirent *e;
-    while ((e = readdir(d)) != NULL) {
-        if (strcmp(e->d_name, ".") == 0 || strcmp(e->d_name, "..") == 0) {
-            continue;
-        }
-        const char *full = ex_path(x, dir, e->d_name);
-        const char *r = (rel[0] != '\0') ? ex_fmt(x, "%s/%s", rel, e->d_name)
-                                         : ex_strdup(x, e->d_name);
-        struct stat st;
-        if (stat(full, &st) != 0) {
-            continue;
-        }
-        if (S_ISDIR(st.st_mode)) {
+    const char *entry;
+    while ((entry = ex_dir_next(d)) != NULL) {
+        const char *name = ex_strdup(x, entry);
+        const char *full = ex_path(x, dir, name);
+        const char *r = (rel[0] != '\0') ? ex_fmt(x, "%s/%s", rel, name)
+                                         : name;
+        long long size = 0;
+        ExPathKind what = ex_path_kind(full, &size);
+        if (what == EX_PATH_DIR) {
             walk(x, l, full, r);
-        } else if (S_ISREG(st.st_mode)) {
-            listed(x, l, r, ex_strdup(x, e->d_name), (long long)st.st_size);
+        } else if (what == EX_PATH_FILE) {
+            listed(x, l, r, name, size);
         }
     }
-    closedir(d);
+    ex_dir_close(d);
 }
 
 static int by_name(const void *a, const void *b)

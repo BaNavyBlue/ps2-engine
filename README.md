@@ -23,13 +23,15 @@ downloaded or sent anywhere.
    works, and so does a `.zip` holding one.
 3. Run `ps2\ps2.exe` (Windows) or `./ps2/ps2`. The first time, it asks
    for the image: drop the file onto its window, or press Enter and choose
-   it. It makes the game's files (a few seconds), checks each one, and the
-   game starts. The Windows package carries the Python this needs; on
-   Linux and macOS it needs Python 3 with Pillow (`apt install
-   python3-pil`, `brew install python pillow`, ...).
+   it. It makes the game's files (about a second), checks each one, and the
+   game starts. Nothing else needs installing: the game makes them itself,
+   in C.
 
-`setup.bat` (drag the image onto it) and `./setup.sh /path/to/image.bin` do
-the same from a terminal.
+From a terminal, give the image on the command line: `ps2\ps2.exe
+path\to\image.bin` or `./ps2/ps2 /path/to/image.bin` (on Windows, dropping
+the image onto `ps2.exe` does the same). On Linux, choosing the image with
+Enter opens the desktop's file dialog, which needs xdg-desktop-portal or
+zenity; dropping the file onto the window needs neither.
 
 The packages are not signed. On Windows choose "More info", then "Run
 anyway". On macOS, run `xattr -dr com.apple.quarantine .` once in the
@@ -44,8 +46,9 @@ unpacked folder.
 * **JAPANESE**: needs the Japanese cartridge (*Kaerazaru Toki no Owari ni*)
   and a copy of Excalibur_Z's repository, which carries the Japanese
   script (its "Download ZIP" will do). Choose JAPANESE on the LANGUAGE menu
-  (Escape) and the game asks for both; or `python3 tools/setup.py JP_IMAGE
-  ps2-retranslation.zip` once the game's own files are made.
+  (Escape) and the game asks for both; or, built from source, in `ps2/`:
+  `./ps2_extract assets JP_IMAGE ps2-retranslation.zip` once the game's own
+  files are made.
 
 ## Building from source
 
@@ -53,18 +56,22 @@ You need:
 
 * a C11 compiler and make;
 * SDL 3.4 or later, with pkg-config;
-* Python 3 with Pillow (for the setup);
 * a C++20 compiler for the re-voiced synth (optional: without one the game
   builds with the emulated chip alone). Cycfi's
   [Q](https://github.com/cycfi/Q), the synth's library, comes with this
   repository: its headers are in `Q/`, and `make` finds them.
 
+Python 3 is needed only for the checks and the engine's own tools; the
+checks that hold the C extraction to its Python twins want Pillow too.
+
 ```sh
 git clone https://github.com/BaNavyBlue/ps2-engine.git
-cd ps2-engine
-python3 tools/setup.py /path/to/image.bin     # the game's files, from your image
-cd ps2                                        # (or start ./ps2 and give it the image)
+cd ps2-engine/ps2
 make                                          # the game: ./ps2
+./ps2 /path/to/image.bin                      # its files, from your image
+                                              # (or start it and give it the image)
+make ps2_extract && ./ps2_extract assets /path/to/image.bin
+                                              # the same from a terminal
 make headless route_probe && make routes      # the checks (163 of 172 pass
                                               # without the Japanese files)
 ```
@@ -82,27 +89,26 @@ describe the port itself.
   numbers only, no data and no code. The private tree makes it from the
   disassembly (`ps2/tools/make_rom_map.sh` assembles the disassembly, checks
   the result is the ROM byte for byte, and reads the listing).
-* `ps2/Makefile` names the port's extractors (`EXTRACTORS`).
-  `ps2/tools/make_assets.py` checks your image's SHA-1 and runs them on it
-  in that order, as `make extract ROM=image.bin` does. They read the image
-  through `ps2/tools/rommap.py` and the map, and make `ps2/assets/`. The
-  game runs the script itself when it starts without its files, in a
-  window of its own that asks for the image and shows the steps
-  (`ps2/src/platform/first_start_sdl3.c`; `ps2/docs/first_start.md`);
-  `tools/setup.py` runs it from a terminal.
-* The extraction is being written again in C, so that the game needs no
-  Python anywhere (`ps2/src/extract/`, built by `make ps2_extract`). All
-  21 extractors have their C twin, and so do the Japanese importer and
-  `make_assets.py` itself: in `ps2/`, `./ps2_extract assets IMAGE` makes
-  the game's files and checks them as the setup does, and `./ps2_extract
-  NAME IMAGE -o OUT` runs one step. `ps2/tools/extract_c_check.py IMAGE`
-  and `ps2/tools/make_assets_c_check.py IMAGE` hold the C to the Python.
-  Until the first-start window runs the C itself, the game and the setup
-  run the Python.
+* The game makes its files itself, in C (`ps2/src/extract/`, linked into
+  the game). When it starts without them, a window of its own asks for the
+  image and shows the steps (`ps2/src/platform/first_start_sdl3.c`;
+  `ps2/docs/first_start.md`). It reads the image as players keep it (raw,
+  `.smd`, with a copier's header, zipped), checks its size and SHA-1,
+  finds what it needs through the map, runs each of the 21 steps
+  `ps2/Makefile` names (`EXTRACTORS`), and writes `ps2/assets/` and its
+  preload list. `./ps2_extract assets IMAGE` (`make ps2_extract`) does the
+  same from a terminal, and `./ps2_extract NAME IMAGE -o OUT` runs one
+  step.
+* The port's Python extractors stay as the reference the C is held to:
+  `ps2/tools/make_assets.py` runs them as `make extract ROM=image.bin`
+  does, through `ps2/tools/rommap.py` and the map, and
+  `ps2/tools/extract_c_check.py IMAGE` and
+  `ps2/tools/make_assets_c_check.py IMAGE` hold every C step, and the
+  whole run, to their files.
 * `ps2/tools/assets.sha256` lists the files the engine was proved with
   (the engine's own list, kept in `overlay/ps2/tools/`). Every file made is
   checked against it. For a PNG it compares the picture, not the bytes,
-  since compression varies between Pillow builds.
+  since compression varies between PNG writers.
 
 Every push builds the game for Windows, Linux and macOS in GitHub Actions
 (`.github/workflows/build.yml`). The packages are kept as each run's
@@ -113,7 +119,7 @@ artifacts. Pushing a tag `v*` publishes them as a release.
 | Path | What |
 |---|---|
 | `ps2/` | the port: source (`src/`), tools and extractors (`tools/`), test routes (`routes/`), compiled shaders, docs |
-| `tools/` | the setup from a terminal, the release packager, the leak check, the sync from the private tree, the list of proved files' maker, the copy of Q's headers |
+| `tools/` | the release packager, the leak check, the sync from the private tree, the list of proved files' maker, the copy of Q's headers |
 | `Q/` | Cycfi Q's headers (v1.5.4, unchanged), which the re-voiced synth builds with |
 | `overlay/ps2/` | the engine's own versions of files laid over the port: the icon (the private tree takes it from the cartridge) and the list of proved files |
 

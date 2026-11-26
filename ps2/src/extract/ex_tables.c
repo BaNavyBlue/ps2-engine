@@ -73,7 +73,7 @@ static char *parent_dir(Extract *x, const char *dir)
 /* Path.exists() for a file. */
 static bool file_there(const char *path)
 {
-    FILE *fh = fopen(path, "rb");
+    FILE *fh = ex_fopen(path, "rb");
     if (fh == NULL) {
         return false;
     }

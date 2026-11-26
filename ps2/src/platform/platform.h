@@ -176,9 +176,11 @@ void   platform_sleep(double seconds);
 /* (build 186) The first start (docs/first_start.md). With no game files
  * beside it (assets/manifest.txt) and none packed in, the game asks for the
  * cartridge image they are made from, in a window of its own -- an image
- * dropped on it, or chosen -- and runs tools/make_assets.py on it, its steps
- * shown as they go. `files` (`nfiles` of them) were named on the command
- * line -- an image dropped onto the program -- and are used at once. True
+ * dropped on it, or chosen -- and makes them from it, its steps shown as
+ * they go ((build 193) in C, src/extract/'s ex_make_*; until 192 by
+ * running tools/make_assets.py). `files` (`nfiles` of them) were named on
+ * the command line -- an image dropped onto the program -- and are used
+ * at once (as UTF-8 on every system: ex_utf8_args, home_given_path). True
  * when the files are there now; false when the player left it (the
  * headless platform: at once, saying on stderr how to make them). Before
  * platform_create. src/platform/first_start_sdl3.c. */

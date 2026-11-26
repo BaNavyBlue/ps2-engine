@@ -1,9 +1,7 @@
 /* (build 187) What every extractor step uses: the arena, the stop, the
- * messages, text and files (extract.h). Standard C; making a folder is
- * the one call no standard has, _mkdir on Windows and POSIX's mkdir
- * elsewhere. */
-
-#define _POSIX_C_SOURCE 200809L
+ * messages, text and files (extract.h). Standard C; the calls no standard
+ * has -- making a folder, listing one -- and Windows' wide names are
+ * exfs.c's (build 193). */
 
 #include "extract.h"
 
@@ -11,18 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-/* dirent.h is POSIX's; MinGW has it too, as autoplay.c uses it */
-#include <dirent.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-#ifdef _WIN32
-#include <direct.h>
-#define make_one_dir(path) _mkdir(path)
-#else
-#define make_one_dir(path) mkdir(path, 0777)
-#endif
 
 /* ---- the arena ---- */
 
@@ -298,7 +284,7 @@ void ex_mkdirs(Extract *x, const char *dir)
         p[i] = '\0';
         /* a drive's "C:" is no folder to make */
         bool drive = (i == 2 && p[1] == ':');
-        if (!drive && make_one_dir(p) != 0 && errno != EEXIST) {
+        if (!drive && ex_mkdir_one(p) != 0 && errno != EEXIST) {
             ex_fail(x, "%s: cannot make the folder (%s)", p, strerror(errno));
         }
         p[i] = keep;
@@ -307,7 +293,7 @@ void ex_mkdirs(Extract *x, const char *dir)
 
 void ex_write(Extract *x, const char *path, const void *data, size_t n)
 {
-    FILE *fh = fopen(path, "wb");
+    FILE *fh = ex_fopen(path, "wb");
     if (fh == NULL) {
         ex_fail(x, "%s: cannot write it (%s)", path, strerror(errno));
     }
@@ -325,30 +311,29 @@ void ex_write_text(Extract *x, const char *path, const char *text)
 void ex_remove(Extract *x, const char *path)
 {
     (void)x;
-    struct stat st;
-    if (stat(path, &st) == 0 && S_ISREG(st.st_mode)) {
-        remove(path);
+    if (ex_path_kind(path, NULL) == EX_PATH_FILE) {
+        ex_remove_file(path);
     }
 }
 
 void ex_remove_ending(Extract *x, const char *dir, const char *suffix)
 {
-    DIR *d = opendir(dir);
+    ExDir *d = ex_dir_open(dir);
     if (d == NULL) {
         return;
     }
-    struct dirent *e;
-    while ((e = readdir(d)) != NULL) {
-        if (ex_ends(e->d_name, suffix)) {
-            ex_remove(x, ex_path(x, dir, e->d_name));
+    const char *name;
+    while ((name = ex_dir_next(d)) != NULL) {
+        if (ex_ends(name, suffix)) {
+            ex_remove(x, ex_path(x, dir, name));
         }
     }
-    closedir(d);
+    ex_dir_close(d);
 }
 
 u8 *ex_read_file(Extract *x, const char *path, size_t *size)
 {
-    FILE *fh = fopen(path, "rb");
+    FILE *fh = ex_fopen(path, "rb");
     if (fh == NULL) {
         return NULL;
     }

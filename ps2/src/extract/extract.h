@@ -22,6 +22,7 @@
 #include <setjmp.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdio.h>
 
 /* printf's checks on the formats, where the compiler has them. MinGW's
  * "printf" checks Microsoft's old msvcrt formats; the C runtime the tree
@@ -174,6 +175,41 @@ void  ex_remove(Extract *x, const char *path);
 void  ex_remove_ending(Extract *x, const char *dir, const char *suffix);
 /* A file's bytes (NUL after them), or NULL when there is none. */
 u8   *ex_read_file(Extract *x, const char *path, size_t *size);
+
+/* (build 193) The system's file calls, by UTF-8 names (exfs.c). Every
+ * path the extraction takes is UTF-8 -- SDL gives a dropped or chosen
+ * file's so, and ex_utf8_args reads the command line's so -- which
+ * Windows' narrow calls do not take (they read the ANSI code page): there
+ * each is opened by its wide name. A path that is not UTF-8 is taken as
+ * it is. Elsewhere the bytes are the name. Everything under src/extract/
+ * reaches the disk through these and ex_read_file/ex_write. */
+typedef enum {
+    EX_PATH_NONE,               /* nothing there (or it cannot be seen) */
+    EX_PATH_FILE,
+    EX_PATH_DIR,
+    EX_PATH_OTHER
+} ExPathKind;
+
+FILE      *ex_fopen(const char *path, const char *mode);
+/* What is at `path` (no separator at its end), and its size (may be
+ * NULL). */
+ExPathKind ex_path_kind(const char *path, long long *size);
+int        ex_mkdir_one(const char *path);     /* 0, or -1 with errno */
+int        ex_remove_file(const char *path);   /* 0, or -1 */
+
+/* A folder's names, "." and ".." left out; NULL when it cannot be
+ * opened. A name stays until the next ex_dir_next. */
+typedef struct ExDir ExDir;
+ExDir      *ex_dir_open(const char *path);     /* "" is the current one */
+const char *ex_dir_next(ExDir *d);             /* NULL at the end */
+void        ex_dir_close(ExDir *d);
+
+/* The last `n` of the program's arguments (`args`, main()'s argv from
+ * some place on), as UTF-8: on Windows read again from the wide command
+ * line, as main() is handed them in the ANSI code page; elsewhere the
+ * same pointers. One block, NULL after the n, for free(); NULL when there
+ * is no memory. */
+char      **ex_utf8_args(int n, char **args);
 /* A JSON file the earlier steps wrote; a stop when it is missing. */
 const JsonValue *ex_read_json(Extract *x, const char *path);
 

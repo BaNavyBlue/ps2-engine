@@ -23,11 +23,14 @@ USA/Europe, revision 02, "Phantasy Star II (UE) (REV02)", a .bin, .md,
 - dropped onto the program itself, or named on its command line
   (`ps2 path/to/image.bin`): used at once.
 
-The window then shows each step as `tools/make_assets.py` runs it (a bar
-and "step 9 of 22: techs"), and the game's window opens the moment the
-files are made -- about six seconds here. When the script refuses (a file
-that is not the cartridge, an earlier revision) or a step fails, its words
-are shown under "That did not work:" and the window asks again. When the
+The window then shows each step as the game makes it (a bar and "step 9
+of 22: techs"), and the game's window opens the moment the files are made
+-- (build 193) under a second from the game's start here, the window's
+opening included, made in C in the game's own process (below); until
+192 the window ran `tools/make_assets.py`, about six seconds. When the
+files given are refused (a file that is not the cartridge, an earlier
+revision) or a step fails, the words are shown whole under "That did not
+work:" and the window asks again. When the
 files are made but some are not as a proved extraction made them (exit
 3, below), it says so: Enter plays on, Escape quits. Escape quits while it
 asks; closing the window stops a run (the preload list is written last,
@@ -62,13 +65,18 @@ Such a language is offered, not loaded:
 the platform (`platform_add_language`). The SDL window shows two slots,
 cartridge and retranslation; files dropped or chosen fill them (a folder,
 or a zip naming work/dialogue.json, is the retranslation; anything else
-the cartridge), and when both are filled the script runs. Made, the new
+the cartridge), and when both are filled the files are made. Made, the new
 files are preloaded, the languages' default names read again
 (`lang_rescan`) and the language chosen; the game takes it up at its next
 tick. Left, the game goes on in the language it had, and settings.json
 keeps that one.
 
 ## tools/make_assets.py
+
+(build 193) The game no longer runs it: its twin in C (below, "In C")
+does what it does, in the game's own process. The script stays, as the
+reference that twin is held to (tools/make_assets_c_check.py) and as
+`make extract` with no make. What follows is the script's.
 
 `make extract ROM=...` with no make (it parses the Makefile's
 `EXTRACTORS` and each rule's command, as `make extract` runs them, then
@@ -98,29 +106,59 @@ files from (an unknown file, one of the Japanese pair alone, the
 Japanese before the game's files); 3 made, but some differ from the
 list; 4 no Pillow.
 
-## Which Python
+## In the game's own process (build 193)
 
-Found once a run (first_start_sdl3.c, find_python), each asked to `import
-PIL` (15 s at most): `PS2_PYTHON`; a Python packaged beside the game
-(`python/` in the folder above the game's or in its own); then the PATH's.
-On Windows the windowless one first -- pythonw.exe beside python.exe, then
-`pythonw` and `pyw -3` before `python3`, `python` and `py -3` -- since a
-console Python started by a game with no console opens a console window
-over it (seen here: the game started from Git Bash). make_assets.py starts
-its own steps with CREATE_NO_WINDOW for the same reason. On Windows the
-command line's files are read again from the wide command line
-(CommandLineToArgvW's rules), as main()'s are in the ANSI code page.
+The window makes the files itself, with src/extract/'s `ex_make_*`
+(extract.h; `./ps2_extract assets` runs the same code), so the game needs
+no Python, no Pillow and no other program to make them:
 
-None found: the window says Python 3 with Pillow is needed, and how to
-install it there.
+- **A thread of its own.** first_start_sdl3.c starts the run on an SDL
+  thread (`make_files`): `ex_make_begin` with the files given, each step,
+  then the check and the status. Its lines come back through the `say`
+  callback: a `[K/N] STEP` line is the bar and the step's name, any other
+  the last twelve lines kept, under a mutex; each frame copies them and
+  draws from the copy. So the window is drawn and its events read while a
+  step runs (the longest, the levels', takes about a tenth of a second
+  here), and the steps never wait for a frame.
+- **Closed mid-run**, the run stops before its next step (the one running
+  ends first) and the game exits. The preload list is the last step, so a
+  half-made `assets/` is never taken for a whole one, and the next start
+  asks again.
+- **Beside the game**, as before: the files are made in the game's folder
+  (where home_enter goes when it has no files), from the map there,
+  `tools/rom_map.json`, with `make_assets.log` beside them. A copy with
+  no map says so on the window rather than starting.
+- **Every name in UTF-8.** SDL gives a dropped or chosen file's name in
+  UTF-8, which Windows' narrow calls (`fopen`, `stat`, `_mkdir`) read in
+  the ANSI code page. Every file the extraction opens, looks at, makes,
+  removes or lists goes through src/extract/exfs.c: on Windows by its
+  wide name (`_wfopen`, `_wstat64`, `_wmkdir`, `_wremove`,
+  `FindFirstFileW`), a string that is not UTF-8 by the narrow call as
+  before; elsewhere POSIX's calls, a name being its bytes. The command
+  line's files are UTF-8 too: `ex_utf8_args` reads them again from the
+  wide command line by the C runtime's rules on Windows (the window's own
+  code until 192, moved there so `ps2_extract` takes them as well), and
+  `home_given_path` (home.c) reads a relative one from the folder the
+  game was started in -- until 192 it was read from the game's own
+  folder, where home_enter had gone.
+
+What went with the Python: finding one (`PS2_PYTHON`, a `python/`
+packaged beside the game, the PATH's, each asked to import Pillow), the
+windowless one chosen first on Windows so no console window opened over
+the game, and the process the window ran and read. `ps2` links
+src/extract/ (the Makefile's EXTRACT); this tree's `make dist` has
+carried no Python since build 179, and its game, with its files packed
+in, never asks.
 
 ## Headless
 
 `ps2_headless` has no window: `platform_make_assets` prints how to make
-the files (`python3 tools/make_assets.py IMAGE`, or `make extract`) and the
-game exits 1; `platform_add_language` prints how to add the language and
-the game goes on in the one it had. tools/lang_check.py checks the latter
-(its sixth part).
+the files (`make ps2_extract && ./ps2_extract assets IMAGE`, or the game,
+`ps2`, which asks for it; `python3 tools/make_assets.py IMAGE` until 192)
+and the game exits 1; `platform_add_language` prints how to add the
+language (`./ps2_extract assets JP_IMAGE RETRANSLATION`) and the game goes
+on in the one it had. tools/lang_check.py checks the latter (its sixth
+part).
 
 ## How it was tried (build 186, the Windows desktop)
 
@@ -144,6 +182,50 @@ Not tried: drag and drop and the file dialog by hand (they need a
 person); the Japanese language made end to end (no Japanese cartridge on
 this machine); the window on Linux and macOS (the dialogs there go through
 xdg-desktop-portal or zenity, and macOS's own panel).
+
+## How it was tried (build 193, the Windows desktop)
+
+In a scratch game -- the built `ps2.exe` with its DLLs and shaders,
+`tools/rom_map.json`, and in `assets/` only the 35 files no extractor
+makes -- reset before each try, the window photographed as it ran:
+
+- The image in a folder named with letters no single ANSI code page
+  holds (`Röm 日本 ü`), its absolute path on the command line: the steps
+  shown, then the game, 1,070 files loaded. Every file the same bytes as
+  `ps2_extract assets`'s in another folder; the preload list the tree's
+  less the Japanese lines.
+- The image by a relative name, the game started from the image's folder
+  (home_enter then moves to the game's): made. A file that is not a
+  cartridge: its refusal shown whole (until 192 a line was cut at 159
+  characters), asked again. Nothing given: the asking screen. The window
+  closed as the run began: stopped before step 2, no preload list, the
+  game gone.
+- settings.json naming JAPANESE, the game's files there, the stand-in
+  Japanese image and the retranslation's GitHub zip on the command line:
+  the language's window, then 32 files -- 30 the same as assets/lang/ja's,
+  the face differing as the stand-in's does (tools/japanese_c_check.py)
+  -- the preload list's Japanese lines the tree's, and the language
+  chosen.
+- Timing, the game started with nothing redirected (as a player starts
+  it): its preload list written 0.8 to 1.0 s after the game started,
+  three times. With the game's stderr redirected by PowerShell's
+  Start-Process and read while it ran, the first steps took up to a
+  second each; with cmd's redirection to a file, the 22 steps 0.73 s:
+  that was the measuring, not the game.
+- `ps2_extract` built with ASan and UBSan (CLANG64's clang 23.1.3):
+  tools/make_assets_c_check.py's 33 runs PASS, tools/japanese_c_check.py
+  PASS, and the non-ASCII path made and digested; nothing reported.
+
+This machine's ANSI code page is UTF-8 (Windows' "Beta: Use Unicode UTF-8"
+setting, code page 65001), so its narrow calls take UTF-8 too: build
+192's `ps2_extract` opened the same path. The wide calls are what ran
+here, but the failure they are for -- a name outside the code page, on a
+Windows set to 1252 or 932 -- could not be shown on this machine.
+
+Not tried: drag and drop and the file dialog by hand; the JAPANESE
+language from the real cartridge (not on this machine); the window on
+Linux and macOS (first_start_sdl3.c, home.c and exfs.c compiled on
+glibc, GCC 13.3, against SDL3's headers; not linked there, nor run).
 
 ## In C (step 2, from build 187)
 
@@ -186,6 +268,7 @@ POSIX's `mkdir` elsewhere, as home.c and gamedata.c do already).
 | 190 | song_text.py's vocabulary and walk (`exsong.c`), its disassembly and annotate (`ex_songtext.c`), tracker.py's export (`ex_tracker.c`); tables, music, drums -- all 21 |
 | 191 | zip files as Python's zipfile reads them (`exzip.c`); the Japanese importer, tools/import_japanese.py (`ex_japanese.c`, `ps2_extract japanese`) |
 | 192 | tools/make_assets.py itself (`exmake.c`, `ps2_extract assets`): the image as players keep it, the files told apart, every step, the preload list (make_manifest.py), the check against the proved files with its digest (`exdigest.c`: SHA-256, a PNG's picture as Pillow opens it; `ps2_extract digest`) |
+| 193 | the game runs it in its first-start window, on a thread of its own; every file by its UTF-8 name (`exfs.c`: wide calls on Windows), the command line's too (`ex_utf8_args`) |
 
 (build 190) The music step builds the song text it made back into the
 driver's image with the game's own song builder (src/audio/songtext.c,
@@ -275,8 +358,8 @@ the Python's, the kinds it does not read "png:unreadable".
 The Python extractors stay, as the reference the C ones are checked
 against (as the C player and the Python one both stay, build 180a). Every
 step has its twin now (build 190), the Japanese importer (191) and
-make_assets.py (192); next, the game runs them itself in its first-start
-window, and the packages carry no Python.
+make_assets.py (192), and (193) the game runs them itself in its
+first-start window: making the files needs nothing but the game.
 
 ## Later
 - A game folder that cannot be written (an installed copy): the files in

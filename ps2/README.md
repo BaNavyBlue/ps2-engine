@@ -28,7 +28,7 @@ parts the next task needs.
 | `docs/emulator_saves.md` | (build 138e) The port's saves in the emulator: the battery RAM's layout as the ROM reads and writes it, `tools/to_srm.py` (a port save into an `.srm` slot and back, the ROM's power-on check and CONTINUE worked through), the scenes' file for RetroArch |
 | `docs/mods.md` | (builds 138b-c) The mods folder, every build's: a file there read in place of the game's own, the packaged game's originals written out on first start, the music's fallback when a mod is refused |
 | `docs/languages.md` | (builds 163-165) The languages: LANGUAGE on the Escape menu, a language's folder (`assets/lang/<key>/`) standing in for the game's own files, Excalibur_Z's retranslation converted (`tools/import_retranslation.py`) and drawn in his proportional face, what is his and what was written for the original game, Japanese later |
-| `docs/first_start.md` | (build 186) A copy of the game without its files makes them on its first start, from the player's own cartridge: the window that asks for the image (dropped, chosen, or on the command line) and shows `tools/make_assets.py`'s steps; the JAPANESE language offered the same way; which Python; how it was tried; (187) the extractors in C, step by step; (192) make_assets.py in C |
+| `docs/first_start.md` | (build 186) A copy of the game without its files makes them on its first start, from the player's own cartridge: the window that asks for the image (dropped, chosen, or on the command line) and shows the steps as it makes the files; the JAPANESE language offered the same way; how it was tried; (187) the extractors in C, step by step; (192) make_assets.py in C; (193) the game making the files itself, in C, on a thread of the window's, every name in UTF-8 |
 | `docs/harness.md` | `route_probe` and the route language, `fuzz`, `route_probe -i`, `play.py`, `fuzz_levels.py`, the route list |
 | `docs/old/` | (build 142b) The old handover and questions files of builds 112-113 (`handover_113_windows.txt`, `questions_113.txt`), moved from the tree's top; history.md cites them by name |
 | `docs/machines.md` | (build 142a) What runs where: the headless server's unattended proof of every commit (`server_proof.sh`, a git hook), the Linux desktop and the Windows machine's windowed builds, shaders and GPU check |
@@ -78,8 +78,8 @@ parts the next task needs.
 | `tools/disasm_art.py` | (build 156) Any tile sheet's tiles and grid, by name, straight from the cartridge image (build 185; the disassembly's `art/*.bin` or an inline block before): what the picture, window-map and nametable extractors and the art dump read; `python3 tools/disasm_art.py ROM` checks `assets/tiles` against it |
 | `tools/rom_map.json`, `tools/rommap.py` | (build 185) Where the disassembly's labels, files and constants are in the cartridge image, and the reader every extractor takes the image through (it checks the image's size and SHA-1) |
 | `tools/make_rom_map.sh`, `tools/make_rom_map.py` | (build 185) rom_map.json made again from the disassembly: assembled with AS for its listing, the output checked against the ROM byte for byte, the labels' addresses read off the listing |
-| `tools/make_assets.py` | (build 186) `make extract ROM=...` with no make, for the game's first start (docs/first_start.md): the files given told apart by what they are (the US image, the Japanese one, the retranslation), every extractor the Makefile names run, the JAPANESE language made, checked against `tools/assets.sha256` where there is one; `[K/N]` lines for the window, exit 0-4 |
-| `src/extract/`, `tools/ps2_extract.c` | (build 187) The extractors in C, each a Python extractor's twin (docs/first_start.md, "In C"): C11 and the tree's own JSON and PNG code; `./ps2_extract NAME IMAGE -o OUT` runs one as its Python twin is run; (build 191) `./ps2_extract japanese JP_IMAGE RETRANSLATION` the Japanese importer's twin, zips read in C; (build 192) `./ps2_extract assets FILE...` tools/make_assets.py's twin (`exmake.c`), `./ps2_extract digest FILE...` its file_digest (`exdigest.c`: SHA-256, a PNG's picture as Pillow opens it) |
+| `tools/make_assets.py` | (build 186) `make extract ROM=...` with no make, for the game's first start until build 193 and the reference its C twin is held to since (docs/first_start.md): the files given told apart by what they are (the US image, the Japanese one, the retranslation), every extractor the Makefile names run, the JAPANESE language made, checked against `tools/assets.sha256` where there is one; `[K/N]` lines for the window, exit 0-4 |
+| `src/extract/`, `tools/ps2_extract.c` | (build 187) The extractors in C, each a Python extractor's twin (docs/first_start.md, "In C"): C11 and the tree's own JSON and PNG code; `./ps2_extract NAME IMAGE -o OUT` runs one as its Python twin is run; (build 191) `./ps2_extract japanese JP_IMAGE RETRANSLATION` the Japanese importer's twin, zips read in C; (build 192) `./ps2_extract assets FILE...` tools/make_assets.py's twin (`exmake.c`), `./ps2_extract digest FILE...` its file_digest (`exdigest.c`: SHA-256, a PNG's picture as Pillow opens it); (build 193) linked into the game, whose first start runs it, every file by its UTF-8 name (`exfs.c`) |
 | `tools/extract_c_check.py` | (build 187) The C extractors held to the Python ones: two whole extractions, every step with a C twin run in C in one; the same files written by each step, every file the same in the end (a PNG the same picture) |
 | `tools/make_assets_c_check.py` | (build 192) make_assets.py's part in C (`ps2_extract assets`, `ps2_extract digest`) held to tools/make_assets.py: both in scratch games on the same files -- the image raw, .smd, with a copier's header, zipped; the refusals; the check against `tools/assets.sha256`, a list changed; a failing step; the JAPANESE language from a folder and zips -- the same exit, lines and files; and the digests of every asset and of PNGs of each kind Pillow writes (docs/first_start.md, "In C") |
 | `tools/japanese_c_check.py` | (build 191) The Japanese importer in C (`ps2_extract japanese`) held to tools/import_japanese.py: the same files and lines from the same cartridge and retranslation, the image in a zip taken and the wrong ones refused, the files assets/lang/ja's; `--stand-in US_IMAGE` where there is no Japanese cartridge (docs/first_start.md, "In C") |
@@ -384,11 +384,13 @@ writes the map again. The extractors read the disassembly until build
 extract).
 
 (build 186) `python3 tools/make_assets.py IMAGE` does what `make extract`
-does with no make, and a game started without its files runs it itself:
-a window asks for the image -- dropped on it, chosen, or named on the
-command line -- and shows the steps (docs/first_start.md). The JAPANESE
-language is added the same way, from the Japanese cartridge and
-Excalibur_Z's retranslation, when LANGUAGE is closed on it.
+does with no make, and a game started without its files makes them
+itself: a window asks for the image -- dropped on it, chosen, or named on
+the command line -- and shows the steps (docs/first_start.md). The
+JAPANESE language is added the same way, from the Japanese cartridge and
+Excalibur_Z's retranslation, when LANGUAGE is closed on it. (build 193)
+The game makes them in C, in its own process, in under a second: no
+Python needed.
 
 (build 187) The extractors are being ported to C (`src/extract/`, C11 and
 the tree's own code, so that making the files needs no Python on any
@@ -402,7 +404,8 @@ RETRANSLATION`, held to its twin by `python3 tools/japanese_c_check.py`.
 the Japanese cartridge and the retranslation, as make_assets.py takes
 them) tells the files apart, runs every step in C and checks the files
 against `tools/assets.sha256` where there is one, held to the Python by
-`python3 tools/make_assets_c_check.py IMAGE`.
+`python3 tools/make_assets_c_check.py IMAGE`. (build 193) The game's
+first-start window runs it.
 
 Before build 55 there was no `assets` target at all: `make assets` found
 the `assets/` directory, had no rule for it and did nothing, even with
@@ -1146,18 +1149,19 @@ working list of what comes next is NOTES_next_context.md's latest "Next".
 
 Done since this list was written, and where:
 
-- The extractors in C (builds 187-192): the framework, the two
+- The extractors in C (builds 187-193): the framework, the two
   decompressors, a 68000 decoder, the art sheets, all twenty-one steps
   (the music's three in 190), the Japanese importer (191) and
   make_assets.py's own part (192: the image as players keep it, the files
   told apart, the preload list, the check against the proved files),
-  each writing and saying what its Python twin does. Left: the game
-  running them in its first-start window, packages without Python.
-  docs/first_start.md, "In C"; docs/history.md, Builds 187 to 192.
+  each writing and saying what its Python twin does; (193) the game
+  runs them in its first-start window, on a thread of its own, every
+  name in UTF-8, so making the files needs nothing but the game.
+  docs/first_start.md, "In C"; docs/history.md, Builds 187 to 193.
 
 - The first start makes the game's files (build 186): a copy without
   them opens a window that takes the player's cartridge image (dropped,
-  chosen, or on the command line), runs tools/make_assets.py and starts
+  chosen, or on the command line), makes the files from it and starts
   the game; JAPANESE without its files is offered the same way, from the
   Japanese cartridge and the retranslation. docs/first_start.md;
   docs/history.md, Build 186.

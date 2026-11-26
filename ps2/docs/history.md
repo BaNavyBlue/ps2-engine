@@ -15884,3 +15884,115 @@ made from the US cartridge alone, with a list of its own:
 make_assets_c_check IMAGE PASS, 20 runs, digests 1,091 of 1,095 (no
 JAPANESE: none of lang/ja's files); both `--stand-in`s exit 2 with the
 sentence. Nothing under src/ changed; no make target.
+
+## Build 193: the first-start window makes the files in C (2026-11-25)
+
+Step 2's last part in this tree: a copy of the game without its files
+makes them in its own process, in C, with build 192's `ex_make_*`. Until
+192 its first-start window found a Python with Pillow and ran
+tools/make_assets.py in it; now it needs nothing but the game
+(docs/first_start.md, "In the game's own process").
+
+* src/platform/first_start_sdl3.c (1,025 lines to 818): the run is
+  `make_files`, on an SDL thread of its own -- `ex_make_begin` with the
+  files given, each step (the window closed: it stops before the next,
+  "first start: stopped before step K of N"), `ex_make_finish`,
+  `ex_make_end`; its status `EX_MAKE_*` or -1 when stopped. Its lines come
+  through the `say` callback (`said`), each printed on stderr as
+  "make_assets: ..." as the script's were; a `[K/N] STEP` line sets the
+  bar and the step, any other goes to the last twelve kept. The thread
+  writes them to `out` under a mutex; each frame copies `out` to `shown`
+  under it and draws from `shown`, so the lock is held for a copy only.
+  `end_make` waits for the thread and takes its status (done; made but
+  differing; refused or failed, the slots emptied so the next files are a
+  new pair); `stop_make` sets `stop` and waits; `first_start_free`, used
+  by both the game's window and the language's, stops a run before the
+  window goes. A line said is kept whole (512 bytes; until 192 a line was
+  cut at 159 characters, the refusal's long ones among them). A copy
+  with no tools/rom_map.json says so on the window rather than starting.
+  Gone: find_python and its probe (`PS2_PYTHON`, a packaged `python/`, the
+  PATH's, each asked to import PIL), the windowless-Python choice,
+  SDL_Process and the reading of its output, windows.h, and the window's
+  own reading of the wide command line (moved to exfs.c).
+* src/extract/exfs.c, new: files by their UTF-8 names. `ex_fopen`,
+  `ex_path_kind` (file, folder, other, none; and the size),
+  `ex_mkdir_one`, `ex_remove_file`, `ex_dir_open/next/close`: on Windows
+  `_wfopen`, `_wstat64`, `_wmkdir`, `_wremove`, `FindFirstFileW`, the
+  name made wide from UTF-8 (`MB_ERR_INVALID_CHARS`), a string that is
+  not UTF-8 by the narrow call as before; elsewhere fopen, stat, mkdir,
+  remove, opendir. `ex_utf8_args`: the command line's last N arguments in
+  UTF-8 -- on Windows read again from `GetCommandLineW` by the C
+  runtime's rules (backslashes before a quote, `""` inside quotes), as
+  main()'s are in the ANSI code page; elsewhere argv as it is. extract.h
+  declares them. exbase.c (ex_mkdirs, ex_write, ex_read_file, ex_remove,
+  ex_remove_ending), exmake.c (is_file, is_dir, the retranslation's root,
+  identify, the log, the preload list's walk), ex_drums.c and
+  ex_tables.c (file_there) go through them; dirent.h, sys/stat.h and
+  direct.h are exfs.c's alone now.
+* tools/ps2_extract.c: its arguments through `ex_utf8_args` (main is
+  `run`, with a main around it), read_all through `ex_fopen`.
+* src/platform/home.c: `home_given_path` -- a relative name from the
+  command line read from the folder the game was started in, which
+  home_enter now keeps (`g_left`, in UTF-8; `_wgetcwd` on Windows) when it
+  moves to the game's own. Until 192 such a name was read from the game's
+  folder.
+* src/platform/platform_headless.c: no python3 in its words -- "make
+  ps2_extract && ./ps2_extract assets IMAGE (or start the game, ps2,
+  which asks for it; docs/first_start.md)", and for JAPANESE
+  "./ps2_extract assets JP_IMAGE RETRANSLATION". platform.h's comment.
+* Makefile: EXTRACT (src/extract/*.c) is defined beside the game's
+  sources, and `ps2` and the package's exe link it.
+
+Tried in a scratch game (docs/first_start.md, "How it was tried (build
+193)"): the image in a folder named `Röm 日本 ü`, its absolute path on the
+command line -- 1,070 files loaded, every file the same bytes as
+`ps2_extract assets`'s, the preload list the tree's less the Japanese
+lines; a relative name from the image's folder; the refusal shown whole;
+the asking screen; the window closed as the run began (stopped before
+step 2, no preload list); JAPANESE from the stand-in image and the
+retranslation's zip (32 files, 30 assets/lang/ja's, the stand-in's face
+differing as it should; the language chosen). Made 0.8 to 1.0 s after the
+game's start, nothing redirected, three times.
+
+The timing took a detour worth keeping. Measured first through
+PowerShell's Start-Process with the game's stderr redirected to a file
+and read as it ran, the run took 7.5 to 9 s, the first eleven steps
+about a third of a second each while the game's CPU time hardly moved;
+`ps2_extract` alone, under the same harness, about a second. Defender's
+scanning was suspected and not shown. A trace of each step and frame
+with the stderr sent by cmd straight to a file put the 22 steps at 0.73
+s and the frames 30 ms apart, and with nothing redirected the times are
+those above: the seconds were the measuring's. The copy-and-draw (`out`
+and `shown`) was made while chasing it, and kept.
+
+This machine's ANSI code page is UTF-8 (65001), so the narrow calls take
+UTF-8 here too (build 192's `ps2_extract` opened the same path): the
+wide calls ran, but the failure they are for, on a Windows set to 1252 or
+932, could not be shown.
+
+Proofs: r193 against r191, every file the same -- 172 routes PASS, 815
+route files, the attract WAV, the Dark Force trial, crt 27, crt_sim 40,
+patches 14, probe 8, mods 16, colour; run on the extraction's and the
+headless game's final code (the window's later changes are in
+first_start_sdl3.c, which neither builds). extract_c_check PASS;
+make_assets_c_check `--stand-in` PASS (33 runs, 23,293 files, digests
+1,124 of 1,128); japanese_c_check `--stand-in` PASS (32 files);
+lang_check PASS (the headless words); rom_left exit 0; `make dist`
+builds. `ps2_extract` under ASan and UBSan (CLANG64's clang 23.1.3):
+make_assets_c_check and japanese_c_check PASS, the non-ASCII path made
+and digested, nothing reported (songtext.c's two warnings, build 184's,
+seen again). On the server (glibc, GCC 13.3, `-Werror=implicit-function-
+declaration`): `make -k Q=0 headless route_probe ps2_extract` clean;
+first_start_sdl3.c, home.c, platform_sdl3.c and platform_headless.c
+compiled against SDL3's headers (`-fsyntax-only`); exfs.c's POSIX side
+run on a name that is not there, an empty folder, the retranslation's
+folder and its root, its zip, a file that is not a cartridge, and the
+digest.
+
+Not compiled or run: macOS; GCC 16 on Linux; the game linked with SDL3
+on Linux, so its window there; drag and drop and the file dialog by hand;
+the JAPANESE language from the real cartridge; a Windows whose code page
+is not UTF-8. c_player_check, computer_check, rumble, controls and chords
+not run: of what they build only home.c changed, and its new lines run
+only when the game moves to its own folder. `make ps2` (and `make
+dist`).

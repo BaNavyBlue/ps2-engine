@@ -375,8 +375,9 @@ cartridge's, in its font, with its dakuten and handakuten.
 (build 186) A copy of the game without `assets/lang/ja/` offers to make
 it when LANGUAGE closes on JAPANESE, or settings.json names it: a window
 takes the Japanese cartridge and the retranslation (a checkout, or
-GitHub's "Download ZIP", whose comment gives `--commit` below) and runs
-`tools/make_assets.py` on them (docs/first_start.md).
+GitHub's "Download ZIP", whose comment gives `--commit` below) and makes
+the language's files from them ((build 193) in C, in the game; until 192
+by running `tools/make_assets.py`; docs/first_start.md).
 
 **Where it comes from.** `tools/import_japanese.py JP_ROM RETRANSLATION`
 writes `assets/lang/ja/` ((build 191) and its twin in C, `./ps2_extract

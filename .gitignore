@@ -1,5 +1,5 @@
 # The game's data: made on your own machine from your own cartridge image by
-# the setup (tools/setup.py). None of it is ever committed.
+# the game itself, the first time it starts. None of it is ever committed.
 # No disassembly: the extractors read the image itself. One put here for
 # the round-trip tools (ps2/'s `make roundtrip`) stays out.
 /PSII_Disasm/
@@ -46,4 +46,3 @@ __pycache__/
 
 # A sync that stopped halfway keeps the player's folders here.
 /.sync-kept/
-setup.log
